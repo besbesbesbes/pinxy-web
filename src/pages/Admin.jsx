@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function App() {
+function Admin() {
   const navigate = useNavigate();
   const hdlLogout = () => {
     localStorage.clear();
@@ -8,7 +8,7 @@ function App() {
   };
   return (
     <>
-      <p>App user</p>
+      <p>Admin page</p>
       <button className="btn btn-primary" onClick={hdlLogout}>
         Logout
       </button>
@@ -16,4 +16,4 @@ function App() {
   );
 }
 
-export default App;
+export default Admin;

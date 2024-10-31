@@ -88,6 +88,7 @@ function Login() {
                     <div className='flex flex-col items-center'>
                         <button className='bg-slate-100 p-5' onClick={hdlSubmit}>LOG IN</button>
                         <div>Don't have an account? <span onClick={hdlOnLink}>Register</span></div>
+
                     </div>
                 </div>
             </div>

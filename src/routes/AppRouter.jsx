@@ -18,7 +18,7 @@ const guestRouter = createBrowserRouter([
 ]);
 
 const userRouter = createBrowserRouter([
-  { path: "/", element: <App /> },
+  { path: "/", element: <Pinxy /> },
   { path: "/admin", element: <Admin /> },
   { path: "*", element: <Navigate to="/" /> },
 ]);

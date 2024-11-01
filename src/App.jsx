@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Posts from "./components/Posts";
 
 function App() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function App() {
       <button className="btn btn-primary" onClick={hdlLogout}>
         Logout
       </button>
+      <Posts />
     </>
   );
 }

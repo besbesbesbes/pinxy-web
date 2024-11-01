@@ -1,22 +1,17 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+
 
 function PrivacyPolicy() {
-    const navigate = useNavigate()
 
-    const hdlOnBack = (e) => {
-        e.preventDefault()
-        navigate("/register")
-    }
     return (
-        <div>
-            <h1>Privacy Policy</h1>
-            <div>
-                <h4>Privacy Policy for [Website Name]</h4>
-                <h4>Effective Date: [Date]</h4>
-                <h4>Website: [URL of the Website]</h4>
+        <div className='flex flex-col gap-8 p-2'>
+            <h1 className='text-3xl text-center font-bold'>Privacy Policy</h1>
+            <div className='flex flex-col gap-1 font-semibold text-base'>
+                <h4>Privacy Policy for Pinxy</h4>
+                <h4>Effective Date: 10/31/2024</h4>
+                <h4>Website: www.pinxy.com</h4>
             </div>
-            <div>
+            <div className='flex flex-col gap-5'>
                 <div>
                     1. Information We Collect
                     We collect various types of information from users when you register or use our website, including:
@@ -54,11 +49,8 @@ function PrivacyPolicy() {
                 </div>
                 <div>
                     7. Contact Us
-                    If you have any questions about our privacy policy, please contact us at [Contact Email].
+                    If you have any questions about our privacy policy, please contact us at pinxy@gmail.com.
                 </div>
-            </div>
-            <div>
-                <button onClick={hdlOnBack}>BACK</button>
             </div>
         </div>
     )

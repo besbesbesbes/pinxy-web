@@ -1,22 +1,16 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 
 function TermAndCond() {
-    const navigate = useNavigate
 
-    const hdlOnBack = () => {
-        e.preventDefault()
-        navigate("/register")
-    }
     return (
-        <div>
-            <h1>Terms and Conditions</h1>
-            <div>
-                <h4>Terms and Conditions for [Website Name]</h4>
-                <h4>Effective Date: [Date]</h4>
-                <h4>Website: [URL of the Website]</h4>
+        <div className='flex flex-col gap-8 p-2'>
+            <h1 className='text-3xl text-center font-bold'>Terms and Conditions</h1>
+            <div className='flex flex-col gap-1 font-semibold text-base'>
+                <h4>Terms and Conditions for Pinxy</h4>
+                <h4>Effective Date: 10/31/2024</h4>
+                <h4>Website: www.pinxy.com</h4>
             </div>
-            <div>
+            <div className='flex flex-col gap-5'>
                 <div>
                     1. General Agreement
                     By using our website, you agree to these terms and conditions. If you do not agree with any part of these terms, please stop using the website immediately.
@@ -39,15 +33,12 @@ function TermAndCond() {
                 </div>
                 <div>
                     6. Governing Law
-                    These terms shall be governed by the laws of [Country/State], and you agree to submit to the jurisdiction of the courts in [Location] for any disputes that arise.
+                    These terms shall be governed by the laws of Thailand, and you agree to submit to the jurisdiction of the courts in Bangkok for any disputes that arise.
                 </div>
                 <div>
                     7. Contact Us
-                    If you have any questions regarding these terms and conditions, please contact us at [Contact Email].
+                    If you have any questions regarding these terms and conditions, please contact us at pinxy@gmail.com.
                 </div>
-            </div>
-            <div>
-                <button onClick={hdlOnBack}>BACK</button>
             </div>
         </div>
     )

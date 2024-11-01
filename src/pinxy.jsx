@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Navbar from './components/Navbar';
 import ProfileCard from './components/ProfileCard';
 import PostCard from './components/PostCard';
@@ -7,6 +7,7 @@ import EventMap from './components/EventMap';
 import { SearchUser } from './components/Filters';
 import FollowBar from './components/FollowBar';
 import Sidebar from './components/Sidebar';
+
 
 
 const Pinxy = () => {

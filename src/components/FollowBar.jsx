@@ -10,7 +10,6 @@ const FollowBar = ({ followers }) => {
             <img src={follower.avatar} alt={follower.name} className="w-10 h-10 rounded-full mr-3" />
             <div>
               <p className="font-medium">{follower.name}</p>
-              <p className="text-sm text-gray-600">@{follower.name.toLowerCase().replace(' ', '')}</p>
             </div>
           </li>
         ))}

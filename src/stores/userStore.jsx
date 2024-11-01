@@ -6,8 +6,9 @@ const useUserStore = create(
     (set, get) => ({
       user: null,
       token: "",
-      login: (role) => {
-        set({ token: "FAKETOKEN", user: { name: "fakeuser", role: role } });
+      login: (authData) => {
+        console.log("authData", authData)
+        set({ token: authData.data.token, user: { name: authData.data.payload.name, role: authData.data.payload.role, isBanned: authData.data.payload.isBanned } });
       },
     }),
     {

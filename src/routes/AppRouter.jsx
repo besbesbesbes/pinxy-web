@@ -3,20 +3,22 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import Login from "../pages/Login";
+
 import App from "../App";
 import useUserStore from "../stores/userStore";
 import Admin from "../pages/Admin";
+import Landing from "../pages/Landing"
+
 import Pinxy from "../pinxy";
 
 const guestRouter = createBrowserRouter([
-  { path: "/", element: <Login /> },
+  { path: "/", element: <Landing /> },
   { path: "*", element: <Navigate to="/" /> },
-  { path: "/posts", element: <Pinxy/> },
+  { path: "/posts", element: <Pinxy /> },
 ]);
 
 const userRouter = createBrowserRouter([
-  { path: "/", element: <App /> },
+  { path: "/", element: <Pinxy /> },
   { path: "/admin", element: <Admin /> },
   { path: "*", element: <Navigate to="/" /> },
 ]);

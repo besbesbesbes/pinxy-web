@@ -55,20 +55,3 @@ export const SearchUser = () => {
     </div>
   );
 };
-
-export const DistanceFilter = ({ distance, setDistance }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
-      <h4 className="text-xl font-bold mb-4">Filter by Distance</h4>
-      <input
-        type="range"
-        min="500"
-        max="2000"
-        value={distance}
-        onChange={(e) => setDistance(e.target.value)}
-        className="w-full"
-      />
-      <p className="text-gray-600 text-center mt-2">{distance} km</p>
-    </div>
-  );
-};

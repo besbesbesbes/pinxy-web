@@ -20,24 +20,9 @@ const ProfileCard = ({ name, username }) => {
 
         <div>
           <h3 className="text-xl font-bold">{name}</h3>
-          <p className="text-gray-600">@{username}</p>
         </div>
-      </div>
-      <div className="flex justify-between mt-6">
-        <div className="text-center">
-          <p className="font-bold">Posts</p>
-          <p className="text-gray-600">24</p>
+      </div>  
         </div>
-        <div className="text-center">
-          <p className="font-bold">Following</p>
-          <p className="text-gray-600">145</p>
-        </div>
-        <div className="text-center">
-          <p className="font-bold">Followers</p>
-          <p className="text-gray-600">298</p>
-        </div>
-      </div>
-    </div>
   );
 };
 

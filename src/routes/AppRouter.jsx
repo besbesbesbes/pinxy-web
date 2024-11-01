@@ -9,10 +9,12 @@ import useUserStore from "../stores/userStore";
 import Admin from "../pages/Admin";
 import Landing from "../pages/Landing"
 
+import Pinxy from "../pinxy";
 
 const guestRouter = createBrowserRouter([
   { path: "/", element: <Landing /> },
   { path: "*", element: <Navigate to="/" /> },
+  { path: "/posts", element: <Pinxy /> },
 ]);
 
 const userRouter = createBrowserRouter([

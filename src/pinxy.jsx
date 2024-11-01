@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import SearchBar from './components/SearchBar';
+import Navbar from './components/Navbar';
 import ProfileCard from './components/ProfileCard';
 import PostCard from './components/PostCard';
 import PostForm from './components/PostForm';
 import EventMap from './components/EventMap';
-import { SearchUser, DistanceFilter } from './components/Filters';
+import { SearchUser } from './components/Filters';
 import FollowBar from './components/FollowBar';
+import Sidebar from './components/Sidebar';
+
 
 const pinxy = () => {
   const [posts, setPosts] = useState([
@@ -59,34 +61,36 @@ const pinxy = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-4xl font-bold text-gray-900">Happening</h1>
-            <SearchBar />
-          </div>
-        </header>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <ProfileCard name="John Doe" username="johndoe" />
-            <PostForm handleSubmit={handleSubmit} content={content} setContent={setContent} />
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
+    <div className="min-h-screen bg-gray-100 flex">
+      <Sidebar />
+      
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <header className="mb-8">
+            <div className="flex justify-between items-center">
+              <Navbar />
+            </div>
+          </header>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <ProfileCard name="John Doe" username="johndoe" />
+              <PostForm handleSubmit={handleSubmit} content={content} setContent={setContent} />
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <EventMap posts={posts} distance={distance} setDistance={setDistance}/>
+              <SearchUser />
+              <FollowBar followers={followers} />
             </div>
           </div>
-          
-          <div className="space-y-6">
-            <EventMap posts={posts} />
-            <DistanceFilter distance={distance} setDistance={setDistance} />
-            <SearchUser />
-            <FollowBar followers={followers} />
-          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

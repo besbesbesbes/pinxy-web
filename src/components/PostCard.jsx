@@ -5,7 +5,6 @@ const PostCard = ({ post }) => {
           <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
           <div>
             <h3 className="text-lg font-bold">{post.author}</h3>
-            <p className="text-gray-600">@{post.username}</p>
           </div>
         </div>
         <p className="text-lg mb-4">{post.content}</p>

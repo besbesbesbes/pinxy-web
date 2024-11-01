@@ -7,10 +7,12 @@ import Login from "../pages/Login";
 import App from "../App";
 import useUserStore from "../stores/userStore";
 import Admin from "../pages/Admin";
+import Pinxy from "../pinxy";
 
 const guestRouter = createBrowserRouter([
   { path: "/", element: <Login /> },
   { path: "*", element: <Navigate to="/" /> },
+  { path: "/posts", element: <Pinxy/> },
 ]);
 
 const userRouter = createBrowserRouter([

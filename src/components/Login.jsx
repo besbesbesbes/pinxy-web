@@ -155,7 +155,8 @@ function Login() {
     const hdlOnChange = (e) => {
         setLoginData({
             ...loginData,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
+            roleInput: isEmail
         })
         validate(e.target.name, e.target.value)
     }
@@ -209,7 +210,13 @@ function Login() {
                 const res = await userLogin(loginData)
                 console.log("res from log in", res)
                 login(res)
-                navigate("/")
+                console.log("res", res)
+                if (res.data.payload.role === "USER") {
+                    navigate("/")
+                } else {
+                    navigate("/admin")
+                }
+
             } else if (isError) {
                 alert("please fill all the data.");
             }

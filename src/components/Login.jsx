@@ -161,7 +161,6 @@ function Login() {
         validate(e.target.name, e.target.value)
     }
 
-
     const validate = (name, value) => {
         let alertError = {};
 

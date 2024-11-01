@@ -61,7 +61,7 @@ const Pinxy = () => {
   };
 
   return (
-<<<<<<< HEAD
+    <>
     <div className="min-h-screen bg-gray-100 flex">
       <Sidebar />
       
@@ -90,37 +90,10 @@ const Pinxy = () => {
               <FollowBar followers={followers} />
             </div>
           </div>
-=======
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-4xl font-bold text-gray-900">Happening</h1>
-            <SearchBar />
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <ProfileCard name="John Doe" username="johndoe" />
-            <PostForm handleSubmit={handleSubmit} content={content} setContent={setContent} />
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <EventMap posts={posts} />
-            <DistanceFilter distance={distance} setDistance={setDistance} />
-            <SearchUser />
-            <FollowBar followers={followers} />
-          </div>
->>>>>>> dev
         </div>
       </main>
     </div>
+                </>
   );
 };
 

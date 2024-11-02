@@ -5,7 +5,9 @@ import { IoIosClose } from "react-icons/io";
 import { IoSendSharp } from "react-icons/io5";
 import { format } from "timeago.js";
 import { editCommentApi } from "../apis/post-api";
+import useUserStore from "../stores/userStore";
 function Post_comment_edit_modal() {
+  const token = useUserStore((state) => state.token);
   const curPostId = usePostStore((state) => state.curPostId);
   const setCurPostId = usePostStore((state) => state.setCurPostId);
   const curCommentId = usePostStore((state) => state.curCommentId);
@@ -20,7 +22,7 @@ function Post_comment_edit_modal() {
   };
   const getComment = async () => {
     try {
-      const result = await getCommentApi(curCommentId);
+      const result = await getCommentApi(token, curCommentId);
       console.log(result.data.comment);
       setComment(result.data.comment);
       setInput(result.data.comment.content);
@@ -30,7 +32,7 @@ function Post_comment_edit_modal() {
   };
   const hdlEditComment = async () => {
     try {
-      await editCommentApi(input, curCommentId);
+      await editCommentApi(token, input, curCommentId);
       setReloadPost(true);
       hdlClosePopup();
     } catch (err) {

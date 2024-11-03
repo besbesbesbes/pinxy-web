@@ -26,6 +26,22 @@ export const newPostApi = async (token, body) =>
       Authorization: `Bearer ${token}`,
     },
   });
+export const deletePostApi = async (token, postId) =>
+  await axios.post(
+    `${baseUrl}/post/delete`,
+    { postId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+export const editPostApi = async (token, body) =>
+  await axios.post(`${baseUrl}/post/edit`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 export const upPostApi = async (token, curPostId) =>
   await axios.post(
     `${baseUrl}/post/up`,

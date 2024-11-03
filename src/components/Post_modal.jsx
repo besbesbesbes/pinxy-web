@@ -1,8 +1,6 @@
 import { IoIosClose } from "react-icons/io";
-import { BsThreeDots } from "react-icons/bs";
 import usePostStore from "../stores/postStore";
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineReport } from "react-icons/md";
 import {
@@ -20,6 +18,7 @@ import { IoSendSharp, IoTrashBin } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
 import "animate.css/animate.min.css";
 import useUserStore from "../stores/userStore";
+import Post_category from "./Post_category";
 
 function Post_modal() {
   const token = useUserStore((state) => state.token);
@@ -68,7 +67,7 @@ function Post_modal() {
     try {
       await upPostApi(token, curPostId);
       setIsAnimatingUpPost(true);
-      getPost();
+      setReloadPost(true);
       setTimeout(() => setIsAnimatingUpPost(false), 1000);
     } catch (err) {
       console.log(err.response.data.error || err.message);
@@ -78,7 +77,7 @@ function Post_modal() {
     try {
       await downPostApi(token, curPostId);
       setIsAnimatingDownPost(true);
-      getPost();
+      setReloadPost(true);
       setTimeout(() => setIsAnimatingDownPost(false), 1000);
     } catch (err) {
       console.log(err.response.data.error || err.message);
@@ -88,7 +87,7 @@ function Post_modal() {
     try {
       const result = await addCommentApi(token, input, curPostId);
       setInput("");
-      getPost();
+      setReloadPost(true);
     } catch (err) {
       console.log(err.response.data.error || err.message);
     }
@@ -96,7 +95,7 @@ function Post_modal() {
   const hdlDelComment = async (commentId) => {
     try {
       await delCommentApi(token, commentId);
-      getPost();
+      setReloadPost(true);
     } catch (err) {
       console.log(err?.response?.data?.error || err.message);
     }
@@ -123,6 +122,12 @@ function Post_modal() {
   };
   const hdlReportPost = () => {
     document.getElementById("report-post-modal").showModal();
+  };
+  const hdlDeletePost = () => {
+    document.getElementById("post-delete-modal").showModal();
+  };
+  const hdlEditPost = () => {
+    document.getElementById("post-edit-modal").showModal();
   };
   useEffect(() => {
     if (curPostId) {
@@ -169,11 +174,17 @@ function Post_modal() {
                   {post?.userId == user.id && (
                     <>
                       {/* Edit button */}
-                      <button className="btn w-[50px] h-[50px] text-my-text text-opacity-50 rounded-full text-xl font-bold flex justify-center items-center bg-transparent border-none shadow-none hover:bg-opacity-10 relative ">
+                      <button
+                        className="btn w-[50px] h-[50px] text-my-text text-opacity-50 rounded-full text-xl font-bold flex justify-center items-center bg-transparent border-none shadow-none hover:bg-opacity-10 relative"
+                        onClick={hdlEditPost}
+                      >
                         <MdModeEdit className="absolute" />
                       </button>
                       {/* Delete button */}
-                      <button className="btn w-[50px] h-[50px] text-my-text text-opacity-50 rounded-full text-xl font-bold flex justify-center items-center bg-transparent border-none shadow-none hover:bg-opacity-10 relative ">
+                      <button
+                        className="btn w-[50px] h-[50px] text-my-text text-opacity-50 rounded-full text-xl font-bold flex justify-center items-center bg-transparent border-none shadow-none hover:bg-opacity-10 relative"
+                        onClick={hdlDeletePost}
+                      >
                         <IoTrashBin className="absolute" />
                       </button>
                     </>
@@ -202,6 +213,8 @@ function Post_modal() {
               </div>
             </div>
           </div>
+          {/* category */}
+          <Post_category cat={post?.category} />
           {/* text content area */}
           <div>
             <p className="text-2xl">{post?.content}</p>

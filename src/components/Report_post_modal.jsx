@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getReportPostReasonApi, reportPostApi } from "../apis/post-api";
 import useUserStore from "../stores/userStore";
 import usePostStore from "../stores/postStore";
-function Report_post() {
+function Report_post_modal() {
   const [reasons, setReasons] = useState([]);
   const [input, setInput] = useState("");
   const curPostId = usePostStore((state) => state.curPostId);
@@ -95,4 +95,4 @@ function Report_post() {
   );
 }
 
-export default Report_post;
+export default Report_post_modal;

@@ -9,7 +9,7 @@ import {
 } from "../apis/post-api";
 import useUserStore from "../stores/userStore";
 import usePostStore from "../stores/postStore";
-function Report_user() {
+function Report_user_modal() {
   const [reasons, setReasons] = useState([]);
   const [input, setInput] = useState("");
   const [reportedUser, setReportedUser] = useState({});
@@ -45,7 +45,9 @@ function Report_user() {
     getReportUserReason();
   }, []);
   useEffect(() => {
-    getReportedUser();
+    if (curUserId) {
+      getReportedUser();
+    }
   }, [curUserId]);
   return (
     <div
@@ -54,7 +56,7 @@ function Report_user() {
         e.stopPropagation();
       }}
     >
-      <button onClick={() => console.log(curUserId)}>input</button>
+      {/* <button onClick={() => console.log(curUserId)}>input</button> */}
       <div className="flex justify-between">
         <p className="text-xl flex items-baseline">
           <MdOutlineReport className="text-4xl translate-y-1 text-my-prim" />
@@ -124,4 +126,4 @@ function Report_user() {
   );
 }
 
-export default Report_user;
+export default Report_user_modal;

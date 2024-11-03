@@ -7,8 +7,14 @@ import usePostStore from "../stores/postStore";
 import { FaImage } from "react-icons/fa";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoTrashBin } from "react-icons/io5";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
 import { getUserForNewPostApi } from "../apis/post-api";
+import { IoNewspaper } from "react-icons/io5";
+import { IoIosAlert } from "react-icons/io";
+import { RiShoppingBasketFill } from "react-icons/ri";
+import { MdOutlineWork } from "react-icons/md";
+import { BsChatLeftDotsFill } from "react-icons/bs";
+import { VscThreeBars } from "react-icons/vsc";
 import {
   MapContainer,
   TileLayer,
@@ -21,7 +27,8 @@ import {
   LayerGroup,
 } from "react-leaflet";
 import useUserStore from "../stores/userStore";
-function Post_new() {
+import Post_category from "./Post_category";
+function Post_new_modal() {
   const token = useUserStore((state) => state.token);
   const files = usePostStore((state) => state.files);
   const setFiles = usePostStore((state) => state.setFiles);
@@ -45,7 +52,7 @@ function Post_new() {
       cat: "",
     });
     setFiles([]);
-    setUser({});
+    // setUser({});
     setMarkerPosition({ lat: null, lng: null });
     document.getElementById("post-new-modal").close();
   };
@@ -137,17 +144,18 @@ function Post_new() {
           </div>
         </div>
       </div>
+
       {/* text area */}
       <textarea
         placeholder="What's on your mind..."
-        className="bg-my-text bg-opacity-5 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full"
+        className="bg-slate-50 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full shadow-md"
         value={input.txt}
         onChange={(e) => setInput((prv) => ({ ...prv, txt: e.target.value }))}
       />
       {/* map and picture area */}
       <div className="flex gap-5">
         <div className="flex-1 w-1/2 flex flex-col gap-2">
-          <div className="border h-full rounded-xl bg-slate-50">
+          <div className="border h-full rounded-xl bg-slate-50 shadow-md">
             <input
               type="file"
               id="input-file"
@@ -157,33 +165,42 @@ function Post_new() {
               onChange={hdlFileChange}
             />
             {/* picture lists */}
-            <div className="flex flex-col gap-2 p-3 max-h-[600px] overflow-auto">
+            <div className="flex flex-col gap-2 px-2 max-h-[600px] overflow-auto">
               {files.length > 0 ? (
-                <AnimatePresence>
-                  {files.map((el, idx) => (
-                    <motion.div
-                      key={el.idx} // Use a unique key like el.name or el.url if available
-                      className="w-full border rounded-xl bg-my-bg-card px-2 flex items-center justify-between shadow-md"
-                      initial={{ opacity: 1 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={URL.createObjectURL(el)}
-                          alt="no load"
-                          className="w-[100px] h-[100px] object-cover rounded-xl"
-                        />
-                        <p>{el.name}</p>
-                      </div>
-                      <IoTrashBin
-                        className="p-2 text-[40px] text-my-acct cursor-pointer hover:text-my-btn-hover"
-                        onClick={() => removeImage(idx)}
-                      />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                <Reorder.Group axis="y" values={files} onReorder={setFiles}>
+                  <AnimatePresence>
+                    {files.map((el, idx) => (
+                      <Reorder.Item
+                        key={el.name} // Use a unique key like el.name or el.url if available
+                        value={el}
+                      >
+                        <motion.div
+                          className="w-full border rounded-xl bg-my-bg-card px-2 flex items-center justify-between shadow-md p-2 my-2"
+                          initial={{ opacity: 1, x: 0 }} // Starting position
+                          animate={{ opacity: 1, x: 0 }} // Keep it in the same position
+                          exit={{ opacity: 0, x: -20 }} // Move left and fade out
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={URL.createObjectURL(el)}
+                              alt="no load"
+                              className="w-[100px] h-[100px] object-cover rounded-xl"
+                            />
+                            <p className="flex-1">{el.name}</p>
+                          </div>
+                          <div className="flex items-center">
+                            <VscThreeBars className="text-2xl text-my-text text-opacity-20" />
+                            <IoTrashBin
+                              className="p-2 text-[40px] text-my-acct cursor-pointer hover:text-my-btn-hover"
+                              onClick={() => removeImage(idx)}
+                            />
+                          </div>
+                        </motion.div>
+                      </Reorder.Item>
+                    ))}
+                  </AnimatePresence>
+                </Reorder.Group>
               ) : (
                 <div
                   className="w-full min-h-[300px] flex flex-col justify-center items-center text-my-text text-opacity-50 cursor-pointer"
@@ -196,7 +213,7 @@ function Post_new() {
             </div>
           </div>
           <button
-            className="btn btn-primary bg-my-acct border-none  hover:bg-my-acct-hover  text-white"
+            className="btn btn-primary bg-my-acct border-none  hover:bg-my-acct-hover  text-white shadow-md"
             onClick={() => document.getElementById("input-file").click()}
           >
             <FaImage className="text-2xl" />
@@ -204,7 +221,7 @@ function Post_new() {
           </button>
         </div>
         <div className="flex flex-col w-1/2 gap-2">
-          <div className="h-[400px] w-full rounded-xl overflow-hidden">
+          <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
               center={[13.721792197183028, 100.4980552161973]}
               zoom={16}
@@ -225,30 +242,58 @@ function Post_new() {
               )}
             </MapContainer>
           </div>
-          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl gap-5 bg-slate-50">
+          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl gap-5 bg-slate-50 shadow-md">
             {/* category */}
             <p className="m-2 font-bold">Category</p>
             <div className="relative inline-block w-full px-10">
-              <select
-                defaultValue={input.cat}
-                className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300"
-                value={input.cat}
-                onChange={(e) =>
-                  setInput((prv) => ({ ...prv, cat: e.target.value }))
-                }
-              >
-                <option value="" disabled>
-                  Select an option
-                </option>
-                <option value="ALERT">Alert</option>
-                <option value="NEWS">News</option>
-                <option value="SHOP">Shop</option>
-                <option value="JOB">Job</option>
-                <option value="OTHER">Other</option>
-              </select>
+              <div className="flex gap-4 items-center">
+                {input.cat === "ALERT" && (
+                  <div className="bg-my-cat-alert p-2 rounded-full shadow-lg">
+                    <IoIosAlert className="text-2xl text-white" />
+                  </div>
+                )}
+                {input.cat === "NEWS" && (
+                  <div className="bg-my-cat-news p-2 rounded-full shadow-lg">
+                    <IoNewspaper className="text-2xl text-white" />
+                  </div>
+                )}
+                {input.cat === "SHOP" && (
+                  <div className="bg-my-cat-shop p-2 rounded-full shadow-lg">
+                    <RiShoppingBasketFill className="text-2xl text-white" />
+                  </div>
+                )}
+                {input.cat === "JOB" && (
+                  <div className="bg-my-cat-job p-2 rounded-full shadow-lg">
+                    <MdOutlineWork className="text-2xl text-white" />
+                  </div>
+                )}
+                {input.cat === "OTHER" && (
+                  <div className="bg-my-cat-other p-2 rounded-full shadow-lg">
+                    <BsChatLeftDotsFill className="text-2xl text-white" />
+                  </div>
+                )}
+
+                <select
+                  defaultValue={input.cat}
+                  className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300"
+                  value={input.cat}
+                  onChange={(e) =>
+                    setInput((prv) => ({ ...prv, cat: e.target.value }))
+                  }
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="ALERT">Alert</option>
+                  <option value="NEWS">News</option>
+                  <option value="SHOP">Shop</option>
+                  <option value="JOB">Job</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl bg-slate-50">
+          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl bg-slate-50 shadow-md">
             {/* duration */}
             <p className="m-2 font-bold">Post duration</p>
             <div className="bg-white rounded-lg p-6 w-full flex gap-1">
@@ -270,7 +315,7 @@ function Post_new() {
 
       {/* send button */}
       <button
-        className="btn btn-primary bg-my-secon hover:bg-my-secon-hover border-none text-lg text-white items-center"
+        className="btn btn-primary bg-my-secon hover:bg-my-secon-hover border-none text-lg text-white items-center shadow-md"
         onClick={hdlNewPost}
       >
         <IoSendSharp className="text-2xl -translate-y-[2px]" />
@@ -287,4 +332,4 @@ function Post_new() {
   );
 }
 
-export default Post_new;
+export default Post_new_modal;

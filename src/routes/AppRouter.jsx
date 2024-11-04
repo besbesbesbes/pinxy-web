@@ -7,6 +7,9 @@ import Login from "../pages/Login";
 import App from "../App";
 import useUserStore from "../stores/userStore";
 import Admin from "../pages/Admin";
+import LayoutAdmin from "../layouts/LayoutAdmin";
+import PostManage from "../pages/admin/PostManage";
+import UserManage from "../pages/admin/UserManage";
 
 const guestRouter = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -15,7 +18,14 @@ const guestRouter = createBrowserRouter([
 
 const userRouter = createBrowserRouter([
   { path: "/", element: <App /> },
-  { path: "/admin", element: <Admin /> },
+  { path: "/admin",
+     element: <LayoutAdmin />,
+     children : [
+      {index : true,element: <PostManage />},
+      { path : 'usermanage', element : <UserManage />},
+     ]
+
+     },
   { path: "*", element: <Navigate to="/" /> },
 ]);
 

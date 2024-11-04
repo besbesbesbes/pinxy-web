@@ -7,6 +7,9 @@ import {
 import App from "../App";
 import useUserStore from "../stores/userStore";
 import Admin from "../pages/Admin";
+import LayoutAdmin from "../layouts/LayoutAdmin";
+import PostManage from "../pages/admin/PostManage";
+import UserManage from "../pages/admin/UserManage";
 import Landing from "../pages/Landing"
 
 import Pinxy from "../pinxy";
@@ -19,7 +22,15 @@ const guestRouter = createBrowserRouter([
 
 const userRouter = createBrowserRouter([
   { path: "/", element: <Pinxy /> },
-  { path: "/admin", element: <Admin /> },
+  {
+    path: "/admin",
+    element: <LayoutAdmin />,
+    children: [
+      { index: true, element: <PostManage /> },
+      { path: 'usermanage', element: <UserManage /> },
+    ]
+
+  },
   { path: "*", element: <Navigate to="/" /> },
 ]);
 

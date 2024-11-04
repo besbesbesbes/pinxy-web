@@ -15,6 +15,8 @@ import { RiShoppingBasketFill } from "react-icons/ri";
 import { MdOutlineWork } from "react-icons/md";
 import { BsChatLeftDotsFill } from "react-icons/bs";
 import { VscThreeBars } from "react-icons/vsc";
+import createError from "../utils/createError";
+import useErrStore from "../stores/errStore";
 import {
   MapContainer,
   TileLayer,
@@ -30,6 +32,7 @@ import useUserStore from "../stores/userStore";
 import Post_category from "./Post_category";
 function Post_new_modal() {
   const token = useUserStore((state) => state.token);
+  const setErrTxt = useErrStore((state) => state.setErrTxt);
   const files = usePostStore((state) => state.files);
   const setFiles = usePostStore((state) => state.setFiles);
   const [rangeVal, setRangeVal] = useState(24);
@@ -78,11 +81,11 @@ function Post_new_modal() {
       setLoading(true);
       // validate
       if (Object.values(input).some((v) => v === "")) {
-        console.log("Miss information");
+        createError(setErrTxt, "Miss some information...");
         return;
       }
       if (files.length > 10) {
-        console.log("Maximum upload 10 images per time");
+        createError(setErrTxt, "Maximum upload 10 images per time...");
         return;
       }
       const body = new FormData();
@@ -98,6 +101,7 @@ function Post_new_modal() {
       console.log(result.data);
       hdlClosePopup();
     } catch (err) {
+      createError(setErrTxt, err.response.data.error);
       console.log(err?.response?.data?.error || err.message);
     } finally {
       setLoading(false);

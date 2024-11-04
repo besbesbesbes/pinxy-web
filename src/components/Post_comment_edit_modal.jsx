@@ -6,8 +6,11 @@ import { IoSendSharp } from "react-icons/io5";
 import { format } from "timeago.js";
 import { editCommentApi } from "../apis/post-api";
 import useUserStore from "../stores/userStore";
+import createError from "../utils/createError";
+import useErrStore from "../stores/errStore";
 function Post_comment_edit_modal() {
   const token = useUserStore((state) => state.token);
+  const setErrTxt = useErrStore((state) => state.setErrTxt);
   const curPostId = usePostStore((state) => state.curPostId);
   const setCurPostId = usePostStore((state) => state.setCurPostId);
   const curCommentId = usePostStore((state) => state.curCommentId);
@@ -36,6 +39,7 @@ function Post_comment_edit_modal() {
       setReloadPost(true);
       hdlClosePopup();
     } catch (err) {
+      createError(setErrTxt, err.response.data.error);
       console.log(err.response.data.error || err.message);
     }
   };

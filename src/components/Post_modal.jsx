@@ -1,3 +1,4 @@
+// import OpenAI from "openai";
 import { IoIosClose } from "react-icons/io";
 import usePostStore from "../stores/postStore";
 import { useEffect, useState } from "react";
@@ -19,8 +20,11 @@ import { MdModeEdit } from "react-icons/md";
 import "animate.css/animate.min.css";
 import useUserStore from "../stores/userStore";
 import Post_category from "./Post_category";
+import createError from "../utils/createError";
+import useErrStore from "../stores/errStore";
 
 function Post_modal() {
+  // const openai = new OpenAI();
   const token = useUserStore((state) => state.token);
   const curPostId = usePostStore((state) => state.curPostId);
   const setCurPostId = usePostStore((state) => state.setCurPostId);
@@ -28,6 +32,7 @@ function Post_modal() {
   const setCurCommentId = usePostStore((state) => state.setCurCommentId);
   const reloadPost = usePostStore((state) => state.reloadPost);
   const setReloadPost = usePostStore((state) => state.setReloadPost);
+  const setErrTxt = useErrStore((state) => state.setErrTxt);
   const [post, setPost] = useState(null);
   const [user, setUser] = useState({});
   const [comments, setComments] = useState([]);
@@ -85,10 +90,16 @@ function Post_modal() {
   };
   const hdlAddComment = async () => {
     try {
+      if (!input) {
+        createError(setErrTxt, "Please input comment...");
+        return;
+      }
       const result = await addCommentApi(token, input, curPostId);
+      console.log(result.data);
       setInput("");
       setReloadPost(true);
     } catch (err) {
+      createError(setErrTxt, err.response.data.error);
       console.log(err.response.data.error || err.message);
     }
   };

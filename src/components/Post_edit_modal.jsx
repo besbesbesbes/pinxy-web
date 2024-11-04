@@ -15,6 +15,8 @@ import { MdOutlineWork } from "react-icons/md";
 import { BsChatLeftDotsFill } from "react-icons/bs";
 import { MdModeEdit } from "react-icons/md";
 import { VscThreeBars } from "react-icons/vsc";
+import createError from "../utils/createError";
+import useErrStore from "../stores/errStore";
 import {
   MapContainer,
   TileLayer,
@@ -29,6 +31,7 @@ import {
 
 function Post_edit_modal() {
   const token = useUserStore((state) => state.token);
+  const setErrTxt = useErrStore((state) => state.setErrTxt);
   const curPostId = usePostStore((state) => state.curPostId);
   const [post, setPost] = useState(null);
   const [user, setUser] = useState({});
@@ -119,7 +122,6 @@ function Post_edit_modal() {
         console.log("Maximum upload 10 images per time");
         return;
       }
-
       const body = new FormData();
       body.append("postId", curPostId);
       body.append("txt", input.txt);
@@ -136,6 +138,7 @@ function Post_edit_modal() {
       getPost();
       hdlClosePopup();
     } catch (err) {
+      createError(setErrTxt, err.response.data.error);
       console.log(err?.response?.data?.error || err.message);
     } finally {
       setLoading(false);

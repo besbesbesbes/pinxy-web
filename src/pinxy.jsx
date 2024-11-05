@@ -9,8 +9,10 @@ import ProfileBio from "./components/ProfileBio";
 import Post_form from "./components/Post_form";
 import Post_post from "./components/Post_post";
 import Modal from "./components/Modal";
-import useUserStore from './stores/userStore';
-import { getProfile } from './api/userProfile';
+import useUserStore from "./stores/userStore";
+import ProfileCard from "./components/ProfileCard";
+import usePostStore from "./stores/postStore";
+import { getProfile } from "./api/userProfile";
 import {
   getAllPost,
   getAllPostByCategory,
@@ -19,13 +21,11 @@ import {
 } from "./api/search";
 import useStore from "./stores/geoStore";
 
-
 const Pinxy = () => {
-
-  const user = useUserStore((state) => state.user)
-  const { id } = user
-  console.log("user", user)
-  const [profileData, setProfileData] = useState({})
+  const user = useUserStore((state) => state.user);
+  const { id } = user;
+  console.log("user", user);
+  const [profileData, setProfileData] = useState({});
   const [posts, setPosts] = useState([
     { id: 1 },
     { id: 2 },
@@ -53,13 +53,16 @@ const Pinxy = () => {
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
+  const clearPostForAI = usePostStore((state) => state.clearPostForAI);
 
   useEffect(() => {
-    getProfileData(id)
+    getProfileData(id);
 
     if (categoryOption) {
+      clearPostForAI();
       handleGetAllPostByCategory();
     } else {
+      clearPostForAI();
       handleGetAllPost();
     }
   }, [categoryOption, userPosition, distance, sortOption, orderOption]);
@@ -116,14 +119,13 @@ const Pinxy = () => {
 
   const getProfileData = async (id) => {
     try {
-      const resp = await getProfile(id)
-      setProfileData(resp.data)
-
+      const resp = await getProfile(id);
+      setProfileData(resp.data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
-  console.log("ProfileData", profileData)
+  };
+  console.log("ProfileData", profileData);
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -143,7 +145,7 @@ const Pinxy = () => {
 
   return (
     <div className="min-h-screen bg-my-bg-main flex">
-        <Sidebar setCategoryOption={setCategoryOption} />
+      <Sidebar setCategoryOption={setCategoryOption} />
       <main className="flex-1 ml-64">
         {" "}
         {/* Adjust margin-left for sidebar and padding-top for navbar */}
@@ -161,8 +163,7 @@ const Pinxy = () => {
             <div className="lg:col-span-2 space-y-2">
               <ProfileCard profileData={profileData} />
               {userId && <ProfileBio />}
-              <Post_form
-              />
+              <Post_form />
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
@@ -170,11 +171,8 @@ const Pinxy = () => {
                 setOrderOption={setOrderOption}
               />
               <div className="space-y-2">
-                {/* {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))} */}
-                {posts.map((post) => (
-                  <div key={post.id}>Post ID: {post.postId}</div>
+                {posts.map((post, idx) => (
+                  <Post_post key={idx} postId={post.postId} />
                 ))}
               </div>
             </div>

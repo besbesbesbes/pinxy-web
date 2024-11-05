@@ -19,6 +19,15 @@ export default {
         "my-cat-job": "#40b449",
         "my-cat-other": "#614399",
       },
+      animation: {
+        blink: 'blink 5s infinite',
+      },
+      keyframes: {
+        blink: {
+          '0%, 100%': { borderColor: 'transparent' },
+          '50%': { borderColor: '#4B5563' },
+        },
+      },
     },
   },
   plugins: [require("daisyui")],

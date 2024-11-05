@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
-const PostFilters = () => {
-  const [sortOption, setSortOption] = useState("");
-
+const PostFilters = ({
+  sortOption,
+  setSortOption,
+  orderOption,
+  setOrderOption,
+}) => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mb-6 w-full">
       <div className="flex flex-wrap gap-3 justify-center">
@@ -19,29 +22,30 @@ const PostFilters = () => {
           <option value="upVote">Vote</option>
         </select>
 
-        {/* แสดง dropdown ที่สองเฉพาะเมื่อเลือก sortOption แล้ว */}
-        {sortOption && (
-          <select className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {sortOption === "distance" && (
-              <>
-                <option value="desc">Farthest</option>
-                <option value="asc">Nearest</option>
-              </>
-            )}
-            {sortOption === "createdAt" && (
-              <>
-                <option value="desc">Newest</option>
-                <option value="asc">Oldest</option>
-              </>
-            )}
-            {sortOption === "upVote" && (
-              <>
-                <option value="desc">Most Popular</option>
-                <option value="asc">Least Popular</option>
-              </>
-            )}
-          </select>
-        )}
+        <select
+          className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={orderOption}
+          onChange={(e) => setOrderOption(e.target.value)}
+        >
+          {sortOption === "distance" && (
+            <>
+              <option value="desc">Farthest</option>
+              <option value="asc">Nearest</option>
+            </>
+          )}
+          {sortOption === "createdAt" && (
+            <>
+              <option value="desc">Newest</option>
+              <option value="asc">Oldest</option>
+            </>
+          )}
+          {sortOption === "upVote" && (
+            <>
+              <option value="desc">Most Popular</option>
+              <option value="asc">Least Popular</option>
+            </>
+          )}
+        </select>
       </div>
     </div>
   );

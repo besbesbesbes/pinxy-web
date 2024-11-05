@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import ProfileCard from './components/ProfileCard';
 import PostCard from './components/PostCard';
 import PostForm from './components/PostForm';
 import EventMap from './components/EventMap';
@@ -10,6 +9,8 @@ import Sidebar from './components/Sidebar';
 import useUserStore from './stores/userStore';
 import { getProfile } from './api/userProfile';
 
+import PostFilters from './components/PostFilters';
+import ProfileBio from './components/ProfileBio';
 
 const Pinxy = () => {
 
@@ -85,18 +86,18 @@ const Pinxy = () => {
     <div className="min-h-screen bg-gray-100 flex">
       <Sidebar />
 
-      <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <header className="mb-8">
-            <div className="flex justify-between items-center">
-              <Navbar />
-            </div>
+      <main className="flex-1 ml-64 pt-16"> {/* Adjust margin-left for sidebar and padding-top for navbar */}
+        <div className="max-w-full mx-auto px-4">
+          <header className="sticky top-0 z-10 mb-8"> {/* Make header sticky */}
+            <Navbar />
           </header>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <ProfileCard profileData={profileData} />
+              <ProfileBio />
               <PostForm handleSubmit={handleSubmit} content={content} setContent={setContent} />
+              <PostFilters />
               <div className="space-y-4">
                 {posts.map((post) => (
                   <PostCard key={post.id} post={post} />
@@ -104,10 +105,13 @@ const Pinxy = () => {
               </div>
             </div>
 
-            <div className="space-y-6">
-              <EventMap posts={posts} distance={distance} setDistance={setDistance} />
-              <SearchUser />
-              <FollowBar followers={followers} />
+            {/* Fixed Sidebar Content */}
+            <div className="lg:col-span-1 sticky top-4 h-[calc(100vh-8rem)] overflow-y-auto"> {/* Adjust height */}
+              <div className="space-y-6">
+                <EventMap posts={posts} distance={distance} setDistance={setDistance} />
+                <SearchUser />
+                <FollowBar followers={followers} />
+              </div>
             </div>
           </div>
         </div>

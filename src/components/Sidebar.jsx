@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Home,
   Calendar,
@@ -11,11 +11,12 @@ import {
   Earth
 } from 'lucide-react';
 
-const MenuItem = ({ icon: Icon, label, active = false }) => (
+const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
     <button 
+      onClick={onClick} // กำหนด onClick เพื่อเรียกใช้ฟังก์ชันเมื่อคลิก
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
-        ${active 
+        ${isActive 
           ? 'bg-blue-500 text-white' 
           : 'text-gray-700 hover:bg-gray-100'
         }`}
@@ -27,8 +28,10 @@ const MenuItem = ({ icon: Icon, label, active = false }) => (
 );
 
 const Sidebar = () => {
+  const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
+
   return (
-    <div className="bg-gray-50 fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg"> {/* เพิ่ม fixed ที่นี่ */}
+    <div className="bg-gray-50 fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg">
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-4">
@@ -45,19 +48,54 @@ const Sidebar = () => {
       {/* Menu Items */}
       <nav className="flex-1 overflow-y-auto p-4">
         <ul className="space-y-2">
-          <MenuItem icon={Home} label="Home" active />
-          <MenuItem icon={ShieldAlert} label="Alert" />
-          <MenuItem icon={Calendar} label="Events" />
-          <MenuItem icon={ShoppingBag} label="Shop" />
-          <MenuItem icon={Briefcase} label="Jobs" />
-          <MenuItem icon={Earth} label="Other" />
+          <MenuItem 
+            icon={Home} 
+            label="Home" 
+            isActive={activeMenu === "Home"} 
+            onClick={() => setActiveMenu("Home")} 
+          />
+          <MenuItem 
+            icon={ShieldAlert} 
+            label="Alert" 
+            isActive={activeMenu === "Alert"} 
+            onClick={() => setActiveMenu("Alert")} 
+          />
+          <MenuItem 
+            icon={Calendar} 
+            label="Events" 
+            isActive={activeMenu === "Events"} 
+            onClick={() => setActiveMenu("Events")} 
+          />
+          <MenuItem 
+            icon={ShoppingBag} 
+            label="Shop" 
+            isActive={activeMenu === "Shop"} 
+            onClick={() => setActiveMenu("Shop")} 
+          />
+          <MenuItem 
+            icon={Briefcase} 
+            label="Jobs" 
+            isActive={activeMenu === "Jobs"} 
+            onClick={() => setActiveMenu("Jobs")} 
+          />
+          <MenuItem 
+            icon={Earth} 
+            label="Other" 
+            isActive={activeMenu === "Other"} 
+            onClick={() => setActiveMenu("Other")} 
+          />
         </ul>
       </nav>
 
       {/* Bottom Actions */}
       <div className="p-4 border-t">
         <ul className="space-y-2">
-          <MenuItem icon={Settings} label="Settings" />
+          <MenuItem 
+            icon={Settings} 
+            label="Settings" 
+            isActive={activeMenu === "Settings"} 
+            onClick={() => setActiveMenu("Settings")} 
+          />
           <li>
             <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors">
               <LogOut className="h-5 w-5" />

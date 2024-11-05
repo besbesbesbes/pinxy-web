@@ -9,3 +9,7 @@ export const userRegister = (registerData) => {
 export const userLogin = (loginData) => {
     return axios.post(`${baseUrl}/auth/login`, loginData)
 }
+
+export const userLoginGoogle = (token) => {
+    return axios.post(`${baseUrl}/auth/google_api`, { token })
+}

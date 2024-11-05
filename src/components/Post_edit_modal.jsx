@@ -1,8 +1,8 @@
 import { IoIosClose } from "react-icons/io";
 import useUserStore from "../stores/userStore";
 import usePostStore from "../stores/postStore";
-import { getPostApi, editPostApi } from "../apis/post-api";
-import { useState, useEffect } from "react";
+import { getPostApi, editPostApi, getAiSentimentApi } from "../apis/post-api";
+import { useState, useEffect, useRef } from "react";
 import { format } from "timeago.js";
 import { FaImage } from "react-icons/fa";
 import { RiImageAddFill } from "react-icons/ri";
@@ -17,6 +17,7 @@ import { MdModeEdit } from "react-icons/md";
 import { VscThreeBars } from "react-icons/vsc";
 import createError from "../utils/createError";
 import useErrStore from "../stores/errStore";
+import { AiFillOpenAI } from "react-icons/ai";
 import {
   MapContainer,
   TileLayer,
@@ -42,6 +43,8 @@ function Post_edit_modal() {
   const setReloadPost = usePostStore((state) => state.setReloadPost);
   const [tempFiles, setTempFiles] = useState(files);
   const [imagesToDelete, setImagesToDelete] = useState([]);
+  const [sentiment, setSentiment] = useState("Neutral");
+  const [isSentimentLoading, setIsSentimentLoading] = useState(false);
   const [input, setInput] = useState({
     txt: "",
     lat: "",
@@ -63,6 +66,8 @@ function Post_edit_modal() {
   const hdlClosePopup = (e) => {
     setFiles([]);
     setImagesToDelete([]);
+    setSentiment("Neutral");
+    setIsSentimentLoading(false);
     document.getElementById("post-edit-modal").close();
   };
   const getPost = async () => {
@@ -144,11 +149,36 @@ function Post_edit_modal() {
       setLoading(false);
     }
   };
+  const getSentiment = async (e) => {
+    console.log("Call ai sentiment");
+    try {
+      setIsSentimentLoading(true);
+      const resp = await getAiSentimentApi(token, input.txt);
+      setSentiment(resp.data.sentiment);
+    } catch (err) {
+      console.log(err?.response?.data?.error || err.message);
+    } finally {
+      setIsSentimentLoading(false);
+    }
+  };
+  const typingTimerRef = useRef(null);
+  const hdlTextInputChange = (e) => {
+    setInput((prev) => ({ ...prev, txt: e.target.value }));
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+    typingTimerRef.current = setTimeout(() => {
+      console.log("Call sentiment");
+      getSentiment();
+    }, 1000);
+  };
+
   useEffect(() => {
     if (curPostId) {
       getPost();
     }
   }, [curPostId]);
+
   return (
     <div
       className="w-6/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col p-10 rounded-xl gap-5 "
@@ -157,6 +187,9 @@ function Post_edit_modal() {
       }}
     >
       {/* <button onClick={() => console.log(post)}>post</button> */}
+      {/* <button onClick={() => console.log(markerPosition)}>
+        markerPosition
+      </button> */}
       <div
         className="flex flex-col gap-5 overflow-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "auto" }}
@@ -194,12 +227,26 @@ function Post_edit_modal() {
         </div>
       </div>
       {/* text area */}
-      <textarea
-        placeholder="What's on your mind..."
-        className="bg-slate-50 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full shadow-md"
-        value={input.txt}
-        onChange={(e) => setInput((prv) => ({ ...prv, txt: e.target.value }))}
-      />
+      <div className="relative">
+        <textarea
+          onBlur={getSentiment}
+          placeholder="What's on your mind..."
+          className="bg-slate-50 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full shadow-md"
+          value={input.txt}
+          onChange={hdlTextInputChange}
+        />
+        {/* sentiment */}
+        {sentiment && (
+          <div className="absolute bottom-0 right-0 px-2 py-1 bg-blue-500 text-white italic rounded-full flex items-center gap-1 -translate-x-3 -translate-y-3">
+            {isSentimentLoading ? (
+              <span className="loading loading-spinner w-[20px]"></span>
+            ) : (
+              <AiFillOpenAI className="text-xl" />
+            )}
+            {sentiment}
+          </div>
+        )}
+      </div>
       {/* map and picture area */}
       <div className="flex gap-5">
         <div className="flex-1 w-1/2 flex flex-col gap-2">
@@ -316,7 +363,7 @@ function Post_edit_modal() {
         <div className="flex flex-col w-1/2 gap-2">
           <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
-              center={[13.721792197183028, 100.4980552161973]}
+              center={[13.75848253693764, 100.53602035822]}
               zoom={16}
               scrollWheelZoom={false}
               dragging={false}

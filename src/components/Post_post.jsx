@@ -6,7 +6,9 @@ import usePostStore from "../stores/postStore";
 import { getPostApi, upPostApi, downPostApi } from "../apis/post-api";
 import useUserStore from "../stores/userStore";
 import { div } from "framer-motion/client";
-function Post_post() {
+import { FaCommentDots } from "react-icons/fa";
+import useGeoStore from "../stores/geoStore";
+function Post_post({ postId }) {
   const token = useUserStore((state) => state.token);
   const [post, setPost] = useState(null);
   const [user, setUser] = useState({});
@@ -16,10 +18,17 @@ function Post_post() {
   const setReloadPost = usePostStore((state) => state.setReloadPost);
   const curPostId = usePostStore((state) => state.curPostId);
   const setCurPostId = usePostStore((state) => state.setCurPostId);
+  const updateUserPosition = useGeoStore((state) => state.updateUserPosition);
+  const addPostForAI = usePostStore((state) => state.addPostForAI);
+  const clearPostForAI = usePostStore((state) => state.clearPostForAI);
+  const postForAI = usePostStore((state) => state.postForAI);
   const hdlShowPost = () => {
+    setCurPostId(postId);
+    updateUserPosition();
     document.getElementById("post-modal").showModal();
   };
   const hdlUpPost = async () => {
+    setCurPostId(postId);
     try {
       await upPostApi(token, curPostId);
       setIsAnimatingUpPost(true);
@@ -30,6 +39,7 @@ function Post_post() {
     }
   };
   const hdlDownPost = async () => {
+    setCurPostId(postId);
     try {
       await downPostApi(token, curPostId);
       setIsAnimatingDownPost(true);
@@ -41,20 +51,18 @@ function Post_post() {
   };
   const getPost = async () => {
     try {
-      const result = await getPostApi(token, curPostId);
+      const result = await getPostApi(token, postId);
       console.log(result.data.resPost);
-      console.log(result.data.user);
       setPost(result.data.resPost);
       setUser(result.data.user);
+      addPostForAI(result.data.resPost.content);
     } catch (err) {
       console.log(err.response.data.error || err.message);
     }
   };
   useEffect(() => {
-    if (curPostId) {
-      getPost();
-    }
-  }, [curPostId]);
+    getPost();
+  }, []);
   useEffect(() => {
     if (reloadPost) {
       getPost();
@@ -63,11 +71,13 @@ function Post_post() {
   }, [reloadPost]);
   return (
     <div
-      className="w-5/12  min-h-[100px] bg-my-bg-card flex flex-col py-5 px-10 rounded-xl shadow-md"
+      className="w-full  min-h-[100px] bg-my-bg-card flex flex-col py-5 px-10 rounded-xl shadow-md"
       onClick={(e) => {
         e.stopPropagation();
       }}
     >
+      {/* <button onClick={() => console.log(postForAI)}>postForAI</button> */}
+      {/* <button onClick={() => clearPostForAI([])}>clearPostForAI</button> */}
       <div
         className="flex flex-col gap-5 overflow-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "auto" }}
@@ -235,7 +245,7 @@ function Post_post() {
             <p>{post?._count.comments} comments</p>
           </div>
           {/* vote area */}
-          <div className="w-full h-[50px] border-x-0 border-[2px] border-my-text border-opacity-20 flex justify-evenly text-lg text-my-text text-opacity-20 font-bold items-center gap-20">
+          <div className="w-full h-[50px] border-x-0 border-b-0 border-[2px] border-my-text border-opacity-20 flex justify-evenly text-lg text-my-text text-opacity-20 font-bold items-center gap-20 pt-2">
             <button
               className={`flex gap-2 items-baseline hover:text-my-prim cursor-pointer ${
                 isAnimatingUpPost
@@ -247,7 +257,12 @@ function Post_post() {
               <ImArrowUp className="text-2xl font-bold" />
               UP
             </button>
-
+            <button
+              className="flex gap-2 items-baseline cursor-pointer"
+              onClick={hdlShowPost}
+            >
+              <FaCommentDots className="text-2xl font-bold" /> COMMENT
+            </button>
             <button
               className={`flex gap-2 items-baseline hover:text-my-acct cursor-pointer ${
                 isAnimatingDownPost

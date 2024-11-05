@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const PostFilters = () => {
   const [sortOption, setSortOption] = useState("");
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
+    <div className="bg-white rounded-xl shadow-md p-6 mb-6 w-full">
       <div className="flex flex-wrap gap-3 justify-center">
-
-        <select 
+        <select
           className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
         >
-          <option disabled value="">Sort by</option>
+          <option disabled value="">
+            Sort by
+          </option>
           <option value="distance">Distance</option>
           <option value="createdAt">Date</option>
           <option value="upVote">Vote</option>

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { 
+import React, { useState } from "react";
+import {
   Home,
   Calendar,
   ShoppingBag,
@@ -8,20 +8,29 @@ import {
   LogOut,
   User,
   ShieldAlert,
-  Earth
-} from 'lucide-react';
+  // Earth,
+} from "lucide-react";
+import { BsChatLeftDotsFill } from "react-icons/bs";
+import { MdOutlineWork } from "react-icons/md";
+import { RiShoppingBasketFill } from "react-icons/ri";
+import { IoNewspaper } from "react-icons/io5";
+import { IoIosAlert } from "react-icons/io";
+import { RiHome7Fill } from "react-icons/ri";
+import { AiFillOpenAI } from "react-icons/ai";
+import usePostStore from "../stores/postStore";
 
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
-    <button 
+    <button
       onClick={onClick} // กำหนด onClick เพื่อเรียกใช้ฟังก์ชันเมื่อคลิก
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
-        ${isActive 
-          ? 'bg-blue-500 text-white' 
-          : 'text-gray-700 hover:bg-gray-100'
+        ${
+          isActive
+            ? "bg-my-prim text-white"
+            : "text-my-prim text-opacity-60 hover:bg-gray-100"
         }`}
     >
-      <Icon className="h-5 w-5" />
+      <Icon className="h-7 w-7" />
       <span className="font-medium">{label}</span>
     </button>
   </li>
@@ -29,13 +38,20 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
 
 const Sidebar = () => {
   const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
+  const setAiSummaryTrigger = usePostStore(
+    (state) => state.setAiSummaryTrigger
+  );
+  const hdlAISummary = () => {
+    setAiSummaryTrigger(true);
+    document.getElementById("ai-summary-modal").showModal();
+  };
 
   return (
-    <div className="bg-gray-50 fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg">
+    <div className="bg-my-bg-card fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg text-xl">
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-my-prim flex items-center justify-center">
             <User className="h-6 w-6 text-white" />
           </div>
           <div>
@@ -46,58 +62,69 @@ const Sidebar = () => {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex-1 overflow-y-auto p-4">
-        <ul className="space-y-2">
-          <MenuItem 
-            icon={Home} 
-            label="Home" 
-            isActive={activeMenu === "Home"} 
-            onClick={() => setActiveMenu("Home")} 
-          />
-          <MenuItem 
-            icon={ShieldAlert} 
-            label="Alert" 
-            isActive={activeMenu === "Alert"} 
-            onClick={() => setActiveMenu("Alert")} 
-          />
-          <MenuItem 
-            icon={Calendar} 
-            label="Events" 
-            isActive={activeMenu === "Events"} 
-            onClick={() => setActiveMenu("Events")} 
-          />
-          <MenuItem 
-            icon={ShoppingBag} 
-            label="Shop" 
-            isActive={activeMenu === "Shop"} 
-            onClick={() => setActiveMenu("Shop")} 
-          />
-          <MenuItem 
-            icon={Briefcase} 
-            label="Jobs" 
-            isActive={activeMenu === "Jobs"} 
-            onClick={() => setActiveMenu("Jobs")} 
-          />
-          <MenuItem 
-            icon={Earth} 
-            label="Other" 
-            isActive={activeMenu === "Other"} 
-            onClick={() => setActiveMenu("Other")} 
-          />
-        </ul>
-      </nav>
-
+      <div className="flex-1">
+        <nav className="flex-1 overflow-y-auto p-4">
+          <ul className="space-y-2">
+            <MenuItem
+              icon={RiHome7Fill}
+              label="Home"
+              isActive={activeMenu === "Home"}
+              onClick={() => setActiveMenu("Home")}
+            />
+            <MenuItem
+              icon={IoIosAlert}
+              label="Alert"
+              isActive={activeMenu === "Alert"}
+              onClick={() => setActiveMenu("Alert")}
+            />
+            <MenuItem
+              icon={IoNewspaper}
+              label="News"
+              isActive={activeMenu === "News"}
+              onClick={() => setActiveMenu("News")}
+            />
+            <MenuItem
+              icon={RiShoppingBasketFill}
+              label="Shop"
+              isActive={activeMenu === "Shop"}
+              onClick={() => setActiveMenu("Shop")}
+            />
+            <MenuItem
+              icon={MdOutlineWork}
+              label="Jobs"
+              isActive={activeMenu === "Jobs"}
+              onClick={() => setActiveMenu("Jobs")}
+            />
+            <MenuItem
+              icon={BsChatLeftDotsFill}
+              label="Other"
+              isActive={activeMenu === "Other"}
+              onClick={() => setActiveMenu("Other")}
+            />
+          </ul>
+        </nav>
+        {/* ai button */}
+        <div className="flex overflow-y-auto p-4 text-my-secon hover:text-my-secon-hover cursor-pointer">
+          <button
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl border-my-secon transition-colors border transform hover:scale-105 duration-150"
+            onClick={hdlAISummary}
+          >
+            <AiFillOpenAI className="h-7 w-7" />
+            <span className="font-medium">Summary</span>
+          </button>
+        </div>
+      </div>
       {/* Bottom Actions */}
       <div className="p-4 border-t">
         <ul className="space-y-2">
-          <MenuItem 
-            icon={Settings} 
-            label="Settings" 
-            isActive={activeMenu === "Settings"} 
-            onClick={() => setActiveMenu("Settings")} 
-          />
+          {/* <MenuItem
+            icon={Settings}
+            label="Settings"
+            isActive={activeMenu === "Settings"}
+            onClick={() => setActiveMenu("Settings")}
+          /> */}
           <li>
-            <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors">
+            <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-my-acct hover:bg-red-50 transition-colors">
               <LogOut className="h-5 w-5" />
               <span className="font-medium">Logout</span>
             </button>

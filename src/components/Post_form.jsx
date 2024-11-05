@@ -23,7 +23,7 @@ function Post_form() {
   }, []);
   return (
     <div
-      className="w-5/12 min-h-[100px] bg-my-bg-card flex flex-col px-10 py-6 rounded-xl gap-5 shadow-md cursor-pointer"
+      className="w-full min-h-[120px] bg-my-bg-card flex flex-col px-10 py-6 rounded-xl gap-5 shadow-md cursor-pointer"
       onClick={hdlNewPost}
     >
       <div className="flex gap-5">

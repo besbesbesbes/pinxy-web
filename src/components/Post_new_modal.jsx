@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoIosClose } from "react-icons/io";
 import "leaflet/dist/leaflet.css";
 import { IoSendSharp } from "react-icons/io5";
@@ -8,7 +8,7 @@ import { FaImage } from "react-icons/fa";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoTrashBin } from "react-icons/io5";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
-import { getUserForNewPostApi } from "../apis/post-api";
+import { getUserForNewPostApi, getAiSentimentApi } from "../apis/post-api";
 import { IoNewspaper } from "react-icons/io5";
 import { IoIosAlert } from "react-icons/io";
 import { RiShoppingBasketFill } from "react-icons/ri";
@@ -17,6 +17,8 @@ import { BsChatLeftDotsFill } from "react-icons/bs";
 import { VscThreeBars } from "react-icons/vsc";
 import createError from "../utils/createError";
 import useErrStore from "../stores/errStore";
+import useGeoStore from "../stores/geoStore";
+import { AiFillOpenAI } from "react-icons/ai";
 import {
   MapContainer,
   TileLayer,
@@ -33,12 +35,15 @@ import Post_category from "./Post_category";
 function Post_new_modal() {
   const token = useUserStore((state) => state.token);
   const setErrTxt = useErrStore((state) => state.setErrTxt);
+  const userPosition = useGeoStore((state) => state.userPosition);
   const files = usePostStore((state) => state.files);
   const setFiles = usePostStore((state) => state.setFiles);
   const [rangeVal, setRangeVal] = useState(24);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
   const [markerPosition, setMarkerPosition] = useState(null);
+  const [sentiment, setSentiment] = useState("Neutral");
+  const [isSentimentLoading, setIsSentimentLoading] = useState(false);
   const [input, setInput] = useState({
     txt: "",
     lat: "",
@@ -55,6 +60,8 @@ function Post_new_modal() {
       cat: "",
     });
     setFiles([]);
+    setSentiment("Neutral");
+    setIsSentimentLoading(false);
     // setUser({});
     setMarkerPosition({ lat: null, lng: null });
     document.getElementById("post-new-modal").close();
@@ -113,6 +120,30 @@ function Post_new_modal() {
   const removeImage = (idx) => {
     setFiles(files.filter((v, i) => i !== idx));
   };
+  const getSentiment = async (e) => {
+    console.log("Call ai sentiment");
+    try {
+      setIsSentimentLoading(true);
+      const resp = await getAiSentimentApi(token, input.txt);
+      setSentiment(resp.data.sentiment);
+    } catch (err) {
+      console.log(err?.response?.data?.error || err.message);
+    } finally {
+      setIsSentimentLoading(false);
+    }
+  };
+  const typingTimerRef = useRef(null);
+  const hdlTextInputChange = (e) => {
+    setInput((prev) => ({ ...prev, txt: e.target.value }));
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+    typingTimerRef.current = setTimeout(() => {
+      console.log("Call sentiment");
+      getSentiment();
+    }, 1000);
+  };
+
   useEffect(() => {
     getUserForNewPost();
   }, []);
@@ -123,7 +154,10 @@ function Post_new_modal() {
         e.stopPropagation();
       }}
     >
-      {/* <button onClick={() => console.log(files)}>Test</button> */}
+      {/* <button onClick={() => console.log(isSentimentLoading)}>
+        isSentimentLoading
+      </button> */}
+      {/* <button onClick={() => console.log(userPosition)}>userPosition</button> */}
       {/* <button onClick={() => console.log(input)}>input</button> */}
       {/* user area */}
       <div className="flex gap-5">
@@ -150,12 +184,26 @@ function Post_new_modal() {
       </div>
 
       {/* text area */}
-      <textarea
-        placeholder="What's on your mind..."
-        className="bg-slate-50 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full shadow-md"
-        value={input.txt}
-        onChange={(e) => setInput((prv) => ({ ...prv, txt: e.target.value }))}
-      />
+      <div className="relative">
+        <textarea
+          onBlur={getSentiment}
+          placeholder="What's on your mind..."
+          className="bg-slate-50 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full shadow-md"
+          value={input.txt}
+          onChange={hdlTextInputChange}
+        />
+        {/* sentiment */}
+        {sentiment && (
+          <div className="absolute bottom-0 right-0 px-2 py-1 bg-blue-500 text-white italic rounded-full flex items-center gap-1 -translate-x-3 -translate-y-3">
+            {isSentimentLoading ? (
+              <span className="loading loading-spinner w-[20px]"></span>
+            ) : (
+              <AiFillOpenAI className="text-xl" />
+            )}
+            {sentiment}
+          </div>
+        )}
+      </div>
       {/* map and picture area */}
       <div className="flex gap-5">
         <div className="flex-1 w-1/2 flex flex-col gap-2">
@@ -207,7 +255,7 @@ function Post_new_modal() {
                 </Reorder.Group>
               ) : (
                 <div
-                  className="w-full min-h-[300px] flex flex-col justify-center items-center text-my-text text-opacity-50 cursor-pointer"
+                  className="w-full min-h-[300px] flex flex-col justify-center items-center text-my-text text-opacity-20 cursor-pointer"
                   onClick={() => document.getElementById("input-file").click()}
                 >
                   <RiImageAddFill className="text-[100px]" />
@@ -227,7 +275,7 @@ function Post_new_modal() {
         <div className="flex flex-col w-1/2 gap-2">
           <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
-              center={[13.721792197183028, 100.4980552161973]}
+              center={userPosition}
               zoom={16}
               scrollWheelZoom={false}
               dragging={false}

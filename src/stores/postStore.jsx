@@ -10,6 +10,14 @@ const usePostStore = create((set) => ({
   setCurUserId: (newVal) => set({ curUserId: newVal }),
   files: [],
   setFiles: (newVal) => set({ files: newVal }),
+  postForAI: [],
+  addPostForAI: (newVal) =>
+    set((state) => ({
+      postForAI: [...state.postForAI, newVal],
+    })),
+  clearPostForAI: () => set({ postForAI: [] }),
+  aiSummaryTrigger: false,
+  setAiSummaryTrigger: (newVal) => set({ aiSummaryTrigger: newVal }),
 }));
 
 export default usePostStore;

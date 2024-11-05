@@ -183,3 +183,25 @@ export const getReportedUserApi = async (token, reportedUserId) =>
       },
     }
   );
+
+export const getAiSummaryApi = async (token, postForAI) =>
+  await axios.post(
+    `${baseUrl}/ai/summary`,
+    { postForAI },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+export const getAiSentimentApi = async (token, txt) =>
+  await axios.post(
+    `${baseUrl}/ai/sentiment`,
+    { txt },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );

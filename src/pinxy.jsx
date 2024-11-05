@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import PostCard from "./components/PostCard";
-import PostForm from "./components/PostForm";
-import EventMap from "./components/EventMap";
-import { SearchUser } from "./components/Filters";
-import FollowBar from "./components/FollowBar";
-import Sidebar from "./components/Sidebar";
-import PostFilters from "./components/PostFilters";
-import ProfileBio from "./components/ProfileBio";
+import React, { useEffect, useState } from 'react';
+import Navbar from './components/Navbar';
+import PostCard from './components/PostCard';
+import PostForm from './components/PostForm';
+import EventMap from './components/EventMap';
+import { SearchUser } from './components/Filters';
+import FollowBar from './components/FollowBar';
+import Sidebar from './components/Sidebar';
+import useUserStore from './stores/userStore';
+import { getProfile } from './api/userProfile';
+
+import PostFilters from './components/PostFilters';
+import ProfileBio from './components/ProfileBio';
 import {
   getAllPost,
   getAllPostByCategory,
@@ -16,7 +19,13 @@ import {
 } from "./api/search";
 import useStore from "./stores/geoStore";
 
+
 const Pinxy = () => {
+
+  const user = useUserStore((state) => state.user)
+  const { id } = user
+  console.log("user", user)
+  const [profileData, setProfileData] = useState({})
   const [posts, setPosts] = useState([
     // {
     //   id: 1,
@@ -58,6 +67,8 @@ const Pinxy = () => {
   const updateUserPosition = useStore((state) => state.updateUserPosition);
 
   useEffect(() => {
+    getProfileData(id)
+
     if (categoryOption) {
       handleGetAllPostByCategory();
     } else {
@@ -115,6 +126,16 @@ const Pinxy = () => {
     }
   };
 
+  const getProfileData = async (id) => {
+    try {
+      const resp = await getProfile(id)
+      setProfileData(resp.data)
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  console.log("ProfileData", profileData)
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -151,6 +172,7 @@ const Pinxy = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
+              <ProfileCard profileData={profileData} />
               {userId && <ProfileBio />}
               <PostForm
                 handleSubmit={handleSubmit}

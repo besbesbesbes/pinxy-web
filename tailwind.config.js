@@ -14,6 +14,15 @@ export default {
         "my-bg-main": "#f3f3f3",
         "my-bg-card": "#ffffff",
       },
+      animation: {
+        blink: 'blink 5s infinite',
+      },
+      keyframes: {
+        blink: {
+          '0%, 100%': { borderColor: 'transparent' },
+          '50%': { borderColor: '#4B5563' },
+        },
+      },
     },
   },
   plugins: [require("daisyui")],

@@ -6,12 +6,9 @@ const useUserStore = create(
     (set, get) => ({
       user: null,
       token: "",
-      login: (role) => {
-        set({
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzMwNTUyNzI0LCJleHAiOjE3MzMxNDQ3MjR9.EfTD5uMwJxLJMrbfDzAtcmwJSY2q9XtxYalei3KnAPU",
-          user: { id: 1, name: "admin", role: role },
-        });
+      login: (authData) => {
+        console.log("authData", authData)
+        set({ token: authData.data.token, user: { name: authData.data.payload.name, role: authData.data.payload.role, isBanned: authData.data.payload.isBanned } });
       },
     }),
     {

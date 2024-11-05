@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
-import PostCard from './components/PostCard';
-import PostForm from './components/PostForm';
-import EventMap from './components/EventMap';
-import { SearchUser } from './components/Filters';
-import FollowBar from './components/FollowBar';
-import Sidebar from './components/Sidebar';
-import useUserStore from './stores/userStore';
-import { getProfile } from './api/userProfile';
-
-import PostFilters from './components/PostFilters';
-import ProfileBio from './components/ProfileBio';
+import React, { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
+import EventMap from "./components/EventMap";
+import { SearchUser } from "./components/Filters";
+import FollowBar from "./components/FollowBar";
+import Sidebar from "./components/Sidebar";
+import PostFilters from "./components/PostFilters";
+import ProfileBio from "./components/ProfileBio";
+import Post_form from "./components/Post_form";
+import Post_post from "./components/Post_post";
+import Modal from "./components/Modal";
+import useUserStore from "./stores/userStore";
+import ProfileCard from "./components/ProfileCard";
+import usePostStore from "./stores/postStore";
+import { getProfile } from "./api/userProfile";
 import {
   getAllPost,
   getAllPostByCategory,
@@ -19,36 +21,22 @@ import {
 } from "./api/search";
 import useStore from "./stores/geoStore";
 
-
 const Pinxy = () => {
-
-  const user = useUserStore((state) => state.user)
-  const { id } = user
-  console.log("user", user)
-  const [profileData, setProfileData] = useState({})
+  const user = useUserStore((state) => state.user);
+  const { id } = user;
+  console.log("user", user);
+  const [profileData, setProfileData] = useState({});
   const [posts, setPosts] = useState([
-    // {
-    //   id: 1,
-    //   author: "Alice",
-    //   username: "alice",
-    //   content: "Excited for the weekend!",
-    //   likes: 10,
-    //   comments: 2,
-    //   shares: 1,
-    //   latitude: 40.73061,
-    //   longitude: -73.935242,
-    // },
-    // {
-    //   id: 2,
-    //   author: "Bob",
-    //   username: "bob",
-    //   content: "New café in town!",
-    //   likes: 20,
-    //   comments: 5,
-    //   shares: 3,
-    //   latitude: 40.712776,
-    //   longitude: -74.005974,
-    // },
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+    { id: 6 },
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
+    { id: 10 },
   ]);
 
   const [followers, setFollowers] = useState([
@@ -65,13 +53,16 @@ const Pinxy = () => {
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
+  const clearPostForAI = usePostStore((state) => state.clearPostForAI);
 
   useEffect(() => {
-    getProfileData(id)
+    getProfileData(id);
 
     if (categoryOption) {
+      clearPostForAI();
       handleGetAllPostByCategory();
     } else {
+      clearPostForAI();
       handleGetAllPost();
     }
   }, [categoryOption, userPosition, distance, sortOption, orderOption]);
@@ -128,14 +119,13 @@ const Pinxy = () => {
 
   const getProfileData = async (id) => {
     try {
-      const resp = await getProfile(id)
-      setProfileData(resp.data)
-
+      const resp = await getProfile(id);
+      setProfileData(resp.data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
-  console.log("ProfileData", profileData)
+  };
+  console.log("ProfileData", profileData);
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -154,10 +144,9 @@ const Pinxy = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen bg-my-bg-main flex">
       <Sidebar setCategoryOption={setCategoryOption} />
-
-      <main className="flex-1 ml-64 pt-16">
+      <main className="flex-1 ml-64">
         {" "}
         {/* Adjust margin-left for sidebar and padding-top for navbar */}
         <div className="max-w-full mx-auto px-4">
@@ -171,26 +160,19 @@ const Pinxy = () => {
           </header>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-2">
               <ProfileCard profileData={profileData} />
               {userId && <ProfileBio />}
-              <PostForm
-                handleSubmit={handleSubmit}
-                content={content}
-                setContent={setContent}
-              />
+              <Post_form />
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
                 orderOption={orderOption}
                 setOrderOption={setOrderOption}
               />
-              <div className="space-y-4">
-                {/* {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))} */}
-                {posts.map((post) => (
-                  <div key={post.id}>Post ID: {post.postId}</div>
+              <div className="space-y-2">
+                {posts.map((post, idx) => (
+                  <Post_post key={idx} postId={post.postId} />
                 ))}
               </div>
             </div>
@@ -199,7 +181,7 @@ const Pinxy = () => {
             <div className="lg:col-span-1 sticky top-4 h-[calc(100vh-8rem)] overflow-y-auto">
               {" "}
               {/* Adjust height */}
-              <div className="space-y-6">
+              <div className="space-y-2">
                 {/* <EventMap
                   posts={posts}
                   distance={distance}
@@ -212,6 +194,7 @@ const Pinxy = () => {
           </div>
         </div>
       </main>
+      <Modal />
     </div>
   );
 };

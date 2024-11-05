@@ -7,7 +7,7 @@ const PostFilters = ({
   setOrderOption,
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
+    <div className="bg-white rounded-xl shadow-md p-6 mb-6 w-full">
       <div className="flex flex-wrap gap-3 justify-center">
         <select
           className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"

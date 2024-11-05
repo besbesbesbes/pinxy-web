@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import UserProfile from './UserProfile';
 
-const ProfileCard = ({ name, username }) => {
+const ProfileCard = (props) => {
+  const { profileData: data, getProfileData } = props
+  const { profileData } = data
+
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
@@ -11,18 +14,18 @@ const ProfileCard = ({ name, username }) => {
 
 
         <dialog id="userProfile" className="modal">
-          <div className="modal-box w-full max-w-2xl h-1/2 overflow-y-auto">
-            <UserProfile />
+          <div className="modal-box w-full max-w-3xl h-1/2 overflow-y-auto">
+            {profileData && <UserProfile profileData={profileData} />}
             <button onClick={() => document.getElementById('userProfile').close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" >✕</button>
           </div>
         </dialog>
 
 
         <div>
-          <h3 className="text-xl font-bold">{name}</h3>
+          <h3 className="text-xl font-bold">{profileData?.displayName}</h3>
         </div>
-      </div>  
-        </div>
+      </div>
+    </div>
   );
 };
 

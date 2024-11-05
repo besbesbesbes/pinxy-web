@@ -133,6 +133,7 @@ import React, { useState } from 'react'
 import { userLogin } from '../api/auth'
 import { useNavigate } from 'react-router-dom'
 import useUserStore from '../stores/userStore'
+import LoginGoogle from './LoginGoogle'
 
 const INITIAL_ERROR_INPUT = {
     input: "Please fill USERNAME or Email",
@@ -239,7 +240,9 @@ function Login() {
             {/* BUTTON */}
             <div className='flex flex-col items-center'>
                 <div className='flex flex-col mb-1'>
+
                     <button className='bg-my-secon text-white hover:bg-my-secon-hover py-3 px-10 text-xl font-semibold' onClick={hdlSubmit}>LOG IN</button>
+                    <LoginGoogle />
                 </div>
             </div>
         </div>

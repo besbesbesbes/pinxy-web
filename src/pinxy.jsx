@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import ProfileCard from './components/ProfileCard';
 import PostCard from './components/PostCard';
@@ -7,9 +7,16 @@ import EventMap from './components/EventMap';
 import { SearchUser } from './components/Filters';
 import FollowBar from './components/FollowBar';
 import Sidebar from './components/Sidebar';
+import useUserStore from './stores/userStore';
+import { getProfile } from './api/userProfile';
 
 
 const Pinxy = () => {
+
+  const user = useUserStore((state) => state.user)
+  const { id } = user
+  console.log("user", user)
+  const [profileData, setProfileData] = useState({})
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -43,8 +50,20 @@ const Pinxy = () => {
   const [distance, setDistance] = useState(1000);
   const [content, setContent] = useState("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getProfileData(id)
+  }, []);
 
+  const getProfileData = async (id) => {
+    try {
+      const resp = await getProfile(id)
+      setProfileData(resp.data)
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  console.log("ProfileData", profileData)
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -65,7 +84,7 @@ const Pinxy = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex">
       <Sidebar />
-      
+
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <header className="mb-8">
@@ -73,10 +92,10 @@ const Pinxy = () => {
               <Navbar />
             </div>
           </header>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-              <ProfileCard name="John Doe" username="johndoe" />
+              <ProfileCard profileData={profileData} />
               <PostForm handleSubmit={handleSubmit} content={content} setContent={setContent} />
               <div className="space-y-4">
                 {posts.map((post) => (
@@ -84,9 +103,9 @@ const Pinxy = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className="space-y-6">
-              <EventMap posts={posts} distance={distance} setDistance={setDistance}/>
+              <EventMap posts={posts} distance={distance} setDistance={setDistance} />
               <SearchUser />
               <FollowBar followers={followers} />
             </div>

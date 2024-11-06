@@ -7,12 +7,20 @@ const useUserStore = create(
       user: null,
       token: "",
       login: (authData) => {
-        console.log("authData", authData)
-        set({ token: authData.data.token, user: { name: authData.data.payload.name, role: authData.data.payload.role, isBanned: authData.data.payload.isBanned, id: authData.data.payload.id } });
+        console.log("authData", authData);
+        set({
+          token: authData.data.token,
+          user: {
+            name: authData.data.payload.name,
+            role: authData.data.payload.role,
+            isBanned: authData.data.payload.isBanned,
+            id: authData.data.payload.id,
+          },
+        });
       },
       logout: () => {
-        set({ user: null, token: "" })
-      }
+        set({ user: null, token: "" });
+      },
     }),
     {
       name: "userState",

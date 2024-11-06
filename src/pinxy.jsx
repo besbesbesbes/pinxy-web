@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import EventMap from "./components/EventMap";
 import { SearchUser } from "./components/Filters";
@@ -13,6 +13,7 @@ import useUserStore from "./stores/userStore";
 import ProfileCard from "./components/ProfileCard";
 import usePostStore from "./stores/postStore";
 import { getProfile } from "./api/userProfile";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   getAllPost,
   getAllPostByCategory,
@@ -24,22 +25,17 @@ import useStore from "./stores/geoStore";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
-  const { id } = user;
-  console.log("user", user);
-  const [profileData, setProfileData] = useState({});
-  const [posts, setPosts] = useState([]);
+  const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
-  const [followers, setFollowers] = useState([
-    // { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
-    // { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
-  ]);
+  const [posts, setPosts] = useState([]);
+  const [followers, setFollowers] = useState([]);
 
   const [distance, setDistance] = useState(5000);
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
   const [orderOption, setOrderOption] = useState("asc");
   const [categoryOption, setCategoryOption] = useState("");
-  const [userId, setUserId] = useState(null);
+  const [value, setValue] = useState("");
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
@@ -47,14 +43,15 @@ const Pinxy = () => {
   const selectedUser = usePostStore((state) => state.selectedUser);
 
   useEffect(() => {
-    getProfileData(id);
     handleGetFollowing(user.id);
     if (categoryOption) {
       handleGetAllPostByCategory();
+    } else if (value) {
+      handleGetAllPostByValue(value);
     } else {
       handleGetAllPost();
     }
-  }, [categoryOption, userPosition, distance, sortOption, orderOption]);
+  }, [categoryOption, userPosition, distance, sortOption, orderOption, value]);
 
   useEffect(() => {
     clearPostForAI();
@@ -70,7 +67,6 @@ const Pinxy = () => {
         order: orderOption,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -93,7 +89,7 @@ const Pinxy = () => {
     }
   };
 
-  const handleGetAllPostByCategory = async (selectedUser) => {
+  const handleGetAllPostByCategory = async () => {
     try {
       const resp = await getAllPostByCategory({
         current_location_lat: userPosition[0],
@@ -110,7 +106,7 @@ const Pinxy = () => {
     }
   };
 
-  const handleGetAllPostByUserId = async () => {
+  const handleGetAllPostByUserId = async (selectedUser) => {
     try {
       const resp = await getAllPostByUserId({
         current_location_lat: userPosition[0],
@@ -133,21 +129,11 @@ const Pinxy = () => {
         userId: userId,
       });
       setFollowers(resp.data.following);
-      console.log("Following", resp.data.following);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const getProfileData = async (id) => {
-    try {
-      const resp = await getProfile(id);
-      setProfileData(resp.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  console.log("ProfileData", profileData);
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -167,7 +153,11 @@ const Pinxy = () => {
 
   return (
     <div className="min-h-screen bg-my-bg-main flex">
-      <Sidebar setCategoryOption={setCategoryOption} />
+      <Sidebar
+        setCategoryOption={setCategoryOption}
+        inputRef={inputRef}
+        setValue={setValue}
+      />
       <main className="flex-1 ml-64">
         {" "}
         {/* Adjust margin-left for sidebar and padding-top for navbar */}
@@ -177,22 +167,36 @@ const Pinxy = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
             <div className="lg:col-span-2 space-y-2">
               <Navbar
+                inputRef={inputRef}
+                setValue={setValue}
                 setCategoryOption={setCategoryOption}
                 handleGetAllPostByValue={handleGetAllPostByValue}
               />
               <Post_form />
               {/* <ProfileBio /> */}
+              <ProfileCard
+                handleGetAllPostByUserId={handleGetAllPostByUserId}
+              />
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
                 orderOption={orderOption}
                 setOrderOption={setOrderOption}
               />
-              <ProfileCard profileData={profileData} />
               <div className="space-y-2">
-                {posts.map((post, idx) => (
-                  <Post_post key={idx} postId={post.postId} />
-                ))}
+                <AnimatePresence>
+                  {posts.map((post, idx) => (
+                    <motion.div
+                      key={post.postId}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Post_post postId={post.postId} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -205,8 +209,10 @@ const Pinxy = () => {
                   distance={distance}
                   setDistance={setDistance}
                 /> */}
-                <SearchUser />
-                {/* <FollowBar followers={followers} /> */}
+                <SearchUser
+                  handleGetAllPostByUserId={handleGetAllPostByUserId}
+                />
+                <FollowBar followers={followers} />
               </div>
             </div>
           </div>

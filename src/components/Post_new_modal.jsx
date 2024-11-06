@@ -156,7 +156,7 @@ function Post_new_modal() {
   }, [isRenderPostNew]);
   return (
     <div
-      className="w-6/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col p-10 rounded-xl gap-5 "
+      className="w-6/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col p-10 rounded-xl gap-5 overflow-auto"
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -164,7 +164,7 @@ function Post_new_modal() {
       {/* <button onClick={() => console.log(isSentimentLoading)}>
         isSentimentLoading
       </button> */}
-      <button onClick={() => console.log(userPosition)}>userPosition</button>
+      {/* <button onClick={() => console.log(userPosition)}>userPosition</button> */}
       {/* <button onClick={test}>input</button> */}
       {/* user area */}
       <div className="flex gap-5">
@@ -224,7 +224,7 @@ function Post_new_modal() {
               onChange={hdlFileChange}
             />
             {/* picture lists */}
-            <div className="flex flex-col gap-2 px-2 max-h-[600px] overflow-auto">
+            <div className="flex flex-col gap-2 px-2 max-h-[450px] overflow-auto">
               {files.length > 0 ? (
                 <Reorder.Group axis="y" values={files} onReorder={setFiles}>
                   <AnimatePresence>
@@ -279,7 +279,7 @@ function Post_new_modal() {
             Add Picture
           </button>
         </div>
-        <div className="flex flex-col w-1/2 gap-2">
+        <div className="flex flex-col w-1/2 gap-5">
           <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
               center={newUserPosition}
@@ -301,10 +301,10 @@ function Post_new_modal() {
               )}
             </MapContainer>
           </div>
-          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl gap-5 bg-slate-50 shadow-md">
+          <div className="w-full h-fit flex flex-col items-center justify-start gap-5 ">
             {/* category */}
-            <p className="m-2 font-bold">Category</p>
-            <div className="relative inline-block w-full px-10">
+            {/* <p className="m-2 font-bold">Category</p> */}
+            <div className="relative inline-block w-full">
               <div className="flex gap-4 items-center">
                 {input.cat === "ALERT" && (
                   <div className="bg-my-cat-alert p-2 rounded-full shadow-lg">
@@ -341,7 +341,7 @@ function Post_new_modal() {
                   }
                 >
                   <option value="" disabled>
-                    Select an option
+                    Select Cagetory
                   </option>
                   <option value="ALERT">Alert</option>
                   <option value="NEWS">News</option>
@@ -352,10 +352,10 @@ function Post_new_modal() {
               </div>
             </div>
           </div>
-          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl bg-slate-50 shadow-md">
+          <div className="w-full h-fit flex flex-col items-center justify-start rounded-xl ">
             {/* duration */}
-            <p className="m-2 font-bold">Post duration</p>
-            <div className="bg-white rounded-lg p-6 w-full flex gap-1">
+            <div className="bg-white rounded-lg w-full flex gap-1 items-center">
+              <p className="m-2 font-bold">Duration</p>
               <input
                 type="range"
                 min="1"

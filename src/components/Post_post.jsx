@@ -52,12 +52,13 @@ function Post_post({ postId }) {
     }
   };
   const getPost = async () => {
+    // console.log(`Call getPost for ${postId}`);
     try {
       const result = await getPostApi(token, postId);
       // console.log(result.data.resPost);
       setPost(result.data.resPost);
       setUser(result.data.user);
-      addPostForAI(result.data.resPost.content);
+      // addPostForAI(result.data.resPost.content);
     } catch (err) {
       console.log(err.response.data.error || err.message);
     }

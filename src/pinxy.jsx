@@ -42,6 +42,7 @@ const Pinxy = () => {
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
+  const addPostForAI = usePostStore((state) => state.addPostForAI);
 
   useEffect(() => {
     if (categoryOption) {
@@ -53,6 +54,11 @@ const Pinxy = () => {
 
   useEffect(() => {
     clearPostForAI();
+    if (posts) {
+      posts.map((el) => {
+        addPostForAI(el.content);
+      });
+    }
   }, [posts]);
 
   const handleGetAllPost = async () => {
@@ -131,7 +137,7 @@ const Pinxy = () => {
         <div className="max-w-full mx-auto px-4">
           <header className="sticky top-0 z-10"></header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-2">
               <Navbar
                 setCategoryOption={setCategoryOption}

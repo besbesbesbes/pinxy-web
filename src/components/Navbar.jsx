@@ -8,7 +8,7 @@ const Navbar = ({ setCategoryOption, handleGetAllPostByValue }) => {
     e.preventDefault();
     setCategoryOption("");
     handleGetAllPostByValue(inputRef.current.value); // ส่งค่า input ที่พิมพ์ให้ฟังก์ชัน
-    // inputRef.current.value = ""; // ล้างค่า input หลังจากค้นหา
+    inputRef.current.value = ""; // ล้างค่า input หลังจากค้นหา
   };
 
   return (

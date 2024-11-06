@@ -20,7 +20,9 @@ const ProfileCard = () => {
     document.getElementById("report-user-modal").showModal();
   };
   useEffect(() => {
-    getUserInfo();
+    if (selectedUser) {
+      getUserInfo();
+    }
   }, [selectedUser]);
   return selectedUser ? (
     <div className="w-full min-h-[120px]  flex flex-col pl-10 rounded-xl gap-5 pt-5 cursor-pointer text-my-text">

@@ -38,12 +38,15 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
 
 const Sidebar = ({ setCategoryOption }) => {
   const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
+  const postForAI = usePostStore((state) => state.postForAI);
   const setAiSummaryTrigger = usePostStore(
     (state) => state.setAiSummaryTrigger
   );
   const hdlAISummary = () => {
-    setAiSummaryTrigger(true);
-    document.getElementById("ai-summary-modal").showModal();
+    if (postForAI.length > 0) {
+      setAiSummaryTrigger(true);
+      document.getElementById("ai-summary-modal").showModal();
+    }
   };
 
   return (
@@ -130,12 +133,12 @@ const Sidebar = ({ setCategoryOption }) => {
       {/* Bottom Actions */}
       <div className="p-4 border-t">
         <ul className="space-y-2">
-          <MenuItem
+          {/* <MenuItem
             icon={Settings}
             label="Settings"
             isActive={activeMenu === "Settings"}
             onClick={() => setActiveMenu("Settings")}
-          />
+          /> */}
           <li>
             <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-my-acct hover:bg-red-50 transition-colors">
               <LogOut className="h-5 w-5" />

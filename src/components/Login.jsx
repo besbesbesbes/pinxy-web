@@ -225,6 +225,28 @@ function Login() {
         }
     }
 
+    const hdlOnEnter = async (e) => {
+        try {
+            const { input, password } = loginData
+            if (e.key === "Enter" && input !== "" && password !== "") {
+                alert("log in pass");
+                const res = await userLogin(loginData)
+                console.log("res from log in", res)
+                login(res)
+                console.log("res", res)
+                if (res.data.payload.role === "USER") {
+                    navigate("/")
+                } else {
+                    navigate("/admin")
+                }
+            } else if (e.key === "Enter") {
+                alert("Please fill all the data.")
+            }
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
 
     return (
         <div className='flex flex-col gap-16'>
@@ -233,9 +255,9 @@ function Login() {
             {/* INPUT */}
             <div className='flex flex-col text-lg gap-3'>
                 <label className='flex flex-row justify-between font-medium'>USERNAME / EMAIL <span className="text-red-500 text-sm">{error.input}</span></label>
-                <input name='input' value={loginData.input} onChange={hdlOnChange} type="text" className="mb-5 p-1" />
+                <input name='input' value={loginData.input} onChange={hdlOnChange} type="text" className="mb-5 p-1" onKeyDown={hdlOnEnter} />
                 <label className='flex flex-row justify-between font-medium'>PASSWORD <span className="text-red-500 text-sm">{error.password}</span></label>
-                <input name='password' value={loginData.password} onChange={hdlOnChange} type="password" className=" p-1" />
+                <input name='password' value={loginData.password} onChange={hdlOnChange} type="password" className=" p-1" onKeyDown={hdlOnEnter} />
             </div>
             {/* BUTTON */}
             <div className='flex flex-col items-center'>

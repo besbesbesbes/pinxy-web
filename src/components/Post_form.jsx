@@ -46,7 +46,7 @@ function Post_form() {
         />
         <div className="flex flex-col w-full flex-1 h-fit gap-2">
           <div className="bg-my-bg-main h-[40px] py-2 px-5 rounded-2xl flex-1 self-start w-full shadow-md mb-2">
-            <p className="text-my-text text-opacity-40">
+            <p className="text-my-text text-opacity-40 italic">
               Got someting to share...
             </p>
           </div>

@@ -22,7 +22,7 @@ const ProfileCard = () => {
   useEffect(() => {
     getUserInfo();
   }, [selectedUser]);
-  return (
+  return selectedUser ? (
     <div className="w-full min-h-[120px]  flex flex-col pl-10 rounded-xl gap-5 pt-5 cursor-pointer text-my-text">
       <div className="flex items-end gap-4">
         <img
@@ -33,13 +33,13 @@ const ProfileCard = () => {
         <div className="flex flex-1 ">
           <div className=" flex flex-col gap-2 flex-1">
             <div className="flex">
-              <p className="text-2xl pl-3">{user?.displayName}</p>
+              <p className="text-2xl pl-3 text-my-prim">{user?.displayName}</p>
               <p className="self-end ml-5 text-my-text text-sm text-opacity-50 italic">
                 ( joined us {format(user?.createdAt)} )
               </p>
             </div>
             <textarea
-              className="bg-my-bg-card w-full h-fit p-4 rounded-xl  self-start resize-none  text-lg italic text-my-text text-opacity-70"
+              className="bg-my-bg-card w-full h-fit p-4 rounded-xl  self-start resize-none  text-[18px] italic text-my-text text-opacity-70"
               value={user?.bio}
             />
           </div>
@@ -53,7 +53,7 @@ const ProfileCard = () => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default ProfileCard;

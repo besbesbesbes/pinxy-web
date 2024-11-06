@@ -82,7 +82,7 @@ function Post_post({ postId }) {
     >
       {/* <button onClick={() => console.log(postForAI)}>postForAI</button> */}
       {/* {postId} */}
-      <button onClick={() => console.log(userPosition)}>userPosition</button>
+      {/* <button onClick={() => console.log(userPosition)}>userPosition</button> */}
       {/* {postId} */}
       <div
         className="flex flex-col gap-5 overflow-auto"

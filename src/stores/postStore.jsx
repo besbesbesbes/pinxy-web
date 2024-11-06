@@ -20,7 +20,7 @@ const usePostStore = create((set) => ({
   setAiSummaryTrigger: (newVal) => set({ aiSummaryTrigger: newVal }),
   isRenderPostNew: false,
   SetIsRenderPostNew: (newVal) => set({ isRenderPostNew: newVal }),
-  selectedUser: null,
+  selectedUser: 3,
   setSelectedUser: (newVal) => set({ selectedUser: newVal }),
 }));
 

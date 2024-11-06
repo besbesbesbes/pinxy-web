@@ -13,7 +13,6 @@ export const SearchUser = () => {
   const getUser = async (name) => {
     try {
       const result = await getUserApi(name);
-      console.log(result.data.users);
       setUserList(result.data.users || []); // Handle cases where result.users might be undefined
     } catch (err) {
       console.log(err.message);

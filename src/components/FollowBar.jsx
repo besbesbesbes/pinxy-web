@@ -4,9 +4,9 @@ import usePostStore from "../stores/postStore";
 const FollowBar = ({ followers }) => {
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
+    <div className="bg-white rounded-lg p-6 mb-6 w-full">
       <h4 className="text-xl font-bold mb-4">Following</h4>
-      <ul className="space-y-4">
+      <ul className="space-y-4 max-h-36 overflow-y-auto">
         {followers.map((follower) => (
           <li
             key={follower.id}

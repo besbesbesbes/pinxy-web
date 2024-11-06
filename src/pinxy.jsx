@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
-import EventMap from "./components/EventMap";
+import EventMap from "./components/map/EventMap";
 import { SearchUser } from "./components/Filters";
 import FollowBar from "./components/FollowBar";
 import Sidebar from "./components/Sidebar";
@@ -29,8 +29,9 @@ const Pinxy = () => {
 
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
+  const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks
 
-  const [distance, setDistance] = useState(5000);
+  const [distance, setDistance] = useState(1000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
   const [orderOption, setOrderOption] = useState("asc");
@@ -123,6 +124,17 @@ const Pinxy = () => {
     }
   };
 
+  const fetchLandmarks = async () => {
+    // ดึงข้อมูล landmarks จาก API หรือแหล่งข้อมูล
+    try {
+      const response = await fetch("/api/landmarks");
+      const data = await response.json();
+      setLandmarks(data); // ตั้งค่า landmarks
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleGetFollowing = async (userId) => {
     try {
       const resp = await getFollowingApi({
@@ -159,11 +171,8 @@ const Pinxy = () => {
         setValue={setValue}
       />
       <main className="flex-1 ml-64">
-        {" "}
-        {/* Adjust margin-left for sidebar and padding-top for navbar */}
         <div className="max-w-full mx-auto px-4">
           <header className="sticky top-0 z-10"></header>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
             <div className="lg:col-span-2 space-y-2">
               <Navbar
@@ -199,16 +208,15 @@ const Pinxy = () => {
                 </AnimatePresence>
               </div>
             </div>
-
-            {/* Fixed Sidebar Content */}
-            {/* <div className="lg:col-span-1 sticky top-4 h-[calc(100vh-8rem)] overflow-y-auto "> */}
             <div className="lg:col-span-1 sticky top-0 h-[calc(100vh-4rem)] overflow-y-auto">
               <div className="space-y-2">
-                {/* <EventMap
+                {/* ส่ง landmarks ไปที่ EventMap */}
+                <EventMap
                   posts={posts}
                   distance={distance}
                   setDistance={setDistance}
-                /> */}
+                  landmarks={landmarks}
+                />
                 <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
                 />

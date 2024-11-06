@@ -18,6 +18,7 @@ import {
   getAllPostByCategory,
   getAllPostByValue,
   getAllPostByUserId,
+  getFollowingApi,
 } from "./api/search";
 import useStore from "./stores/geoStore";
 
@@ -29,8 +30,8 @@ const Pinxy = () => {
   const [posts, setPosts] = useState([]);
 
   const [followers, setFollowers] = useState([
-    { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
-    { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
+    // { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
+    // { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
   ]);
 
   const [distance, setDistance] = useState(5000);
@@ -43,9 +44,11 @@ const Pinxy = () => {
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
+  const selectedUser = usePostStore((state) => state.selectedUser);
 
   useEffect(() => {
     getProfileData(id);
+    handleGetFollowing(user.id);
     if (categoryOption) {
       handleGetAllPostByCategory();
     } else {
@@ -90,7 +93,7 @@ const Pinxy = () => {
     }
   };
 
-  const handleGetAllPostByCategory = async () => {
+  const handleGetAllPostByCategory = async (selectedUser) => {
     try {
       const resp = await getAllPostByCategory({
         current_location_lat: userPosition[0],
@@ -102,6 +105,35 @@ const Pinxy = () => {
       });
       setPosts(resp.data.data);
       console.log(resp.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleGetAllPostByUserId = async () => {
+    try {
+      const resp = await getAllPostByUserId({
+        current_location_lat: userPosition[0],
+        current_location_lng: userPosition[1],
+        distance,
+        sort: sortOption,
+        order: orderOption,
+        userId: selectedUser,
+      });
+      setPosts(resp.data.data);
+      console.log(resp.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleGetFollowing = async (userId) => {
+    try {
+      const resp = await getFollowingApi({
+        userId: userId,
+      });
+      setFollowers(resp.data.following);
+      console.log("Following", resp.data.following);
     } catch (err) {
       console.log(err);
     }
@@ -174,7 +206,7 @@ const Pinxy = () => {
                   setDistance={setDistance}
                 /> */}
                 <SearchUser />
-                <FollowBar followers={followers} />
+                {/* <FollowBar followers={followers} /> */}
               </div>
             </div>
           </div>

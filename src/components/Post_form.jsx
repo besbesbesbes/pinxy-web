@@ -7,14 +7,16 @@ import { FaLocationDot } from "react-icons/fa6";
 import usePostStore from "../stores/postStore";
 import useGeoStore from "../stores/geoStore";
 function Post_form() {
-  const [user, setUser] = useState({});
+  const [userInfo, setUserInfo] = useState({});
   const token = useUserStore((state) => state.token);
   const SetIsRenderPostNew = usePostStore((state) => state.SetIsRenderPostNew);
   const updateUserPosition = useGeoStore((state) => state.updateUserPosition);
+  const setSelectedUser = usePostStore((state) => state.setSelectedUser);
+  const user = useUserStore((state) => state.user);
   const getUserForNewPost = async () => {
     try {
       const result = await getUserForNewPostApi(token);
-      setUser(result.data.user);
+      setUserInfo(result.data.user);
     } catch (err) {
       console.log(err?.response?.data?.error || err.message);
     }
@@ -22,6 +24,10 @@ function Post_form() {
   const hdlNewPost = () => {
     SetIsRenderPostNew(true);
     document.getElementById("post-new-modal").showModal();
+  };
+  const hdlClickUseProfile = (e) => {
+    e.stopPropagation();
+    setSelectedUser(user.id);
   };
   useEffect(() => {
     getUserForNewPost();
@@ -33,14 +39,15 @@ function Post_form() {
     >
       <div className="flex gap-5">
         <img
-          className="w-[80px] h-[80px] object-cover rounded-full shadow-md"
-          src={user?.imageUrl}
+          className="w-[80px] h-[80px] object-cover rounded-full shadow-md hover:scale-110"
+          src={userInfo?.imageUrl}
           alt="no load"
+          onClick={(e) => hdlClickUseProfile(e)}
         />
         <div className="flex flex-col w-full flex-1 h-fit gap-2">
-          <div className="bg-slate-50 h-[40px] py-2 px-5 rounded-2xl flex-1 self-start w-full shadow-md">
+          <div className="bg-my-bg-main h-[40px] py-2 px-5 rounded-2xl flex-1 self-start w-full shadow-md mb-2">
             <p className="text-my-text text-opacity-40">
-              What's on your mind...
+              Got someting to share...
             </p>
           </div>
           <div className="flex justify-around text-lg">

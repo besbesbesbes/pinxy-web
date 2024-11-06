@@ -13,6 +13,7 @@ import useUserStore from "./stores/userStore";
 import ProfileCard from "./components/ProfileCard";
 import usePostStore from "./stores/postStore";
 import { getProfile } from "./api/userProfile";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   getAllPost,
   getAllPostByCategory,
@@ -24,8 +25,6 @@ import useStore from "./stores/geoStore";
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
   const { id } = user;
-  console.log("user", user);
-  const [profileData, setProfileData] = useState({});
   const [posts, setPosts] = useState([]);
 
   const [followers, setFollowers] = useState([
@@ -45,7 +44,6 @@ const Pinxy = () => {
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
 
   useEffect(() => {
-    getProfileData(id);
     if (categoryOption) {
       handleGetAllPostByCategory();
     } else {
@@ -107,15 +105,6 @@ const Pinxy = () => {
     }
   };
 
-  const getProfileData = async (id) => {
-    try {
-      const resp = await getProfile(id);
-      setProfileData(resp.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  console.log("ProfileData", profileData);
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -150,17 +139,27 @@ const Pinxy = () => {
               />
               <Post_form />
               {/* <ProfileBio /> */}
+              <ProfileCard />
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
                 orderOption={orderOption}
                 setOrderOption={setOrderOption}
               />
-              <ProfileCard profileData={profileData} />
               <div className="space-y-2">
-                {posts.map((post, idx) => (
-                  <Post_post key={idx} postId={post.postId} />
-                ))}
+                <AnimatePresence>
+                  {posts.map((post, idx) => (
+                    <motion.div
+                      key={post.postId}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Post_post postId={post.postId} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
 

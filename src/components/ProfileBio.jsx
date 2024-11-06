@@ -1,12 +1,12 @@
-import React from 'react';
-import { Mail, Users, Edit } from 'lucide-react';
+import React from "react";
+import { Mail, Users, Edit } from "lucide-react";
 
 const ProfileBio = ({
   displayName = "John Doe",
   username = "johndoe",
   email = "john@example.com",
   bio = "Frontend Developer | React Enthusiast",
-  followers = 1234
+  followers = 1234,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">

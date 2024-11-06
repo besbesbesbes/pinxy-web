@@ -7,10 +7,10 @@ const PostFilters = ({
   setOrderOption,
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 mb-6 w-full">
-      <div className="flex flex-wrap gap-3 justify-center">
+    <div className=" rounded-xl w-full">
+      <div className="flex flex-wrap gap-3 justify-end">
         <select
-          className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 rounded-lg focus:outline-none shadow-md "
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
         >
@@ -23,7 +23,7 @@ const PostFilters = ({
         </select>
 
         <select
-          className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 rounded-lg focus:outline-none shadow-md "
           value={orderOption}
           onChange={(e) => setOrderOption(e.target.value)}
         >

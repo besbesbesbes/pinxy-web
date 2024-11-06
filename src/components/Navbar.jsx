@@ -1,14 +1,23 @@
-import React, { useRef } from "react";
+import React from "react";
 import { FaSearch } from "react-icons/fa"; // นำเข้าไอคอนค้นหาจาก react-icons
+import usePostStore from "../stores/postStore";
 
-const Navbar = ({ setCategoryOption, handleGetAllPostByValue }) => {
-  const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
+const Navbar = ({
+  inputRef,
+  setCategoryOption,
+  handleGetAllPostByValue,
+  setValue,
+}) => {
+  const setSelectedUser = usePostStore((state) => state.setSelectedUser);
+  const setActiveMenu = usePostStore((state) => state.setActiveMenu);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setCategoryOption("");
     handleGetAllPostByValue(inputRef.current.value); // ส่งค่า input ที่พิมพ์ให้ฟังก์ชัน
-    // inputRef.current.value = ""; // ล้างค่า input หลังจากค้นหา
+    setValue(inputRef.current.value);
+    setActiveMenu("")
+    setSelectedUser(null);
   };
 
   return (

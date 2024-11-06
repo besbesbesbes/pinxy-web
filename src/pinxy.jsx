@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import EventMap from "./components/map/EventMap";
 import { SearchUser } from "./components/Filters";
@@ -19,40 +19,40 @@ import {
   getAllPostByCategory,
   getAllPostByValue,
   getAllPostByUserId,
+  getFollowingApi,
 } from "./api/search";
 import useStore from "./stores/geoStore";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
-  const { id } = user;
+  const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
+
   const [posts, setPosts] = useState([]);
-  const [landmarks, setLandmarks] = useState([]);  // เพิ่ม state สำหรับ landmarks
-console.log("posts", posts)
-  const [followers, setFollowers] = useState([
-    { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
-    { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
-  ]);
+  const [followers, setFollowers] = useState([]);
+  const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks
 
   const [distance, setDistance] = useState(1000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
   const [orderOption, setOrderOption] = useState("asc");
   const [categoryOption, setCategoryOption] = useState("");
-  const [userId, setUserId] = useState(null);
+  const [value, setValue] = useState("");
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
+  const selectedUser = usePostStore((state) => state.selectedUser);
 
   useEffect(() => {
+    handleGetFollowing(user.id);
     if (categoryOption) {
       handleGetAllPostByCategory();
+    } else if (value) {
+      handleGetAllPostByValue(value);
     } else {
       handleGetAllPost();
     }
-    // ดึงข้อมูล landmarks ใน useEffect
-    fetchLandmarks();  
-  }, [categoryOption, userPosition, distance, sortOption, orderOption]);
+  }, [categoryOption, userPosition, distance, sortOption, orderOption, value]);
 
   useEffect(() => {
     clearPostForAI();
@@ -68,7 +68,6 @@ console.log("posts", posts)
         order: orderOption,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -108,7 +107,22 @@ console.log("posts", posts)
     }
   };
 
-
+  const handleGetAllPostByUserId = async (selectedUser) => {
+    try {
+      const resp = await getAllPostByUserId({
+        current_location_lat: userPosition[0],
+        current_location_lng: userPosition[1],
+        distance,
+        sort: sortOption,
+        order: orderOption,
+        userId: selectedUser,
+      });
+      setPosts(resp.data.data);
+      console.log(resp.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchLandmarks = async () => {
     // ดึงข้อมูล landmarks จาก API หรือแหล่งข้อมูล
@@ -121,6 +135,16 @@ console.log("posts", posts)
     }
   };
 
+  const handleGetFollowing = async (userId) => {
+    try {
+      const resp = await getFollowingApi({
+        userId: userId,
+      });
+      setFollowers(resp.data.following);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -141,19 +165,27 @@ console.log("posts", posts)
 
   return (
     <div className="min-h-screen bg-my-bg-main flex">
-      <Sidebar setCategoryOption={setCategoryOption} />
+      <Sidebar
+        setCategoryOption={setCategoryOption}
+        inputRef={inputRef}
+        setValue={setValue}
+      />
       <main className="flex-1 ml-64">
         <div className="max-w-full mx-auto px-4">
           <header className="sticky top-0 z-10"></header>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
             <div className="lg:col-span-2 space-y-2">
               <Navbar
+                inputRef={inputRef}
+                setValue={setValue}
                 setCategoryOption={setCategoryOption}
                 handleGetAllPostByValue={handleGetAllPostByValue}
               />
               <Post_form />
               {/* <ProfileBio /> */}
-              <ProfileCard />
+              <ProfileCard
+                handleGetAllPostByUserId={handleGetAllPostByUserId}
+              />
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
@@ -185,7 +217,9 @@ console.log("posts", posts)
                   setDistance={setDistance}
                   landmarks={landmarks}
                 />
-                <SearchUser />
+                <SearchUser
+                  handleGetAllPostByUserId={handleGetAllPostByUserId}
+                />
                 <FollowBar followers={followers} />
               </div>
             </div>

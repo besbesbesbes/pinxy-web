@@ -20,3 +20,7 @@ export const getAllPostByUserId = (body) => {
 export const getUserApi = (displayName) => {
   return axios.post(`${baseUrl}/search/following`, { displayName });
 };
+
+export const getFollowingApi = (body) => {
+  return axios.post(`${baseUrl}/search/following-list`, body);
+};

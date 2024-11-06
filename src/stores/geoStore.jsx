@@ -1,10 +1,10 @@
 // geoStore.js
-import { create } from 'zustand';
+import { create } from "zustand";
 
 const useStore = create((set) => ({
   userPosition: [13.7563, 100.5018], // ค่าเริ่มต้นที่กรุงเทพฯ
   // setUserPosition: (position) => set({ userPosition: position }),
-  
+
   // ฟังก์ชันที่เรียกตำแหน่งของผู้ใช้จาก navigator
   updateUserPosition: () => {
     if (navigator.geolocation) {
@@ -20,7 +20,7 @@ const useStore = create((set) => ({
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
-  }
+  },
 }));
 
 export default useStore;

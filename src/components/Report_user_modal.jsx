@@ -13,7 +13,7 @@ function Report_user_modal() {
   const [reasons, setReasons] = useState([]);
   const [input, setInput] = useState("");
   const [reportedUser, setReportedUser] = useState({});
-  const curUserId = usePostStore((state) => state.curUserId);
+  const selectedUser = usePostStore((state) => state.selectedUser);
   const token = useUserStore((state) => state.token);
   const hdlClosePopup = (e) => {
     setInput("");
@@ -26,7 +26,7 @@ function Report_user_modal() {
         console.log("Please select reason.");
         return;
       }
-      await reportUserApi(token, curUserId, input);
+      await reportUserApi(token, selectedUser, input);
       setInput("");
       hdlClosePopup();
     } catch (err) {
@@ -34,7 +34,7 @@ function Report_user_modal() {
     }
   };
   const getReportedUser = async () => {
-    const result = await getReportedUserApi(token, curUserId);
+    const result = await getReportedUserApi(token, selectedUser);
     setReportedUser(result.data.reportedUser);
   };
   const getReportUserReason = async () => {
@@ -45,10 +45,10 @@ function Report_user_modal() {
     getReportUserReason();
   }, []);
   useEffect(() => {
-    if (curUserId) {
+    if (selectedUser) {
       getReportedUser();
     }
-  }, [curUserId]);
+  }, [selectedUser]);
   return (
     <div
       className="w-4/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col py-5 px-10 rounded-xl gap-5"

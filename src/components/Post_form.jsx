@@ -4,9 +4,13 @@ import useUserStore from "../stores/userStore";
 import { FaCommentDots } from "react-icons/fa";
 import { AiFillPicture } from "react-icons/ai";
 import { FaLocationDot } from "react-icons/fa6";
+import usePostStore from "../stores/postStore";
+import useGeoStore from "../stores/geoStore";
 function Post_form() {
   const [user, setUser] = useState({});
   const token = useUserStore((state) => state.token);
+  const SetIsRenderPostNew = usePostStore((state) => state.SetIsRenderPostNew);
+  const updateUserPosition = useGeoStore((state) => state.updateUserPosition);
   const getUserForNewPost = async () => {
     try {
       const result = await getUserForNewPostApi(token);
@@ -16,6 +20,7 @@ function Post_form() {
     }
   };
   const hdlNewPost = () => {
+    SetIsRenderPostNew(true);
     document.getElementById("post-new-modal").showModal();
   };
   useEffect(() => {
@@ -32,13 +37,13 @@ function Post_form() {
           src={user?.imageUrl}
           alt="no load"
         />
-        <div className="flex flex-col w-full h-fit gap-2">
+        <div className="flex flex-col w-full flex-1 h-fit gap-2">
           <div className="bg-slate-50 h-[40px] py-2 px-5 rounded-2xl flex-1 self-start w-full shadow-md">
             <p className="text-my-text text-opacity-40">
               What's on your mind...
             </p>
           </div>
-          <div className="flex justify-around">
+          <div className="flex justify-around text-lg">
             <div className="flex items-baseline gap-2">
               <FaCommentDots className="text-2xl text-my-prim translate-y-1" />
               <p className="text-my-text font-bold text-opacity-50">Posts</p>

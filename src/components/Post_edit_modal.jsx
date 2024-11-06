@@ -73,8 +73,8 @@ function Post_edit_modal() {
   const getPost = async () => {
     try {
       const result = await getPostApi(token, curPostId);
-      console.log(result.data.resPost);
-      console.log(result.data.user);
+      // console.log(result.data.resPost);
+      // console.log(result.data.user);
       setPost(result.data.resPost);
       setInput({
         txt: result.data.resPost.content,

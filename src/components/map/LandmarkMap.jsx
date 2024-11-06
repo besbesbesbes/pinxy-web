@@ -4,45 +4,47 @@ import L from 'leaflet';
 
 // Define unique icons for each category
 const icons = {
-  Alert: new L.Icon({
-    iconUrl: '/path/to/alert-icon.png',
+  ALERT: new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2299/2299283.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   }),
-  Events: new L.Icon({
-    iconUrl: '/path/to/events-icon.png',
+  NEWS: new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2964/2964063.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   }),
-  Shop: new L.Icon({
-    iconUrl: '/path/to/shop-icon.png',
+  SHOP: new L.Icon({
+    iconUrl: 'https://png.pngtree.com/png-vector/20220912/ourmid/pngtree-shop-icon-png-image_6170900.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   }),
-  Jobs: new L.Icon({
-    iconUrl: '/path/to/jobs-icon.png',
+  JOB: new L.Icon({
+    iconUrl: 'https://cdn-icons-png.freepik.com/256/14993/14993311.png?semt=ais_hybrid',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   }),
-  Other: new L.Icon({
-    iconUrl: '/path/to/other-icon.png',
+  OTHER: new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/9970/9970242.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   }),
 };
 
-const LandmarkMap = ({ landmarks }) => {
+
+const LandmarkMap = ({ landmarks,posts }) => {
+  // console.log(posts)
   return (
     <>
-      {landmarks.map((landmark) => (
+      {posts.map((post) => (
         <Marker
-          key={landmark.id}
-          position={[landmark.latitude, landmark.longitude]}
-          icon={icons[landmark.category] || icons.Other}
+          key={post.id}
+          position={[post.locationLat, post.locationLng]}
+          icon={icons[post.category] || icons.Other}
         >
           <Popup>
-            <h3 className="font-bold">{landmark.name}</h3>
-            <p>{landmark.description}</p>
+            <h3 className="font-bold">{post.name}</h3>
+            <p>{post.description}</p>
           </Popup>
         </Marker>
       ))}

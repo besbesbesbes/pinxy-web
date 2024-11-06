@@ -27,13 +27,13 @@ const Pinxy = () => {
   const { id } = user;
   const [posts, setPosts] = useState([]);
   const [landmarks, setLandmarks] = useState([]);  // เพิ่ม state สำหรับ landmarks
-
+console.log("posts", posts)
   const [followers, setFollowers] = useState([
     { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
     { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
   ]);
 
-  const [distance, setDistance] = useState(5000); // Distance filter
+  const [distance, setDistance] = useState(1000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
   const [orderOption, setOrderOption] = useState("asc");
@@ -108,14 +108,7 @@ const Pinxy = () => {
     }
   };
 
-  // const getProfileData = async (id) => {
-  //   try {
-  //     const resp = await getProfile(id);
-  //     setProfileData(resp.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+
 
   const fetchLandmarks = async () => {
     // ดึงข้อมูล landmarks จาก API หรือแหล่งข้อมูล
@@ -128,7 +121,7 @@ const Pinxy = () => {
     }
   };
 
-  // console.log("ProfileData", profileData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {

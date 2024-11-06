@@ -57,7 +57,7 @@ const Pinxy = () => {
 
   useEffect(() => {
     getProfileData(id);
-
+    
     if (categoryOption) {
       clearPostForAI();
       handleGetAllPostByCategory();

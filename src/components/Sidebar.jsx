@@ -19,7 +19,6 @@ import { RiHome7Fill } from "react-icons/ri";
 import { AiFillOpenAI } from "react-icons/ai";
 import usePostStore from "../stores/postStore";
 
-
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
     <button
@@ -70,37 +69,49 @@ const Sidebar = ({ setCategoryOption }) => {
               icon={RiHome7Fill}
               label="Home"
               isActive={activeMenu === "Home"}
-              onClick={() => setActiveMenu("Home")}
+              onClick={() => {
+                setActiveMenu("Home"), setCategoryOption("");
+              }}
             />
             <MenuItem
               icon={IoIosAlert}
               label="Alert"
               isActive={activeMenu === "Alert"}
-              onClick={() => setActiveMenu("Alert")}
+              onClick={() => {
+                setActiveMenu("Alert"), setCategoryOption("ALERT");
+              }}
             />
             <MenuItem
               icon={IoNewspaper}
               label="News"
               isActive={activeMenu === "News"}
-              onClick={() => setActiveMenu("News")}
+              onClick={() => {
+                setActiveMenu("News"), setCategoryOption("NEWS");
+              }}
             />
             <MenuItem
               icon={RiShoppingBasketFill}
               label="Shop"
               isActive={activeMenu === "Shop"}
-              onClick={() => setActiveMenu("Shop")}
+              onClick={() => {
+                setActiveMenu("Shop"), setCategoryOption("SHOP");
+              }}
             />
             <MenuItem
               icon={MdOutlineWork}
               label="Jobs"
               isActive={activeMenu === "Jobs"}
-              onClick={() => setActiveMenu("Jobs")}
+              onClick={() => {
+                setActiveMenu("Jobs"), setCategoryOption("JOB");
+              }}
             />
             <MenuItem
               icon={BsChatLeftDotsFill}
               label="Other"
               isActive={activeMenu === "Other"}
-              onClick={() => setActiveMenu("Other")}
+              onClick={() => {
+                setActiveMenu("Other"), setCategoryOption("OTHER");
+              }}
             />
           </ul>
         </nav>

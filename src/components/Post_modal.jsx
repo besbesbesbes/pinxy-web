@@ -59,8 +59,8 @@ function Post_modal() {
   const getPost = async () => {
     try {
       const result = await getPostApi(token, curPostId);
-      console.log(result.data.resPost);
-      console.log(result.data.user);
+      // console.log(result.data.resPost);
+      // console.log(result.data.user);
       setPost(result.data.resPost);
       setUser(result.data.user);
       setComments(result.data.resPost.comments);

@@ -26,18 +26,7 @@ const Pinxy = () => {
   const { id } = user;
   console.log("user", user);
   const [profileData, setProfileData] = useState({});
-  const [posts, setPosts] = useState([
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-    { id: 7 },
-    { id: 8 },
-    { id: 9 },
-    { id: 10 },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   const [followers, setFollowers] = useState([
     { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
@@ -57,15 +46,16 @@ const Pinxy = () => {
 
   useEffect(() => {
     getProfileData(id);
-    
     if (categoryOption) {
-      clearPostForAI();
       handleGetAllPostByCategory();
     } else {
-      clearPostForAI();
       handleGetAllPost();
     }
   }, [categoryOption, userPosition, distance, sortOption, orderOption]);
+
+  useEffect(() => {
+    clearPostForAI();
+  }, [posts]);
 
   const handleGetAllPost = async () => {
     try {
@@ -150,26 +140,23 @@ const Pinxy = () => {
         {" "}
         {/* Adjust margin-left for sidebar and padding-top for navbar */}
         <div className="max-w-full mx-auto px-4">
-          <header className="sticky top-0 z-10 mb-8">
-            {" "}
-            {/* Make header sticky */}
-            <Navbar
-              setCategoryOption={setCategoryOption}
-              handleGetAllPostByValue={handleGetAllPostByValue}
-            />
-          </header>
+          <header className="sticky top-0 z-10"></header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
             <div className="lg:col-span-2 space-y-2">
-              <ProfileCard profileData={profileData} />
-              {userId && <ProfileBio />}
+              <Navbar
+                setCategoryOption={setCategoryOption}
+                handleGetAllPostByValue={handleGetAllPostByValue}
+              />
               <Post_form />
+              {/* <ProfileBio /> */}
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
                 orderOption={orderOption}
                 setOrderOption={setOrderOption}
               />
+              <ProfileCard profileData={profileData} />
               <div className="space-y-2">
                 {posts.map((post, idx) => (
                   <Post_post key={idx} postId={post.postId} />
@@ -178,9 +165,8 @@ const Pinxy = () => {
             </div>
 
             {/* Fixed Sidebar Content */}
-            <div className="lg:col-span-1 sticky top-4 h-[calc(100vh-8rem)] overflow-y-auto">
-              {" "}
-              {/* Adjust height */}
+            {/* <div className="lg:col-span-1 sticky top-4 h-[calc(100vh-8rem)] overflow-y-auto "> */}
+            <div className="lg:col-span-1 sticky top-0 h-[calc(100vh-4rem)] overflow-y-auto">
               <div className="space-y-2">
                 {/* <EventMap
                   posts={posts}

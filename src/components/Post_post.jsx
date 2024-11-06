@@ -19,18 +19,20 @@ function Post_post({ postId }) {
   const curPostId = usePostStore((state) => state.curPostId);
   const setCurPostId = usePostStore((state) => state.setCurPostId);
   const updateUserPosition = useGeoStore((state) => state.updateUserPosition);
+  const userPosition = useGeoStore((state) => state.userPosition);
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
   const postForAI = usePostStore((state) => state.postForAI);
   const hdlShowPost = () => {
+    // console.log("Show Post_modal");
     setCurPostId(postId);
-    updateUserPosition();
+    // updateUserPosition();
     document.getElementById("post-modal").showModal();
   };
   const hdlUpPost = async () => {
     setCurPostId(postId);
     try {
-      await upPostApi(token, curPostId);
+      await upPostApi(token, postId);
       setIsAnimatingUpPost(true);
       setReloadPost(true);
       setTimeout(() => setIsAnimatingUpPost(false), 1000);
@@ -41,7 +43,7 @@ function Post_post({ postId }) {
   const hdlDownPost = async () => {
     setCurPostId(postId);
     try {
-      await downPostApi(token, curPostId);
+      await downPostApi(token, postId);
       setIsAnimatingDownPost(true);
       setReloadPost(true);
       setTimeout(() => setIsAnimatingDownPost(false), 1000);
@@ -52,7 +54,7 @@ function Post_post({ postId }) {
   const getPost = async () => {
     try {
       const result = await getPostApi(token, postId);
-      console.log(result.data.resPost);
+      // console.log(result.data.resPost);
       setPost(result.data.resPost);
       setUser(result.data.user);
       addPostForAI(result.data.resPost.content);
@@ -61,8 +63,10 @@ function Post_post({ postId }) {
     }
   };
   useEffect(() => {
-    getPost();
-  }, []);
+    if (postId) {
+      getPost();
+    }
+  }, [postId]);
   useEffect(() => {
     if (reloadPost) {
       getPost();
@@ -77,7 +81,9 @@ function Post_post({ postId }) {
       }}
     >
       {/* <button onClick={() => console.log(postForAI)}>postForAI</button> */}
-      {/* <button onClick={() => clearPostForAI([])}>clearPostForAI</button> */}
+      {/* {postId} */}
+      {/* <button onClick={() => console.log(curPostId)}>curPostId</button> */}
+      {/* {postId} */}
       <div
         className="flex flex-col gap-5 overflow-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "auto" }}

@@ -18,6 +18,10 @@ const usePostStore = create((set) => ({
   clearPostForAI: () => set({ postForAI: [] }),
   aiSummaryTrigger: false,
   setAiSummaryTrigger: (newVal) => set({ aiSummaryTrigger: newVal }),
+  isRenderPostNew: false,
+  SetIsRenderPostNew: (newVal) => set({ isRenderPostNew: newVal }),
+  selectedUser: null,
+  setSelectedUser: (newVal) => set({ selectedUser: newVal }),
 }));
 
 export default usePostStore;

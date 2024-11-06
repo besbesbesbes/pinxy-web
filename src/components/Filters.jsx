@@ -27,7 +27,7 @@ export const SearchUser = () => {
   }, [displayName]);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full relative">
+    <div className="bg-white rounded-lg p-6 mb-6 w-full relative">
       <h4 className="text-xl font-bold mb-4">Search User</h4>
       <input
         type="text"

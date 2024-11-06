@@ -73,7 +73,7 @@ const EventMap = ({ posts, distance, setDistance }) => {
   }, [updateUserPosition]);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
+    <div className="bg-white rounded-lg  p-6 mb-6 w-full">
       <h4 className="text-xl font-bold mb-4">Map</h4>
       
       {/* Icon button to open the modal */}
@@ -126,7 +126,7 @@ const EventMap = ({ posts, distance, setDistance }) => {
       />
 
       {error && <p className="text-red-600">{error}</p>}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-full">
+      <div className="bg-white rounded-lg  p-6 mb-6 w-full">
         <h4 className="text-xl font-bold mb-4">Filter by Distance</h4>
         <input
           type="range"

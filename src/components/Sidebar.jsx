@@ -14,7 +14,7 @@ import {
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
     <button 
-      onClick={onClick} // กำหนด onClick เพื่อเรียกใช้ฟังก์ชันเมื่อคลิก
+      onClick={onClick}
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
         ${isActive 
           ? 'bg-blue-500 text-white' 
@@ -28,10 +28,10 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
 );
 
 const Sidebar = () => {
-  const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
+  const [activeMenu, setActiveMenu] = useState("Home");
 
   return (
-    <div className="bg-gray-50 fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg">
+    <div className="bg-white fixed top-0 left-0 w-64 h-screen flex flex-col shadow-md border-r">
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-4">

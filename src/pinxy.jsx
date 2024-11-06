@@ -1,50 +1,6 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import PostCard from './components/PostCard';
-import PostForm from './components/PostForm';
-import EventMap from './components/EventMap';
-import { SearchUser } from './components/Filters';
-import FollowBar from './components/FollowBar';
-import Sidebar from './components/Sidebar';
-import PostFilters from './components/PostFilters';
-import ProfileBio from './components/ProfileBio';
-
-const Pinxy = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: "Alice",
-      username: "alice",
-      content: "Excited for the weekend!",
-      likes: 10,
-      comments: 2,
-      shares: 1,
-      latitude: 40.73061,
-      longitude: -73.935242,
-    },
-    {
-      id: 2,
-      author: "Bob",
-      username: "bob",
-      content: "New café in town!",
-      likes: 20,
-      comments: 5,
-      shares: 3,
-      latitude: 40.712776,
-      longitude: -74.005974,
-    },
-  ]);
-
-  const [followers, setFollowers] = useState([
-    { id: 1, name: 'John Doe', avatar: 'https://via.placeholder.com/40' },
-    { id: 2, name: 'Jane Smith', avatar: 'https://via.placeholder.com/40' },
-    { id: 3, name: 'BOBY SA', avatar: 'https://via.placeholder.com/40' },
-=======
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
-import EventMap from "./components/EventMap";
+import EventMap from "./components/map/EventMap";
 import { SearchUser } from "./components/Filters";
 import FollowBar from "./components/FollowBar";
 import Sidebar from "./components/Sidebar";
@@ -71,22 +27,20 @@ const Pinxy = () => {
   console.log("user", user);
   const [profileData, setProfileData] = useState({});
   const [posts, setPosts] = useState([]);
+  const [landmarks, setLandmarks] = useState([]);  // เพิ่ม state สำหรับ landmarks
 
   const [followers, setFollowers] = useState([
     { id: 1, name: "John Doe", avatar: "https://via.placeholder.com/40" },
     { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
->>>>>>> dev
   ]);
 
-  const [distance, setDistance] = useState(5000);
+  const [distance, setDistance] = useState(5000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
   const [orderOption, setOrderOption] = useState("asc");
   const [categoryOption, setCategoryOption] = useState("");
   const [userId, setUserId] = useState(null);
 
-<<<<<<< HEAD
-=======
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
@@ -98,6 +52,8 @@ const Pinxy = () => {
     } else {
       handleGetAllPost();
     }
+    // ดึงข้อมูล landmarks ใน useEffect
+    fetchLandmarks();  
   }, [categoryOption, userPosition, distance, sortOption, orderOption]);
 
   useEffect(() => {
@@ -162,8 +118,19 @@ const Pinxy = () => {
       console.log(err);
     }
   };
+
+  const fetchLandmarks = async () => {
+    // ดึงข้อมูล landmarks จาก API หรือแหล่งข้อมูล
+    try {
+      const response = await fetch("/api/landmarks");
+      const data = await response.json();
+      setLandmarks(data); // ตั้งค่า landmarks
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   console.log("ProfileData", profileData);
->>>>>>> dev
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
@@ -182,39 +149,11 @@ const Pinxy = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen bg-gray-100">
-      {/* Fixed Navbar */}
-      <div className="fixed top-0 left-0 right-0 z-50">
-        <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-      </div>
-      
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      <main className="relative ml-64 pt-16">
-        <div className="max-w-full px-6 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Main Content Area */}
-            <div className="lg:col-span-8 space-y-6">
-              <ProfileBio />
-              <PostForm 
-                handleSubmit={handleSubmit} 
-                content={content} 
-                setContent={setContent} 
-              />
-              <PostFilters />
-              <div className="space-y-4">
-                {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-=======
     <div className="min-h-screen bg-my-bg-main flex">
       <Sidebar setCategoryOption={setCategoryOption} />
       <main className="flex-1 ml-64">
-        {" "}
-        {/* Adjust margin-left for sidebar and padding-top for navbar */}
         <div className="max-w-full mx-auto px-4">
           <header className="sticky top-0 z-10"></header>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
             <div className="lg:col-span-2 space-y-2">
               <Navbar
@@ -222,7 +161,6 @@ const Pinxy = () => {
                 handleGetAllPostByValue={handleGetAllPostByValue}
               />
               <Post_form />
-              {/* <ProfileBio /> */}
               <PostFilters
                 sortOption={sortOption}
                 setSortOption={setSortOption}
@@ -233,43 +171,20 @@ const Pinxy = () => {
               <div className="space-y-2">
                 {posts.map((post, idx) => (
                   <Post_post key={idx} postId={post.postId} />
->>>>>>> dev
                 ))}
               </div>
             </div>
-
-<<<<<<< HEAD
-            {/* Right Sidebar - Updated with wider width */}
-            <div className="hidden lg:block lg:col-span-4">
-              <div className="fixed right-0 top-16 w-1/4 min-w-[360px] h-screen z-40 bg-gray-100">
-                <div className="h-full p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                  <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <EventMap 
-                      posts={posts} 
-                      distance={distance} 
-                      setDistance={setDistance} 
-                    />
-                  </div>
-                  <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <SearchUser />
-                  </div>
-                  <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <FollowBar followers={followers} />
-                  </div>
-                </div>
-=======
-            {/* Fixed Sidebar Content */}
-            {/* <div className="lg:col-span-1 sticky top-4 h-[calc(100vh-8rem)] overflow-y-auto "> */}
             <div className="lg:col-span-1 sticky top-0 h-[calc(100vh-4rem)] overflow-y-auto">
               <div className="space-y-2">
-                {/* <EventMap
+                {/* ส่ง landmarks ไปที่ EventMap */}
+                <EventMap
                   posts={posts}
                   distance={distance}
                   setDistance={setDistance}
-                /> */}
+                  landmarks={landmarks}
+                />
                 <SearchUser />
                 <FollowBar followers={followers} />
->>>>>>> dev
               </div>
             </div>
           </div>

@@ -1,4 +1,3 @@
-// LandmarkMap.js
 import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';

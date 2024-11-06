@@ -21,13 +21,8 @@ import usePostStore from "../stores/postStore";
 
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
-<<<<<<< HEAD
-    <button 
-      onClick={onClick}
-=======
     <button
       onClick={onClick} // กำหนด onClick เพื่อเรียกใช้ฟังก์ชันเมื่อคลิก
->>>>>>> dev
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
         ${
           isActive
@@ -41,13 +36,6 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   </li>
 );
 
-<<<<<<< HEAD
-const Sidebar = () => {
-  const [activeMenu, setActiveMenu] = useState("Home");
-
-  return (
-    <div className="bg-white fixed top-0 left-0 w-64 h-screen flex flex-col shadow-md border-r">
-=======
 const Sidebar = ({ setCategoryOption }) => {
   const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
   const setAiSummaryTrigger = usePostStore(
@@ -60,7 +48,6 @@ const Sidebar = ({ setCategoryOption }) => {
 
   return (
     <div className="bg-my-bg-card fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg text-xl">
->>>>>>> dev
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-4">

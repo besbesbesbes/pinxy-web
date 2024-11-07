@@ -75,8 +75,8 @@ const Navbar = ({
             alt="LOGO"
             className="w-[30px] translate-y-1"
           />
-          <h1 className="text-[40px] font-bold mb-2 text-my-acct">
-            <span className="text-my-prim">in</span>xy
+          <h1 className="text-[40px] font-bold mb-2 text-my-prim">
+            <span className="text-my-acct">in</span>xy
           </h1>
         </div>
         <div className="self-end text-lg italic text-my-text font-bold text-opacity-40 mb-[15px]">

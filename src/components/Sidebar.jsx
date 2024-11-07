@@ -19,6 +19,8 @@ import { RiHome7Fill } from "react-icons/ri";
 import { AiFillOpenAI } from "react-icons/ai";
 import usePostStore from "../stores/postStore";
 import useUserStore from "../stores/userStore";
+import { FaQuestionCircle } from "react-icons/fa";
+import { MdSummarize } from "react-icons/md";
 
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
@@ -45,11 +47,18 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
   const setAiSummaryTrigger = usePostStore(
     (state) => state.setAiSummaryTrigger
   );
+  const setAiAskmeTrigger = usePostStore((state) => state.setAiAskmeTrigger);
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   const hdlAISummary = () => {
     if (postForAI.length > 0) {
       setAiSummaryTrigger(true);
       document.getElementById("ai-summary-modal").showModal();
+    }
+  };
+  const hdlAIAskme = () => {
+    if (postForAI.length > 0) {
+      setAiAskmeTrigger(true);
+      document.getElementById("ai-askme-modal").showModal();
     }
   };
   const hdlClickCategory = (label, category) => {
@@ -117,14 +126,21 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
             />
           </ul>
         </nav>
-        {/* ai button */}
-        <div className="flex overflow-y-auto p-4 text-my-secon hover:text-my-secon-hover cursor-pointer">
+        {/* ai section */}
+        <div className="px-4 flex flex-col gap-2">
           <button
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl border-my-secon transition-colors border transform hover:scale-105 duration-150"
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-my-secon transition-colors transform hover:scale-105 duration-150 text-white"
             onClick={hdlAISummary}
           >
-            <AiFillOpenAI className="h-7 w-7" />
+            <MdSummarize className="h-7 w-7" />
             <span className="font-medium">Summary</span>
+          </button>
+          <button
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl border-my-secon transition-colors border transform hover:scale-105 duration-150 text-my-prim text-opacity-70"
+            onClick={hdlAIAskme}
+          >
+            <FaQuestionCircle className="h-7 w-7" />
+            <span className="font-medium">Ask me</span>
           </button>
         </div>
       </div>

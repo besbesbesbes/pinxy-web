@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa"; // นำเข้าไอคอนค้นหาจาก react-icons
 import usePostStore from "../stores/postStore";
+import { getUserApi } from "../api/search";
+import { getProfile } from "../api/userProfile";
 
 const Navbar = ({
   inputRef,
+  setValue,
   setCategoryOption,
   handleGetAllPostByValue,
-  setValue,
+  handleGetAllPostByUserId,
 }) => {
+  const [displayName, setDisplayName] = useState("");
+  const [userList, setUserList] = useState([]);
+  const [focused, setFocused] = useState(false);
+  const selectedUser = usePostStore((state) => state.selectedUser);
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   const setActiveMenu = usePostStore((state) => state.setActiveMenu);
+  const setBioUser = usePostStore((state) => state.setBioUser);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,8 +28,44 @@ const Navbar = ({
     setSelectedUser(null);
   };
 
+  const hdlOnChange = (e) => {
+    setDisplayName(e.target.value);
+  };
+
+  const getUser = async (name) => {
+    try {
+      const result = await getUserApi(name);
+      setUserList(result.data.users || []); // Handle cases where result.users might be undefined
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const getUserInfo = async () => {
+    try {
+      const resp = await getProfile(selectedUser);
+      // console.log(resp.data.profileData);
+      setBioUser(resp.data.profileData);
+    } catch (err) {
+      console.log(err?.response?.data?.error || err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (displayName) {
+      getUser(displayName);
+    }
+  }, [displayName]);
+
+  useEffect(() => {
+    getUserInfo();
+    if (selectedUser) {
+      handleGetAllPostByUserId(selectedUser);
+    }
+  }, [selectedUser]);
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 w-full">
+    <div className="bg-white rounded-lg  p-4 w-full">
       {" "}
       {/* ใช้ w-full */}
       <div className="flex justify-start">
@@ -46,7 +90,11 @@ const Navbar = ({
             type="text"
             ref={inputRef}
             className="w-full flex-1 focus:outline-none text-xl text-my-text text-opacity-70 pl-2"
-            placeholder="Search..."
+            placeholder="Search Posts or Users..."
+            value={displayName}
+            onChange={hdlOnChange}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setTimeout(() => setFocused(false), 100)} // Delay closing dropdown
           />
           <button
             type="submit"
@@ -56,6 +104,27 @@ const Navbar = ({
             <p className="font-bold text-white">Search</p>
           </button>
         </div>
+        {/* Dropdown for showing user list */}
+        {focused && userList.length > 0 && (
+          <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-2 max-h-60 overflow-y-auto shadow-lg z-10">
+            {userList.slice(0, 5).map((user, index) => (
+              <li
+                key={index}
+                className="flex items-center px-4 py-2 hover:bg-blue-100 cursor-pointer"
+                onClick={() => {
+                  setSelectedUser(user.id), setActiveMenu("");
+                }}
+              >
+                <img
+                  src={user.imageUrl}
+                  alt={user.displayName}
+                  className="w-8 h-8 rounded-full mr-3"
+                />
+                <span>{user.displayName}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </form>
     </div>
   );

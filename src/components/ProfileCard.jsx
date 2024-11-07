@@ -23,9 +23,9 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
   };
   useEffect(() => {
     getUserInfo();
-    if (selectedUser) {
-      handleGetAllPostByUserId(selectedUser);
-    }
+    // if (selectedUser) {
+    //   handleGetAllPostByUserId(selectedUser);
+    // }
   }, [selectedUser]);
   return selectedUser ? (
     <div className="w-full min-h-[120px]  flex flex-col pl-10 rounded-xl gap-5 pt-5 cursor-pointer text-my-text">

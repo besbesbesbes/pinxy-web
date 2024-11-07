@@ -48,12 +48,14 @@ const Pinxy = () => {
     handleGetFollowing(user.id);
     if (categoryOption) {
       handleGetAllPostByCategory();
+    } else if (selectedUser) {
+      handleGetAllPostByUserId(selectedUser);
     } else if (value) {
       handleGetAllPostByValue(value);
     } else {
       handleGetAllPost();
     }
-  }, [categoryOption, userPosition, distance, sortOption, orderOption, value]);
+  }, [categoryOption, userPosition, distance, sortOption, orderOption, value, selectedUser]);
 
   useEffect(() => {
     clearPostForAI();
@@ -187,6 +189,7 @@ const Pinxy = () => {
                 setValue={setValue}
                 setCategoryOption={setCategoryOption}
                 handleGetAllPostByValue={handleGetAllPostByValue}
+                handleGetAllPostByUserId={handleGetAllPostByUserId}
               />
               <Post_form />
               {/* <ProfileBio /> */}
@@ -224,10 +227,10 @@ const Pinxy = () => {
                   setDistance={setDistance}
                   landmarks={landmarks}
                 />
-                <SearchUser
+                {/* <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
-                />
-                <FollowBar followers={followers} />
+                /> */}
+                <FollowBar followers={followers} setCategoryOption={setCategoryOption} />
               </div>
             </div>
           </div>

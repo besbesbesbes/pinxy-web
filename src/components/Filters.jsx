@@ -11,6 +11,7 @@ export const SearchUser = ({ handleGetAllPostByUserId }) => {
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   const bioUser = usePostStore((state) => state.bioUser);
   const setBioUser = usePostStore((state) => state.setBioUser);
+  const setActiveMenu = usePostStore((state) => state.setActiveMenu);
 
   const hdlOnChange = (e) => {
     setDisplayName(e.target.value);
@@ -50,7 +51,7 @@ export const SearchUser = ({ handleGetAllPostByUserId }) => {
 
   return (
     <div className="bg-white rounded-lg p-6 mb-6 w-full relative">
-      <h4 className="text-xl font-bold mb-4">Search User</h4>
+      {/* <h4 className="text-xl font-bold mb-4">Search User</h4> */}
       <input
         type="text"
         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -59,7 +60,6 @@ export const SearchUser = ({ handleGetAllPostByUserId }) => {
         onChange={hdlOnChange}
         onFocus={() => setFocused(true)}
         onBlur={() => setTimeout(() => setFocused(false), 100)} // Delay closing dropdown
-        // onBlur={() => setFocused(false)}
       />
 
       {/* Dropdown for showing user list */}
@@ -70,7 +70,7 @@ export const SearchUser = ({ handleGetAllPostByUserId }) => {
               key={index}
               className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
               onClick={() => {
-                setSelectedUser(user.id), console.log(user.id);
+                setSelectedUser(user.id), setActiveMenu("");
               }}
             >
               {user.displayName} {/* Adjust property as needed */}

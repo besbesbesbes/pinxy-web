@@ -60,8 +60,6 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
     setSelectedUser(null);
   };
 
-  // console.log("User", user)
-
   return (
     <div className="bg-my-bg-card fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg text-xl">
       {/* Profile Section */}

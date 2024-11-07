@@ -50,10 +50,12 @@ const Pinxy = () => {
       handleGetAllPostByCategory();
     } else if (value) {
       handleGetAllPostByValue(value);
+    } else if (selectedUser) {
+      handleGetAllPostByUserId(selectedUser);
     } else {
       handleGetAllPost();
     }
-  }, [categoryOption, userPosition, distance, sortOption, orderOption, value]);
+  }, [categoryOption, userPosition, distance, sortOption, orderOption, value, selectedUser]);
 
   useEffect(() => {
     clearPostForAI();
@@ -227,7 +229,7 @@ const Pinxy = () => {
                 <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
                 />
-                <FollowBar followers={followers} />
+                <FollowBar followers={followers} setCategoryOption={setCategoryOption} />
               </div>
             </div>
           </div>

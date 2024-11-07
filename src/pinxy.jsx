@@ -41,6 +41,7 @@ const Pinxy = () => {
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
+  const addPostForAI = usePostStore((state) => state.addPostForAI);
   const selectedUser = usePostStore((state) => state.selectedUser);
 
   useEffect(() => {
@@ -56,6 +57,11 @@ const Pinxy = () => {
 
   useEffect(() => {
     clearPostForAI();
+    if (posts) {
+      posts.map((el) => {
+        addPostForAI(el.content);
+      });
+    }
   }, [posts]);
 
   const handleGetAllPost = async () => {
@@ -172,8 +178,9 @@ const Pinxy = () => {
       />
       <main className="flex-1 ml-64">
         <div className="max-w-full mx-auto px-4">
-          <header className="sticky top-0 z-10"></header>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+          {/* <header className="sticky top-0 z-10"></header> */}
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-2">
               <Navbar
                 inputRef={inputRef}

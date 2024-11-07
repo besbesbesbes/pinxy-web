@@ -18,6 +18,7 @@ import { VscThreeBars } from "react-icons/vsc";
 import createError from "../utils/createError";
 import useErrStore from "../stores/errStore";
 import { AiFillOpenAI } from "react-icons/ai";
+import useGeoStore from "../stores/geoStore";
 import {
   MapContainer,
   TileLayer,
@@ -45,6 +46,12 @@ function Post_edit_modal() {
   const [imagesToDelete, setImagesToDelete] = useState([]);
   const [sentiment, setSentiment] = useState("Neutral");
   const [isSentimentLoading, setIsSentimentLoading] = useState(false);
+  const userPosition = useGeoStore((state) => state.userPosition);
+  const mapRef = useRef(null);
+  const isRenderPostEdit = usePostStore((state) => state.isRenderPostEdit);
+  const SetIsRenderPostEdit = usePostStore(
+    (state) => state.SetIsRenderPostEdit
+  );
   const [input, setInput] = useState({
     txt: "",
     lat: "",
@@ -73,7 +80,7 @@ function Post_edit_modal() {
   const getPost = async () => {
     try {
       const result = await getPostApi(token, curPostId);
-      // console.log(result.data.resPost);
+      console.log(result.data.resPost);
       // console.log(result.data.user);
       setPost(result.data.resPost);
       setInput({
@@ -179,9 +186,17 @@ function Post_edit_modal() {
     }
   }, [curPostId]);
 
+  useEffect(() => {
+    if (mapRef.current && post?.locationLat && post?.locationLng) {
+      console.log("flyTo");
+      mapRef.current.flyTo([post.locationLat, post.locationLng]);
+    }
+    SetIsRenderPostEdit(false);
+  }, [isRenderPostEdit]);
+
   return (
     <div
-      className="w-6/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col p-10 rounded-xl gap-5 "
+      className="w-6/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col p-10 rounded-xl gap-5 overflow-auto"
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -191,7 +206,7 @@ function Post_edit_modal() {
         markerPosition
       </button> */}
       <div
-        className="flex flex-col gap-5 overflow-auto"
+        className="flex flex-col gap-5 overflow-auto min-h-[80px]"
         style={{ scrollbarWidth: "none", msOverflowStyle: "auto" }}
       >
         {/* user area */}
@@ -260,8 +275,8 @@ function Post_edit_modal() {
               onChange={hdlFileChange}
             />
             {/* picture lists */}
-            <div className="flex flex-col px-2 max-h-[600px] overflow-auto">
-              {post?.images.length > 0 ? (
+            <div className="flex flex-col px-2 max-h-[450px] overflow-auto">
+              {post?.images.length > 0 || files.length > 0 ? (
                 <div>
                   {/* First Reorder Group for post.images */}
                   <Reorder.Group
@@ -360,15 +375,16 @@ function Post_edit_modal() {
             Add Picture
           </button>
         </div>
-        <div className="flex flex-col w-1/2 gap-2">
+        <div className="flex flex-col w-1/2 gap-5">
           <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
-              center={[13.75848253693764, 100.53602035822]}
+              center={userPosition}
               zoom={16}
               scrollWheelZoom={false}
               dragging={false}
               zoomControl={false}
               style={{ height: "100%", width: "100%", zIndex: 1 }}
+              ref={mapRef}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -382,10 +398,10 @@ function Post_edit_modal() {
               )}
             </MapContainer>
           </div>
-          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl gap-5 bg-slate-50 shadow-md">
+          <div className="w-full h-fit flex flex-col items-center justify-start gap-5 ">
             {/* category */}
-            <p className="m-2 font-bold">Category</p>
-            <div className="relative inline-block w-full px-10">
+            {/* <p className="m-2 font-bold">Category</p> */}
+            <div className="relative inline-block w-full">
               <div className="flex gap-4 items-center">
                 {input.cat === "ALERT" && (
                   <div className="bg-my-cat-alert p-2 rounded-full shadow-lg">
@@ -422,7 +438,7 @@ function Post_edit_modal() {
                   }
                 >
                   <option value="" disabled>
-                    Select an option
+                    Select Cagetory
                   </option>
                   <option value="ALERT">Alert</option>
                   <option value="NEWS">News</option>
@@ -433,10 +449,10 @@ function Post_edit_modal() {
               </div>
             </div>
           </div>
-          <div className="w-full h-[120px] flex flex-col items-center justify-start border rounded-xl bg-slate-50 shadow-md">
+          <div className="w-full h-fit flex flex-col items-center justify-start rounded-xl ">
             {/* duration */}
-            <p className="m-2 font-bold">Post duration</p>
-            <div className="bg-white rounded-lg p-6 w-full flex gap-1">
+            <div className="bg-white rounded-lg w-full flex gap-1 items-center">
+              <p className="m-2 font-bold">Duration</p>
               <input
                 type="range"
                 min="1"

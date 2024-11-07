@@ -38,6 +38,7 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
 );
 
 const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
+  const postForAI = usePostStore((state) => state.postForAI);
   const user = useUserStore((state) => state.user);
   const activeMenu = usePostStore((state) => state.activeMenu);
   const setActiveMenu = usePostStore((state) => state.setActiveMenu);
@@ -46,8 +47,10 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
   );
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   const hdlAISummary = () => {
-    setAiSummaryTrigger(true);
-    document.getElementById("ai-summary-modal").showModal();
+    if (postForAI.length > 0) {
+      setAiSummaryTrigger(true);
+      document.getElementById("ai-summary-modal").showModal();
+    }
   };
   const hdlClickCategory = (label, category) => {
     setActiveMenu(label);
@@ -131,12 +134,12 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
       {/* Bottom Actions */}
       <div className="p-4 border-t">
         <ul className="space-y-2">
-          <MenuItem
+          {/* <MenuItem
             icon={Settings}
             label="Settings"
             isActive={activeMenu === "Settings"}
             onClick={() => setActiveMenu("Settings")}
-          />
+          /> */}
           <li>
             <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-my-acct hover:bg-red-50 transition-colors">
               <LogOut className="h-5 w-5" />

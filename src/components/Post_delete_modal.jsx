@@ -5,10 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import usePostStore from "../stores/postStore";
 import useUserStore from "../stores/userStore";
 import { deletePostApi } from "../apis/post-api";
+import { useNavigate } from "react-router-dom";
+
 function Post_delete_modal() {
   const [confirming, setConfirming] = useState(false);
   const curPostId = usePostStore((state) => state.curPostId);
   const token = useUserStore((state) => state.token);
+  const navigate = useNavigate();
   const hdlClosePopup = () => {
     setConfirming(false);
     document.getElementById("post-delete-modal").close();
@@ -22,6 +25,7 @@ function Post_delete_modal() {
       setConfirming(false);
       await deletePostApi(token, curPostId);
       hdlClosePopup();
+      navigate(0);
     }
   };
   return (

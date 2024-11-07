@@ -1,9 +1,10 @@
 // import OpenAI from "openai";
 import { IoIosClose } from "react-icons/io";
 import usePostStore from "../stores/postStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineReport } from "react-icons/md";
+import { AiFillOpenAI } from "react-icons/ai";
 import {
   getPostApi,
   addCommentApi,
@@ -12,6 +13,7 @@ import {
   downPostApi,
   upCommentApi,
   downCommentApi,
+  getAiSentimentApi,
 } from "../apis/post-api";
 import { format } from "timeago.js";
 import { ImArrowUp, ImArrowDown } from "react-icons/im";
@@ -40,6 +42,11 @@ function Post_modal() {
   const [input, setInput] = useState("");
   const [isAnimatingUpPost, setIsAnimatingUpPost] = useState(false);
   const [isAnimatingDownPost, setIsAnimatingDownPost] = useState(false);
+  const SetIsRenderPostEdit = usePostStore(
+    (state) => state.SetIsRenderPostEdit
+  );
+  const [sentiment, setSentiment] = useState("Neutral");
+  const [isSentimentLoading, setIsSentimentLoading] = useState(false);
   const commentVariants = {
     initial: { opacity: 0, height: 0 },
     animate: { opacity: 1, height: "auto" },
@@ -51,6 +58,8 @@ function Post_modal() {
     setSelectedPic(0);
     setInput("");
     setUser({});
+    setSentiment("Neutral");
+    setIsSentimentLoading(false);
     document.getElementById("post-modal").close();
   };
   const hldCurPic = (idx) => {
@@ -97,6 +106,7 @@ function Post_modal() {
       const result = await addCommentApi(token, input, curPostId);
       console.log(result.data);
       setInput("");
+      setSentiment("Neutral");
       setReloadPost(true);
     } catch (err) {
       createError(setErrTxt, err.response.data.error);
@@ -138,7 +148,31 @@ function Post_modal() {
     document.getElementById("post-delete-modal").showModal();
   };
   const hdlEditPost = () => {
+    SetIsRenderPostEdit(true);
     document.getElementById("post-edit-modal").showModal();
+  };
+  const getSentiment = async (e) => {
+    console.log("Call ai sentiment");
+    try {
+      setIsSentimentLoading(true);
+      const resp = await getAiSentimentApi(token, input);
+      setSentiment(resp.data.sentiment);
+    } catch (err) {
+      console.log(err?.response?.data?.error || err.message);
+    } finally {
+      setIsSentimentLoading(false);
+    }
+  };
+  const typingTimerRef = useRef(null);
+  const hdlTextInputChange = (e) => {
+    setInput(e.target.value);
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+    typingTimerRef.current = setTimeout(() => {
+      console.log("Call sentiment");
+      getSentiment();
+    }, 1000);
   };
   useEffect(() => {
     if (curPostId) {
@@ -384,12 +418,26 @@ function Post_modal() {
             src={user?.imageUrl}
             alt="no load"
           />
-          <textarea
-            placeholder="What's on your mind..."
-            className="bg-my-text bg-opacity-5 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+          <div className="relative w-full">
+            <textarea
+              onBlur={getSentiment}
+              placeholder="What's on your mind..."
+              className="bg-my-text bg-opacity-5 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full"
+              value={input}
+              onChange={hdlTextInputChange}
+            />
+            {/* sentiment */}
+            {sentiment && (
+              <div className="absolute bottom-0 right-0 px-2 py-1 bg-blue-500 text-white italic rounded-full flex items-center gap-1 -translate-x-3 -translate-y-3">
+                {isSentimentLoading ? (
+                  <span className="loading loading-spinner w-[20px]"></span>
+                ) : (
+                  <AiFillOpenAI className="text-xl" />
+                )}
+                {sentiment}
+              </div>
+            )}
+          </div>
           <button className="btn self-end bg-my-secon hover:bg-my-secon-hover">
             <IoSendSharp
               className="text-2xl text-white"

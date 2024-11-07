@@ -18,6 +18,7 @@ import { VscThreeBars } from "react-icons/vsc";
 import createError from "../utils/createError";
 import useErrStore from "../stores/errStore";
 import { AiFillOpenAI } from "react-icons/ai";
+import useGeoStore from "../stores/geoStore";
 import {
   MapContainer,
   TileLayer,
@@ -45,6 +46,12 @@ function Post_edit_modal() {
   const [imagesToDelete, setImagesToDelete] = useState([]);
   const [sentiment, setSentiment] = useState("Neutral");
   const [isSentimentLoading, setIsSentimentLoading] = useState(false);
+  const userPosition = useGeoStore((state) => state.userPosition);
+  const mapRef = useRef(null);
+  const isRenderPostEdit = usePostStore((state) => state.isRenderPostEdit);
+  const SetIsRenderPostEdit = usePostStore(
+    (state) => state.SetIsRenderPostEdit
+  );
   const [input, setInput] = useState({
     txt: "",
     lat: "",
@@ -73,7 +80,7 @@ function Post_edit_modal() {
   const getPost = async () => {
     try {
       const result = await getPostApi(token, curPostId);
-      // console.log(result.data.resPost);
+      console.log(result.data.resPost);
       // console.log(result.data.user);
       setPost(result.data.resPost);
       setInput({
@@ -178,6 +185,14 @@ function Post_edit_modal() {
       getPost();
     }
   }, [curPostId]);
+
+  useEffect(() => {
+    if (mapRef.current && post?.locationLat && post?.locationLng) {
+      console.log("flyTo");
+      mapRef.current.flyTo([post.locationLat, post.locationLng]);
+    }
+    SetIsRenderPostEdit(false);
+  }, [isRenderPostEdit]);
 
   return (
     <div
@@ -363,12 +378,13 @@ function Post_edit_modal() {
         <div className="flex flex-col w-1/2 gap-5">
           <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
-              center={[13.75848253693764, 100.53602035822]}
+              center={userPosition}
               zoom={16}
               scrollWheelZoom={false}
               dragging={false}
               zoomControl={false}
               style={{ height: "100%", width: "100%", zIndex: 1 }}
+              ref={mapRef}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

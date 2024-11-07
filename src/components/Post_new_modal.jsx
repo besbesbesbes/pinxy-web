@@ -32,6 +32,7 @@ import {
 } from "react-leaflet";
 import useUserStore from "../stores/userStore";
 import Post_category from "./Post_category";
+
 function Post_new_modal() {
   const token = useUserStore((state) => state.token);
   const setErrTxt = useErrStore((state) => state.setErrTxt);
@@ -47,7 +48,7 @@ function Post_new_modal() {
   const [isSentimentLoading, setIsSentimentLoading] = useState(false);
   const isRenderPostNew = usePostStore((state) => state.isRenderPostNew);
   const SetIsRenderPostNew = usePostStore((state) => state.SetIsRenderPostNew);
-  const [newUserPosition, setNewUserPosition] = useState(userPosition);
+  const mapRef = useRef(null);
   const [input, setInput] = useState({
     txt: "",
     lat: "",
@@ -110,6 +111,8 @@ function Post_new_modal() {
       });
       const result = await newPostApi(token, body);
       console.log(result.data);
+      setSentiment("Neutral");
+      setIsSentimentLoading(false);
       hdlClosePopup();
     } catch (err) {
       createError(setErrTxt, err.response.data.error);
@@ -149,11 +152,16 @@ function Post_new_modal() {
   };
 
   useEffect(() => {
-    console.log("Use effect Post_new_modal");
+    // console.log("Use effect Post_new_modal");
+    // console.log("userPostion", userPosition);
     getUserForNewPost();
-    // updateUserPosition();
+    updateUserPosition();
+    if (mapRef.current && userPosition) {
+      mapRef.current.flyTo(userPosition);
+    }
     SetIsRenderPostNew(false);
   }, [isRenderPostNew]);
+
   return (
     <div
       className="w-6/12 max-h-full bg-my-bg-card fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col p-10 rounded-xl gap-5 overflow-auto"
@@ -164,7 +172,8 @@ function Post_new_modal() {
       {/* <button onClick={() => console.log(isSentimentLoading)}>
         isSentimentLoading
       </button> */}
-      {/* <button onClick={() => console.log(userPosition)}>userPosition</button> */}
+
+      {/* <button onClick={hdlTest}>setNewUserPosition</button> */}
       {/* <button onClick={test}>input</button> */}
       {/* user area */}
       <div className="flex gap-5">
@@ -282,12 +291,13 @@ function Post_new_modal() {
         <div className="flex flex-col w-1/2 gap-5">
           <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-md">
             <MapContainer
-              center={newUserPosition}
-              zoom={16}
+              center={userPosition}
+              zoom={15}
               scrollWheelZoom={false}
               dragging={false}
               zoomControl={false}
               style={{ height: "100%", width: "100%", zIndex: 1 }}
+              ref={mapRef}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

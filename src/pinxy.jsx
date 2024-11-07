@@ -135,7 +135,7 @@ const Pinxy = () => {
         {" "}
         {/* Adjust margin-left for sidebar and padding-top for navbar */}
         <div className="max-w-full mx-auto px-4">
-          <header className="sticky top-0 z-10"></header>
+          {/* <header className="sticky top-0 z-10"></header> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-2">

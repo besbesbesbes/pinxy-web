@@ -8,8 +8,13 @@ const PostFilters = ({
 }) => {
   return (
     <div className="flex items-center justify-between w-full p-3">
+<<<<<<< HEAD
     <div className="flex items-center gap-2 ml-auto">
     <p className="text-lg">Current Sort By:</p>
+=======
+      <div className="flex items-center gap-2 ml-auto">
+      <p className="text-lg">Current Sort By:</p>
+>>>>>>> dev
         <select
           className="px-4 py-2 rounded-lg focus:outline-none shadow-md "
           value={sortOption}

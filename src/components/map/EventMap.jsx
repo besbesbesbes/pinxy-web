@@ -83,6 +83,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
 
   return (
     <div className="bg-white rounded-lg p-6 mb-6 w-full">
+<<<<<<< HEAD
       {/* ซ่อนแผนที่เล็กเมื่อ popup เปิดอยู่ */}
       {isMapVisible && (
         <div className="h-[400px] rounded-lg overflow-hidden relative">
@@ -107,6 +108,30 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
                 <h3 className="font-bold">Your Location minimap</h3>
               </Popup>
             </Marker>
+=======
+      <div className="h-[400px] rounded-lg overflow-hidden">
+        <MapContainer
+          center={postLocation.length > 0 ? postLocation : userPosition}
+          zoom={19}
+          className="h-full w-full"
+          zoomControl={false}
+          scrollWheelZoom={false}
+          dragging={false}
+          touchZoom={false}
+          doubleClickZoom={false}
+          keyboard={false}
+          ref={mapRef}  // เก็บการอ้างอิงของแผนที่
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+          />
+          <Marker position={userPosition}>
+            <Popup>
+              <h3 className="font-bold">Your Location</h3>
+            </Popup>
+          </Marker>
+>>>>>>> dev
 
             <LandmarkMap landmarks={landmarks} posts={posts} />
 
@@ -136,7 +161,12 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
       
       {error && <p className="text-red-600">{error}</p>}
 
+<<<<<<< HEAD
       <div className="bg-white rounded-lg mt-2 w-full flex">
+=======
+      {/* Filter by Distance */}
+      <div className="bg-white rounded-lg p-6 mb-6 w-full">
+>>>>>>> dev
         <input
           type="range"
           min="500"

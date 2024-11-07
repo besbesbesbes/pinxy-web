@@ -1,22 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import useStore from '../../stores/geoStore';
-import UserLocationUpdater from './UserLocationUpdater';
-import LandmarkMap from './LandmarkMap';
-
+import React, { useState, useEffect, useRef } from "react";
+import { FaTimes } from "react-icons/fa";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
+import useStore from "../../stores/geoStore";
+import UserLocationUpdater from "./UserLocationUpdater";
+import LandmarkMap from "./LandmarkMap";
 
 const EventMap = ({ posts, distance, setDistance, landmarks }) => {
-  const { userPosition, updateUserPosition, setPostLocation, postLocation } = useStore();
+  const { userPosition, updateUserPosition, setPostLocation, postLocation } =
+    useStore();
   const [error, setError] = useState(null);
   const [isMapPopupOpen, setIsMapPopupOpen] = useState(false); // เปิดปิด Popup
   const [isMapVisible, setIsMapVisible] = useState(true); // การแสดงแผนที่เล็ก
-  const [fixZoomLevel, setFixZoomLevel] = useState(15)
+  const [fixZoomLevel, setFixZoomLevel] = useState(15);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const mapRef = useRef(null);
   const popupRef = useRef(null);
   const zoomLevelRef = useRef(null); // เก็บค่า zoom level ที่ตั้งไว้จากการปรับระยะ
-
 
   useEffect(() => {
     updateUserPosition();
@@ -24,7 +29,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
 
   useEffect(() => {
     if (postLocation.length > 0 && mapRef.current) {
-      if(userPosition === postLocation) {
+      if (userPosition === postLocation) {
         mapRef.current.flyTo(postLocation, fixZoomLevel);
       } else {
         mapRef.current.flyTo(postLocation, 18);
@@ -68,21 +73,29 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
   // Close popup on ESC key press
   useEffect(() => {
     const handleEsc = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsMapPopupOpen(false);
         setIsMapVisible(true); // แสดงแผนที่เล็กเมื่อ Popup ปิด
       }
     };
-    document.addEventListener('keydown', handleEsc);
-    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener("keydown", handleEsc);
+    document.addEventListener("mousedown", handleOutsideClick);
     return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener("keydown", handleEsc);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
+  const formatDistance = (distance) => {
+    if (distance < 1000) {
+      return `${distance} m.`; // Less than 1 km
+    } else {
+      const kilometers = (distance / 1000).toFixed(1); // Convert to kilometers with 1 decimal place
+      return `${kilometers} km.`;
+    }
+  };
 
   return (
-    <div className="bg-white rounded-lg p-6 mb-6 w-full">
+    <div className="bg-white rounded-lg p-3 w-full flex flex-col gap-2">
       {/* ซ่อนแผนที่เล็กเมื่อ popup เปิดอยู่ */}
       {isMapVisible && (
         <div className="h-[400px] rounded-lg overflow-hidden relative">
@@ -111,32 +124,30 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
             <LandmarkMap landmarks={landmarks} posts={posts} />
 
             {posts.map((post) => {
-            if (post.latitude && post.longitude) {
-              return (
-                <Marker
-                  key={post.id}
-                  position={[post.latitude, post.longitude]}
-                  onMouseEnter={() => handleMouseEnter(post)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Popup>
-                    <h3 className="font-bold">{post.author}</h3>
-                    <p>{post.content}</p>
-                  </Popup>
-                </Marker>
-              );
-            }
-            return null;
-          })}
+              if (post.latitude && post.longitude) {
+                return (
+                  <Marker
+                    key={post.id}
+                    position={[post.latitude, post.longitude]}
+                    onMouseEnter={() => handleMouseEnter(post)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <Popup>
+                      <h3 className="font-bold">{post.author}</h3>
+                      <p>{post.content}</p>
+                    </Popup>
+                  </Marker>
+                );
+              }
+              return null;
+            })}
             <UserLocationUpdater userPosition={userPosition} />
             <MapClickHandler />
           </MapContainer>
         </div>
       )}
-      
       {error && <p className="text-red-600">{error}</p>}
-
-      <div className="bg-white rounded-lg mt-2 w-full flex">
+      <div className="bg-white rounded-lg mt-2 w-full flex gap-2">
         <input
           type="range"
           min="500"
@@ -144,18 +155,22 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
           value={distance}
           onChange={(e) => {
             setDistance(e.target.value);
-            const zoomLevel = Math.min(18, Math.max(10, 18 - Math.floor(e.target.value / 500)));
+            const zoomLevel = Math.min(
+              18,
+              Math.max(10, 18 - Math.floor(e.target.value / 500))
+            );
             // zoomLevelRef.current = zoomLevel; // เก็บค่า zoom level ไว้ใน ref
-            setFixZoomLevel(zoomLevel)
+            setFixZoomLevel(zoomLevel);
             if (mapRef.current) {
               mapRef.current.setZoom(zoomLevel); // ตั้งค่า zoom โดยตรงที่แผนที่
             }
           }}
-          className="w-full"
+          className="flex-1"
         />
-        <p className="text-gray-600 text-center ">{distance} meters</p>
+        <p className="text-gray-600 text-center w-fit">
+          {formatDistance(distance)}
+        </p>
       </div>
-
       {/* Map Popup */}
       {isMapPopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -189,7 +204,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
               dragging={true}
               ref={mapRef}
               style={{
-                position: 'absolute',
+                position: "absolute",
                 top: 0,
                 left: 0,
                 zIndex: 1, // แผนที่ใน Popup จะอยู่ข้างหลังพื้นหลัง Popup

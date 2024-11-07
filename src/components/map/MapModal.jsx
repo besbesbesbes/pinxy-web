@@ -70,7 +70,7 @@ const MapModal = ({ isOpen, onClose, userPosition, posts }) => {
                 key={post.id}
                 position={[post.locationLat, post.locationLng]}
                 icon={icons[post.category] || icons.Other}
-                eventHandlers={{ click: (e) => hdlShowPost(post.postId) }}
+                eventHandlers={{ click: (e) => console.log(post.postId) }}
               >
                 <Popup>
                   <h3 className="font-bold">{post.author}</h3>

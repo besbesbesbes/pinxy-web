@@ -53,6 +53,7 @@ function Post_modal() {
     exit: { opacity: 0, height: 0, transition: { duration: 0.2 } },
   };
   const hdlClosePopup = (e) => {
+    e.stopPropagation();
     setCurPostId(null);
     setPost("");
     setSelectedPic(0);

@@ -6,7 +6,7 @@ const UserLocationUpdater = ({ userPosition }) => {
 
   useEffect(() => {
     if (userPosition) {
-      map.setView(userPosition, 19); // Update map position
+      map.setView(userPosition, 18); // Update map position
     }
   }, [userPosition, map]);
 

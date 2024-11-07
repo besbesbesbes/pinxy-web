@@ -1,89 +1,122 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaSearchPlus } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import useStore from '../../stores/geoStore';
 import UserLocationUpdater from './UserLocationUpdater';
-import MapModal from './MapModal';
 import LandmarkMap from './LandmarkMap';
+
 
 const EventMap = ({ posts, distance, setDistance, landmarks }) => {
   const { userPosition, updateUserPosition, setPostLocation, postLocation } = useStore();
   const [error, setError] = useState(null);
+  const [isMapPopupOpen, setIsMapPopupOpen] = useState(false); // เปิดปิด Popup
+  const [isMapVisible, setIsMapVisible] = useState(true); // การแสดงแผนที่เล็ก
+  const [fixZoomLevel, setFixZoomLevel] = useState(15)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [mapClickPosition, setMapClickPosition] = useState(null);  // ใช้เก็บตำแหน่งคลิกที่แผนที่
+  const mapRef = useRef(null);
+  const popupRef = useRef(null);
+  const zoomLevelRef = useRef(null); // เก็บค่า zoom level ที่ตั้งไว้จากการปรับระยะ
 
-  const mapRef = useRef(null);  // ใช้สำหรับเก็บแผนที่อ้างอิง
 
   useEffect(() => {
-    updateUserPosition(); // Update position on mount
+    updateUserPosition();
   }, [updateUserPosition]);
 
   useEffect(() => {
-    console.log("User Position:", userPosition); // Log user position to console
-  }, [userPosition]);
-
-  // เมื่อ postLocation เปลี่ยนแปลงให้ทำการอัปเดตแผนที่
-  useEffect(() => {
     if (postLocation.length > 0 && mapRef.current) {
-      mapRef.current.flyTo(postLocation, 18);  // เรียก flyTo() เพื่อให้แผนที่ขยับไปตำแหน่งที่ใหม่
+      if(userPosition === postLocation) {
+        mapRef.current.flyTo(postLocation, fixZoomLevel);
+      } else {
+        mapRef.current.flyTo(postLocation, 18);
+      }
     }
   }, [postLocation]);
 
-  // Handle mouse enter and leave for each post
   const handleMouseEnter = (post) => {
-    setPostLocation([post.latitude, post.longitude]);  // ตั้งค่า postLocation เมื่อเลื่อนเมาส์
+    setPostLocation([post.latitude, post.longitude]);
+    if (mapRef.current) {
+      mapRef.current.flyTo([post.latitude, post.longitude], 18); // Zoom in to post location
+    }
   };
 
   const handleMouseLeave = () => {
-    setPostLocation(userPosition); // รีเซ็ตกลับไปยังตำแหน่งของผู้ใช้
+    setPostLocation(userPosition);
+    if (mapRef.current) {
+      mapRef.current.setZoom(zoomLevelRef.current); // ใช้ค่า zoom ที่เก็บไว้
+      mapRef.current.flyTo(userPosition, zoomLevelRef.current); // กลับไปยังตำแหน่งผู้ใช้
+    }
   };
 
-  // สร้าง hook สำหรับการคลิกแผนที่
   const MapClickHandler = () => {
     useMapEvents({
-      click(e) {
-        setMapClickPosition(e.latlng); // ตั้งค่าตำแหน่งที่คลิก
-      }
+      click() {
+        setIsMapPopupOpen(true);
+        setIsMapVisible(false); // ซ่อนแผนที่เล็กเมื่อ Popup เปิด
+      },
     });
     return null;
   };
 
+  // Close popup on outside click
+  const handleOutsideClick = (e) => {
+    if (popupRef.current && !popupRef.current.contains(e.target)) {
+      setIsMapPopupOpen(false);
+      setIsMapVisible(true); // แสดงแผนที่เล็กเมื่อ Popup ปิด
+    }
+  };
+
+  // Close popup on ESC key press
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        setIsMapPopupOpen(false);
+        setIsMapVisible(true); // แสดงแผนที่เล็กเมื่อ Popup ปิด
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
+
   return (
     <div className="bg-white rounded-lg p-6 mb-6 w-full">
-      <div className="h-[400px] rounded-lg overflow-hidden">
-        <MapContainer
-          center={postLocation.length > 0 ? postLocation : userPosition}
-          zoom={19}
-          className="h-full w-full"
-          zoomControl={false}
-          scrollWheelZoom={false}
-          dragging={false}
-          touchZoom={false}
-          doubleClickZoom={false}
-          keyboard={false}
-          ref={mapRef}  // เก็บการอ้างอิงของแผนที่
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
-          />
-          <Marker position={userPosition}>
-            <Popup>
-              <h3 className="font-bold">Your Location</h3>
-            </Popup>
-          </Marker>
+      {/* ซ่อนแผนที่เล็กเมื่อ popup เปิดอยู่ */}
+      {isMapVisible && (
+        <div className="h-[400px] rounded-lg overflow-hidden relative">
+          <MapContainer
+            center={postLocation.length > 0 ? postLocation : userPosition}
+            zoom={zoomLevelRef.current}
+            className="h-full w-full"
+            zoomControl={false}
+            scrollWheelZoom={false}
+            dragging={false}
+            touchZoom={false}
+            doubleClickZoom={false}
+            keyboard={false}
+            ref={mapRef}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+            />
+            <Marker position={userPosition}>
+              <Popup>
+                <h3 className="font-bold">Your Location minimap</h3>
+              </Popup>
+            </Marker>
 
-          {/* แสดง LandmarkMap */}
-          <LandmarkMap landmarks={landmarks} posts={posts} />
+            <LandmarkMap landmarks={landmarks} posts={posts} />
 
-          {/* Show posts as markers on the map */}
-          {posts.map((post) => {
+            {posts.map((post) => {
             if (post.latitude && post.longitude) {
               return (
-                <Marker 
-                  key={post.id} 
+                <Marker
+                  key={post.id}
                   position={[post.latitude, post.longitude]}
-                  onMouseEnter={() => handleMouseEnter(post)} 
+                  onMouseEnter={() => handleMouseEnter(post)}
                   onMouseLeave={handleMouseLeave}
                 >
                   <Popup>
@@ -95,46 +128,104 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
             }
             return null;
           })}
-
-          <UserLocationUpdater userPosition={userPosition} />
-
-          {/* Add MapClickHandler to the map */}
-          <MapClickHandler />
-
-        </MapContainer>
-      </div>
-
-      {/* Render MapModal using Portal */}
-      {mapClickPosition && (
-        <MapModal 
-          isOpen={true} 
-          onClose={() => setMapClickPosition(null)}  // Close the modal when clicking close button
-          userPosition={userPosition} 
-          posts={posts} 
-          mapClickPosition={mapClickPosition}  // Pass clicked position to modal
-        />
+            <UserLocationUpdater userPosition={userPosition} />
+            <MapClickHandler />
+          </MapContainer>
+        </div>
       )}
-
+      
       {error && <p className="text-red-600">{error}</p>}
 
-      {/* Filter by Distance */}
-      <div className="bg-white rounded-lg p-6 mb-6 w-full">
+      <div className="bg-white rounded-lg mt-2 w-full flex">
         <input
           type="range"
           min="500"
-          max="2000"
+          max="5000"
           value={distance}
           onChange={(e) => {
-            setDistance(e.target.value);  // Update distance state
+            setDistance(e.target.value);
             const zoomLevel = Math.min(18, Math.max(10, 18 - Math.floor(e.target.value / 500)));
+            // zoomLevelRef.current = zoomLevel; // เก็บค่า zoom level ไว้ใน ref
+            setFixZoomLevel(zoomLevel)
             if (mapRef.current) {
-              mapRef.current.setZoom(zoomLevel);  // Update map zoom based on the distance
+              mapRef.current.setZoom(zoomLevel); // ตั้งค่า zoom โดยตรงที่แผนที่
             }
           }}
           className="w-full"
         />
-        <p className="text-gray-600 text-center mt-2">{distance} meters</p>
+        <p className="text-gray-600 text-center ">{distance} meters</p>
       </div>
+
+      {/* Map Popup */}
+      {isMapPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div
+            ref={popupRef}
+            className="relative w-11/12 h-5/6 bg-white rounded-lg overflow-hidden"
+            style={{
+              zIndex: 2000, // ให้ Popup อยู่ข้างหน้าของแผนที่
+            }}
+          >
+            <button
+              onClick={() => {
+                setIsMapPopupOpen(false);
+                setIsMapVisible(true); // แสดงแผนที่เล็กเมื่อ Popup ปิด
+              }}
+              className="absolute top-4 right-4 bg-gray-800 text-white p-2 rounded-full shadow-lg z-50"
+              style={{
+                zIndex: 1000, // ปุ่มปิดไว้ข้างหน้า
+              }}
+            >
+              <FaTimes size={24} />
+            </button>
+
+            {/* แผนที่ใน Popup */}
+            <MapContainer
+              center={postLocation.length > 0 ? postLocation : userPosition}
+              zoom={18}
+              className="h-full w-full"
+              zoomControl={true}
+              scrollWheelZoom={true}
+              dragging={true}
+              ref={mapRef}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: 1, // แผนที่ใน Popup จะอยู่ข้างหลังพื้นหลัง Popup
+              }}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+              />
+              <Marker position={userPosition}>
+                <Popup>
+                  <h3 className="font-bold">Your Location full map</h3>
+                </Popup>
+              </Marker>
+
+              <LandmarkMap landmarks={landmarks} posts={posts} />
+              {posts.map((post) =>
+                post.latitude && post.longitude ? (
+                  <Marker
+                    key={post.id}
+                    position={[post.latitude, post.longitude]}
+                    // onMouseEnter={() => handleMouseEnter(post)}
+                    // onMouseLeave={handleMouseLeave}
+                  >
+                    <Popup>
+                      <h3 className="font-bold">{post.author}</h3>
+                      <p>{post.content}</p>
+                    </Popup>
+                  </Marker>
+                ) : null
+              )}
+              <UserLocationUpdater userPosition={userPosition} />
+            </MapContainer>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

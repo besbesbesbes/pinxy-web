@@ -224,9 +224,9 @@ const Pinxy = () => {
                   setDistance={setDistance}
                   landmarks={landmarks}
                 />
-                <SearchUser
+                {/* <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
-                />
+                /> */}
                 <FollowBar followers={followers} />
               </div>
             </div>

@@ -6,34 +6,34 @@ import L from 'leaflet';
 const icons = {
   ALERT: new L.Icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/2299/2299283.png',
-    iconSize: [25, 41],
+    iconSize: [30, 30],
     iconAnchor: [12, 41],
   }),
   NEWS: new L.Icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2964/2964063.png',
-    iconSize: [25, 41],
+    iconUrl: 'https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/new-icon.png',
+    iconSize: [30, 30],
     iconAnchor: [12, 41],
   }),
   SHOP: new L.Icon({
-    iconUrl: 'https://png.pngtree.com/png-vector/20220912/ourmid/pngtree-shop-icon-png-image_6170900.png',
-    iconSize: [25, 41],
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/6136/6136558.png',
+    iconSize: [30, 30],
     iconAnchor: [12, 41],
   }),
   JOB: new L.Icon({
-    iconUrl: 'https://cdn-icons-png.freepik.com/256/14993/14993311.png?semt=ais_hybrid',
-    iconSize: [25, 41],
+    iconUrl: 'https://cdn-icons-png.freepik.com/256/393/393790.png?semt=ais_hybrid',
+    iconSize: [30, 30],
     iconAnchor: [12, 41],
   }),
   OTHER: new L.Icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/9970/9970242.png',
-    iconSize: [25, 41],
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/5857/5857418.png',
+    iconSize: [30, 30],
     iconAnchor: [12, 41],
   }),
 };
 
 
 const LandmarkMap = ({ landmarks,posts }) => {
-  // console.log(posts)
+  console.log(posts)
   return (
     <>
       {posts.map((post) => (
@@ -41,9 +41,10 @@ const LandmarkMap = ({ landmarks,posts }) => {
           key={post.id}
           position={[post.locationLat, post.locationLng]}
           icon={icons[post.category] || icons.Other}
+          eventHandlers={{'click':(e)=>console.log(post.postId)}}
         >
           <Popup>
-            <h3 className="font-bold">{post.name}</h3>
+            <h3 className="font-bold">{post.content}</h3>
             <p>{post.description}</p>
           </Popup>
         </Marker>

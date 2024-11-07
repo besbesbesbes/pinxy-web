@@ -21,7 +21,7 @@ const Navbar = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 w-full">
+    <div className="bg-white rounded-lg  p-4 w-full">
       {" "}
       {/* ใช้ w-full */}
       <div className="flex justify-start">

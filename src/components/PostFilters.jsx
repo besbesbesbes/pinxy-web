@@ -7,8 +7,9 @@ const PostFilters = ({
   setOrderOption,
 }) => {
   return (
-    <div className=" rounded-xl w-full">
-      <div className="flex flex-wrap gap-3 justify-end">
+    <div className="flex items-center justify-between w-full p-3">
+    <div className="flex items-center gap-2 ml-auto">
+    <p className="text-lg">Current Sort By:</p>
         <select
           className="px-4 py-2 rounded-lg focus:outline-none shadow-md "
           value={sortOption}

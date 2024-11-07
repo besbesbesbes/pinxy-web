@@ -18,6 +18,7 @@ import { IoIosAlert } from "react-icons/io";
 import { RiHome7Fill } from "react-icons/ri";
 import { AiFillOpenAI } from "react-icons/ai";
 import usePostStore from "../stores/postStore";
+import useUserStore from "../stores/userStore";
 
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
@@ -36,18 +37,30 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   </li>
 );
 
-const Sidebar = ({ setCategoryOption }) => {
-  const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
+const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
   const postForAI = usePostStore((state) => state.postForAI);
+  const user = useUserStore((state) => state.user);
+  const activeMenu = usePostStore((state) => state.activeMenu);
+  const setActiveMenu = usePostStore((state) => state.setActiveMenu);
   const setAiSummaryTrigger = usePostStore(
     (state) => state.setAiSummaryTrigger
   );
+  const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   const hdlAISummary = () => {
     if (postForAI.length > 0) {
       setAiSummaryTrigger(true);
       document.getElementById("ai-summary-modal").showModal();
     }
   };
+  const hdlClickCategory = (label, category) => {
+    setActiveMenu(label);
+    setCategoryOption(category);
+    inputRef.current.value = "";
+    setValue("");
+    setSelectedUser(null);
+  };
+
+  // console.log("User", user)
 
   return (
     <div className="bg-my-bg-card fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg text-xl">
@@ -72,49 +85,37 @@ const Sidebar = ({ setCategoryOption }) => {
               icon={RiHome7Fill}
               label="Home"
               isActive={activeMenu === "Home"}
-              onClick={() => {
-                setActiveMenu("Home"), setCategoryOption("");
-              }}
+              onClick={() => hdlClickCategory("Home", "")}
             />
             <MenuItem
               icon={IoIosAlert}
               label="Alert"
               isActive={activeMenu === "Alert"}
-              onClick={() => {
-                setActiveMenu("Alert"), setCategoryOption("ALERT");
-              }}
+              onClick={() => hdlClickCategory("Alert", "ALERT")}
             />
             <MenuItem
               icon={IoNewspaper}
               label="News"
               isActive={activeMenu === "News"}
-              onClick={() => {
-                setActiveMenu("News"), setCategoryOption("NEWS");
-              }}
+              onClick={() => hdlClickCategory("News", "NEWS")}
             />
             <MenuItem
               icon={RiShoppingBasketFill}
               label="Shop"
               isActive={activeMenu === "Shop"}
-              onClick={() => {
-                setActiveMenu("Shop"), setCategoryOption("SHOP");
-              }}
+              onClick={() => hdlClickCategory("Shop", "SHOP")}
             />
             <MenuItem
               icon={MdOutlineWork}
               label="Jobs"
               isActive={activeMenu === "Jobs"}
-              onClick={() => {
-                setActiveMenu("Jobs"), setCategoryOption("JOB");
-              }}
+              onClick={() => hdlClickCategory("Jobs", "JOB")}
             />
             <MenuItem
               icon={BsChatLeftDotsFill}
               label="Other"
               isActive={activeMenu === "Other"}
-              onClick={() => {
-                setActiveMenu("Other"), setCategoryOption("OTHER");
-              }}
+              onClick={() => hdlClickCategory("Other", "OTHER")}
             />
           </ul>
         </nav>

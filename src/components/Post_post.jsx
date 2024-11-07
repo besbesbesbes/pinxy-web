@@ -23,6 +23,8 @@ function Post_post({ postId }) {
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
   const postForAI = usePostStore((state) => state.postForAI);
+  const postLocation = useGeoStore((state => state.postLocation))
+  const setPostLocation = useGeoStore((state => state.setPostLocation))
   const hdlShowPost = () => {
     // console.log("Show Post_modal");
     setCurPostId(postId);
@@ -76,6 +78,9 @@ function Post_post({ postId }) {
   }, [reloadPost]);
   return (
     <div
+    
+    onMouseEnter={() => {setPostLocation([post.locationLat, post.locationLng]), console.log(postLocation)}}
+      onMouseLeave={() => {setPostLocation(userPosition), console.log(postLocation)}}
       className="w-full  min-h-[100px] bg-my-bg-card flex flex-col py-5 px-10 rounded-xl shadow-md"
       onClick={(e) => {
         e.stopPropagation();

@@ -21,6 +21,8 @@ const useStore = create((set) => ({
       console.error("Geolocation is not supported by this browser.");
     }
   },
+  postLocation: [],
+  setPostLocation: (newVal) => set({ postLocation: newVal }),
 }));
 
 export default useStore;

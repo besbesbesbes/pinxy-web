@@ -24,6 +24,10 @@ const usePostStore = create((set) => ({
   SetIsRenderPostEdit: (newVal) => set({ isRenderPostEdit: newVal }),
   selectedUser: null,
   setSelectedUser: (newVal) => set({ selectedUser: newVal }),
+  bioUser: {},
+  setBioUser: (newVal) => set({ bioUser: newVal }),
+  activeMenu: "Home",
+  setActiveMenu: (newVal) => set({ activeMenu: newVal }),
 }));
 
 export default usePostStore;

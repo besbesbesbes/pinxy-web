@@ -35,9 +35,9 @@ const FollowBar = ({ followers, setCategoryOption }) => {
   }, [followers]);
 
   return (
-    <div className="bg-white rounded-lg p-6 mb-6 w-full">
+    <div className="bg-white rounded-lg p-5 mb-6 w-full">
       <h4 className="text-xl font-bold mb-4">Following</h4>
-      <ul className="space-y-4 max-h-72 overflow-y-auto">
+      <ul className="space-y-4 max-h-56 p-4 overflow-y-auto">
         {updatedFollowers.map((follower) => (
           <li
             key={follower.id}

@@ -38,7 +38,6 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
 );
 
 const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
-  const user = useUserStore((state) => state.user);
   const activeMenu = usePostStore((state) => state.activeMenu);
   const setActiveMenu = usePostStore((state) => state.setActiveMenu);
   const setAiSummaryTrigger = usePostStore(
@@ -56,8 +55,6 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
     setValue("");
     setSelectedUser(null);
   };
-
-  // console.log("User", user)
 
   return (
     <div className="bg-my-bg-card fixed top-0 left-0 w-64 h-screen flex flex-col shadow-lg text-xl">

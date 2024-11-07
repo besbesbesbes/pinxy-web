@@ -11,6 +11,7 @@ export const SearchUser = ({ handleGetAllPostByUserId }) => {
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
   const bioUser = usePostStore((state) => state.bioUser);
   const setBioUser = usePostStore((state) => state.setBioUser);
+  const setActiveMenu = usePostStore((state) => state.setActiveMenu);
 
   const hdlOnChange = (e) => {
     setDisplayName(e.target.value);
@@ -70,7 +71,7 @@ export const SearchUser = ({ handleGetAllPostByUserId }) => {
               key={index}
               className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
               onClick={() => {
-                setSelectedUser(user.id), console.log(user.id);
+                setSelectedUser(user.id), setActiveMenu("");
               }}
             >
               {user.displayName} {/* Adjust property as needed */}

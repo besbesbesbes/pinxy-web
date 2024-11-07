@@ -7,8 +7,6 @@ const FollowBar = ({ followers, setCategoryOption }) => {
   const user = useUserStore((state) => state.user);
   const [updatedFollowers, setUpdatedFollowers] = useState(followers);
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
-<<<<<<< HEAD
-=======
   const setActiveMenu = usePostStore((state) => state.setActiveMenu);
 
   const hdlDelteFollowing = async (e, id) => {
@@ -35,17 +33,12 @@ const FollowBar = ({ followers, setCategoryOption }) => {
   useEffect(() => {
     setUpdatedFollowers(followers);
   }, [followers]);
->>>>>>> dev
 
   return (
     <div className="bg-white rounded-lg p-5 mb-6 w-full">
       <h4 className="text-xl font-bold mb-4">Following</h4>
       <ul className="space-y-4 max-h-56 p-4 overflow-y-auto">
-<<<<<<< HEAD
-        {followers.map((follower) => (
-=======
         {updatedFollowers.map((follower) => (
->>>>>>> dev
           <li
             key={follower.id}
             className="flex items-center hover:bg-gray-50 p-2 rounded-lg cursor-pointer"

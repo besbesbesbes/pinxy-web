@@ -230,11 +230,7 @@ const Pinxy = () => {
                 {/* <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
                 /> */}
-<<<<<<< HEAD
-                <FollowBar followers={followers} />
-=======
                 <FollowBar followers={followers} setCategoryOption={setCategoryOption} />
->>>>>>> dev
               </div>
             </div>
           </div>

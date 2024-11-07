@@ -42,6 +42,7 @@ const LandmarkMap = ({ landmarks,posts }) => {
           position={[post.locationLat, post.locationLng]}
           icon={icons[post.category] || icons.Other}
           eventHandlers={{'click':(e)=>console.log(post.postId)}}
+          
         >
           <Popup>
             <h3 className="font-bold">{post.content}</h3>

@@ -5,6 +5,7 @@ import useUserStore from "../stores/userStore";
 import { AiFillOpenAI } from "react-icons/ai";
 import { IoIosClose } from "react-icons/io";
 import { AiOutlineOpenAI } from "react-icons/ai";
+import { MdSummarize } from "react-icons/md";
 
 function Ai_summary_modal() {
   const token = useUserStore((state) => state.token);
@@ -46,7 +47,7 @@ function Ai_summary_modal() {
     >
       <div className="flex justify-between">
         <p className="text-xl flex items-baseline">
-          <AiFillOpenAI className="text-4xl translate-y-1 text-my-prim mr-2" />
+          <MdSummarize className="text-4xl translate-y-1 text-my-prim mr-2" />
           Summary
         </p>
         {/* close button */}

@@ -50,7 +50,6 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
 
   return (
     <div className="bg-white rounded-lg p-6 mb-6 w-full">
-      <h4 className="text-xl font-bold mb-4">Map</h4>
       <div className="h-[400px] rounded-lg overflow-hidden">
         <MapContainer
           center={postLocation.length > 0 ? postLocation : userPosition}
@@ -120,7 +119,6 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
 
       {/* Filter by Distance */}
       <div className="bg-white rounded-lg p-6 mb-6 w-full">
-        <h4 className="text-xl font-bold mb-4">Filter by Distance</h4>
         <input
           type="range"
           min="500"

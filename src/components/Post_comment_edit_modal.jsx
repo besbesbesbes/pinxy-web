@@ -1,13 +1,14 @@
 import usePostStore from "../stores/postStore";
 import { getCommentApi } from "../apis/post-api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoIosClose } from "react-icons/io";
 import { IoSendSharp } from "react-icons/io5";
 import { format } from "timeago.js";
-import { editCommentApi } from "../apis/post-api";
+import { editCommentApi, getAiSentimentApi } from "../apis/post-api";
 import useUserStore from "../stores/userStore";
 import createError from "../utils/createError";
 import useErrStore from "../stores/errStore";
+import { AiFillOpenAI } from "react-icons/ai";
 function Post_comment_edit_modal() {
   const token = useUserStore((state) => state.token);
   const setErrTxt = useErrStore((state) => state.setErrTxt);
@@ -18,9 +19,13 @@ function Post_comment_edit_modal() {
   const setReloadPost = usePostStore((state) => state.setReloadPost);
   const [comment, setComment] = useState("");
   const [input, setInput] = useState("");
+  const [sentiment, setSentiment] = useState("Neutral");
+  const [isSentimentLoading, setIsSentimentLoading] = useState(false);
   const hdlClosePopup = () => {
     // setCurCommentId(null);
     // setComment("");
+    setSentiment("Neutral");
+    setIsSentimentLoading(false);
     document.getElementById("post-comment-edit-modal").close();
   };
   const getComment = async () => {
@@ -43,9 +48,32 @@ function Post_comment_edit_modal() {
       console.log(err.response.data.error || err.message);
     }
   };
-
+  const getSentiment = async (e) => {
+    console.log("Call ai sentiment");
+    try {
+      setIsSentimentLoading(true);
+      const resp = await getAiSentimentApi(token, input);
+      setSentiment(resp.data.sentiment);
+    } catch (err) {
+      console.log(err?.response?.data?.error || err.message);
+    } finally {
+      setIsSentimentLoading(false);
+    }
+  };
+  const typingTimerRef = useRef(null);
+  const hdlTextInputChange = (e) => {
+    setInput(e.target.value);
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+    typingTimerRef.current = setTimeout(() => {
+      console.log("Call sentiment");
+      getSentiment();
+    }, 1000);
+  };
   useEffect(() => {
     if (curCommentId) {
+      getSentiment();
       getComment();
     }
   }, [curCommentId]);
@@ -90,14 +118,25 @@ function Post_comment_edit_modal() {
       </div>
       {/* comment area */}
       <div className="flex gap-2">
-        <textarea
-          placeholder="What's on your mind..."
-          className="bg-my-text bg-opacity-5 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none"
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-          }}
-        />
+        <div className="relative w-full">
+          <textarea
+            placeholder="What's on your mind..."
+            className="bg-my-text bg-opacity-5 min-h-[100px] p-5 rounded-2xl flex-1 self-start resize-none w-full"
+            value={input}
+            onChange={hdlTextInputChange}
+          />
+          {/* sentiment */}
+          {sentiment && (
+            <div className="absolute bottom-0 right-0 px-2 py-1 bg-blue-500 text-white italic rounded-full flex items-center gap-1 -translate-x-3 -translate-y-3">
+              {isSentimentLoading ? (
+                <span className="loading loading-spinner w-[20px]"></span>
+              ) : (
+                <AiFillOpenAI className="text-xl" />
+              )}
+              {sentiment}
+            </div>
+          )}
+        </div>
         <button
           className="btn self-end bg-my-secon hover:bg-my-secon-hover"
           onClick={hdlEditComment}

@@ -68,7 +68,7 @@ function ChangePicture(props) {
 
                             <div className="flex flex-col items-center gap-5">
                                 <div
-                                    className="w-64 h-64 border-2 border-dashed border-gray-400 rounded-md flex items-center justify-center cursor-pointer"
+                                    className="w-72 h-72 border-2 border-dashed border-gray-400 rounded-md flex items-center justify-center cursor-pointer"
                                     onDrop={hdlDrop}
                                     onDragOver={hdlDragOver}
                                 >

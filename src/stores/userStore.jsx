@@ -11,6 +11,7 @@ const useUserStore = create(
         set({ token: authData.data.token, user: { name: authData.data.payload.name, role: authData.data.payload.role, isBanned: authData.data.payload.isBanned, id: authData.data.payload.id } });
       },
       logout: () => {
+        localStorage.clear()
         set({ user: null, token: "" })
       }
     }),

@@ -295,6 +295,7 @@ function Register() {
             } else if (!isError && isCheck) {
                 alert("register pass");
                 const res = await userRegister(registerData)
+                navigate(0)
                 console.log("res from register", res)
             } else if (isError) {
                 alert("please fill all the data");

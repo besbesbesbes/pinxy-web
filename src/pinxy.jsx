@@ -24,6 +24,7 @@ import useStore from "./stores/geoStore";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
+
   const { id } = user;
   const [posts, setPosts] = useState([]);
 
@@ -32,6 +33,7 @@ const Pinxy = () => {
     { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
   ]);
 
+  const [profileData, setProfileData] = useState({})
   const [distance, setDistance] = useState(5000);
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
@@ -42,6 +44,20 @@ const Pinxy = () => {
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
+
+  useEffect(() => {
+    getProfileData(id)
+  }, [])
+
+  const getProfileData = async (id) => {
+    try {
+      const resp = await getProfile(id)
+      setProfileData(resp.data.profileData)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
 
   useEffect(() => {
     if (categoryOption) {
@@ -121,10 +137,10 @@ const Pinxy = () => {
     setPosts([newPost, ...posts]);
     setContent("");
   };
-
+  console.log('profileData', profileData)
   return (
     <div className="min-h-screen bg-my-bg-main flex">
-      <Sidebar setCategoryOption={setCategoryOption} />
+      <Sidebar setCategoryOption={setCategoryOption} profileData={profileData} />
       <main className="flex-1 ml-64">
         {" "}
         {/* Adjust margin-left for sidebar and padding-top for navbar */}

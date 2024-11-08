@@ -19,3 +19,11 @@ export const updateProfilePic = (data, token) => {
 export const changePassword = (passwordData) => {
     return axios.patch(`${baseUrl}/user/update-password`, passwordData)
 }
+
+export const sendResetPassword = (resetPasswordData) => {
+    return axios.post(`${baseUrl}/user/send-reset`, resetPasswordData)
+}
+
+export const resetPassword = (password) => {
+    return axios.patch(`${baseUrl}/user/reset-password`, password)
+}

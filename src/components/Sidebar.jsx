@@ -21,6 +21,8 @@ import usePostStore from "../stores/postStore";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
+import { FaQuestionCircle } from "react-icons/fa";
+import { MdSummarize } from "react-icons/md";
 
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
@@ -38,13 +40,17 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   </li>
 );
 
-
-
-const Sidebar = ({ setCategoryOption, profileData }) => {
-  const [activeMenu, setActiveMenu] = useState("Home"); // กำหนดค่าเริ่มต้น
+const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
+  const postForAI = usePostStore((state) => state.postForAI);
+  const user = useUserStore((state) => state.user);
+  const activeMenu = usePostStore((state) => state.activeMenu);
+  const setActiveMenu = usePostStore((state) => state.setActiveMenu);
   const setAiSummaryTrigger = usePostStore(
     (state) => state.setAiSummaryTrigger
   );
+  const setAiAskmeTrigger = usePostStore((state) => state.setAiAskmeTrigger);
+  const setSelectedUser = usePostStore((state) => state.setSelectedUser);
+
   const logout = useUserStore((state) => state.logout)
   const navigate = useNavigate()
 
@@ -55,8 +61,23 @@ const Sidebar = ({ setCategoryOption, profileData }) => {
 
   }
   const hdlAISummary = () => {
-    setAiSummaryTrigger(true);
-    document.getElementById("ai-summary-modal").showModal();
+    if (postForAI.length > 0) {
+      setAiSummaryTrigger(true);
+      document.getElementById("ai-summary-modal").showModal();
+    }
+  };
+  const hdlAIAskme = () => {
+    if (postForAI.length > 0) {
+      setAiAskmeTrigger(true);
+      document.getElementById("ai-askme-modal").showModal();
+    }
+  };
+  const hdlClickCategory = (label, category) => {
+    setActiveMenu(label);
+    setCategoryOption(category);
+    inputRef.current.value = "";
+    setValue("");
+    setSelectedUser(null);
   };
 
   return (
@@ -87,60 +108,55 @@ const Sidebar = ({ setCategoryOption, profileData }) => {
               icon={RiHome7Fill}
               label="Home"
               isActive={activeMenu === "Home"}
-              onClick={() => {
-                setActiveMenu("Home"), setCategoryOption("");
-              }}
+              onClick={() => hdlClickCategory("Home", "")}
             />
             <MenuItem
               icon={IoIosAlert}
               label="Alert"
               isActive={activeMenu === "Alert"}
-              onClick={() => {
-                setActiveMenu("Alert"), setCategoryOption("ALERT");
-              }}
+              onClick={() => hdlClickCategory("Alert", "ALERT")}
             />
             <MenuItem
               icon={IoNewspaper}
               label="News"
               isActive={activeMenu === "News"}
-              onClick={() => {
-                setActiveMenu("News"), setCategoryOption("NEWS");
-              }}
+              onClick={() => hdlClickCategory("News", "NEWS")}
             />
             <MenuItem
               icon={RiShoppingBasketFill}
               label="Shop"
               isActive={activeMenu === "Shop"}
-              onClick={() => {
-                setActiveMenu("Shop"), setCategoryOption("SHOP");
-              }}
+              onClick={() => hdlClickCategory("Shop", "SHOP")}
             />
             <MenuItem
               icon={MdOutlineWork}
               label="Jobs"
               isActive={activeMenu === "Jobs"}
-              onClick={() => {
-                setActiveMenu("Jobs"), setCategoryOption("JOB");
-              }}
+              onClick={() => hdlClickCategory("Jobs", "JOB")}
             />
             <MenuItem
               icon={BsChatLeftDotsFill}
               label="Other"
               isActive={activeMenu === "Other"}
-              onClick={() => {
-                setActiveMenu("Other"), setCategoryOption("OTHER");
-              }}
+              onClick={() => hdlClickCategory("Other", "OTHER")}
             />
           </ul>
         </nav>
-        {/* ai button */}
-        <div className="flex overflow-y-auto p-4 text-my-secon hover:text-my-secon-hover cursor-pointer">
+        {/* ai section */}
+        <div className="px-4 flex flex-col gap-2">
           <button
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl border-my-secon transition-colors border transform hover:scale-105 duration-150"
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-my-secon transition-colors transform hover:scale-105 duration-150 text-white"
             onClick={hdlAISummary}
           >
-            <AiFillOpenAI className="h-7 w-7" />
+            <MdSummarize className="h-7 w-7" />
             <span className="font-medium">Summary</span>
+          </button>
+          <button
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl border-my-secon transition-colors border transform hover:scale-105 duration-150 text-my-prim text-opacity-70"
+            onClick={hdlAIAskme}
+          >
+            <FaQuestionCircle className="h-7 w-7" />
+            <span className="font-medium">Ask me</span>
           </button>
         </div>
       </div>
@@ -148,12 +164,12 @@ const Sidebar = ({ setCategoryOption, profileData }) => {
       {/* Bottom Actions */}
       <div className="p-4 border-t">
         <ul className="space-y-2">
-          <MenuItem
+          {/* <MenuItem
             icon={Settings}
             label="Settings"
             isActive={activeMenu === "Settings"}
             onClick={() => setActiveMenu("Settings")}
-          />
+          /> */}
           <li>
             <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-my-acct hover:bg-red-50 transition-colors">
               <LogOut className="h-5 w-5" />

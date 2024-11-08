@@ -23,6 +23,8 @@ function Post_post({ postId }) {
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
   const postForAI = usePostStore((state) => state.postForAI);
+  const postLocation = useGeoStore((state) => state.postLocation);
+  const setPostLocation = useGeoStore((state) => state.setPostLocation);
   const hdlShowPost = () => {
     // console.log("Show Post_modal");
     setCurPostId(postId);
@@ -52,12 +54,13 @@ function Post_post({ postId }) {
     }
   };
   const getPost = async () => {
+    // console.log(`Call getPost for ${postId}`);
     try {
       const result = await getPostApi(token, postId);
       // console.log(result.data.resPost);
       setPost(result.data.resPost);
       setUser(result.data.user);
-      addPostForAI(result.data.resPost.content);
+      // addPostForAI(result.data.resPost.content);
     } catch (err) {
       console.log(err.response.data.error || err.message);
     }
@@ -75,6 +78,13 @@ function Post_post({ postId }) {
   }, [reloadPost]);
   return (
     <div
+      onMouseEnter={() => {
+        setPostLocation([post.locationLat, post.locationLng]),
+          console.log(postLocation);
+      }}
+      onMouseLeave={() => {
+        setPostLocation(userPosition), console.log(postLocation);
+      }}
       className="w-full  min-h-[100px] bg-my-bg-card flex flex-col py-5 px-10 rounded-xl shadow-md"
       onClick={(e) => {
         e.stopPropagation();

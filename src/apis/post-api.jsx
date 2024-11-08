@@ -205,3 +205,14 @@ export const getAiSentimentApi = async (token, txt) =>
       },
     }
   );
+
+export const getAiAskmeApi = async (token, chats) =>
+  await axios.post(
+    `${baseUrl}/ai/askme`,
+    { chats },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );

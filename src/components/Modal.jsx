@@ -7,6 +7,7 @@ import Post_delete_modal from "./Post_delete_modal";
 import Post_edit_modal from "./Post_edit_modal";
 import Error_modal from "./Error_modal";
 import Ai_summary_modal from "./Ai_summary_modal";
+import Ai_askme_modal from "./Ai_askme_modal";
 
 function Modal() {
   return (
@@ -46,6 +47,10 @@ function Modal() {
       {/* ai-summary-modal */}
       <dialog id="ai-summary-modal" className="modal">
         <Ai_summary_modal />
+      </dialog>
+      {/* ai-askme-modal */}
+      <dialog id="ai-askme-modal" className="modal">
+        <Ai_askme_modal />
       </dialog>
     </>
   );

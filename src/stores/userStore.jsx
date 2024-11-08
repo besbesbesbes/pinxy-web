@@ -10,6 +10,9 @@ const useUserStore = create(
         console.log("authData", authData)
         set({ token: authData.data.token, user: { name: authData.data.payload.name, role: authData.data.payload.role, isBanned: authData.data.payload.isBanned } });
       },
+      logout: ()=>{
+        set({token:"",user:null})
+      }
     }),
     {
       name: "userState",

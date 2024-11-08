@@ -29,6 +29,8 @@ const Pinxy = () => {
   const { id } = user;
   const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
+  console.log("id check", id)
+
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks

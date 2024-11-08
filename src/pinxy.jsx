@@ -25,12 +25,16 @@ import useStore from "./stores/geoStore";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
+
+  const { id } = user;
   const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks
 
+
+  const [profileData, setProfileData] = useState({})
   const [distance, setDistance] = useState(1000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
@@ -43,6 +47,20 @@ const Pinxy = () => {
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const selectedUser = usePostStore((state) => state.selectedUser);
+
+  useEffect(() => {
+    getProfileData(id)
+  }, [])
+
+  const getProfileData = async (id) => {
+    try {
+      const resp = await getProfile(id)
+      setProfileData(resp.data.profileData)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
 
   useEffect(() => {
     handleGetFollowing(user.id);
@@ -170,13 +188,14 @@ const Pinxy = () => {
     setPosts([newPost, ...posts]);
     setContent("");
   };
-
+  console.log('profileData', profileData)
   return (
     <div className="min-h-screen bg-my-bg-main flex">
       <Sidebar
         setCategoryOption={setCategoryOption}
         inputRef={inputRef}
         setValue={setValue}
+        profileData={profileData}
       />
       <main className="flex-1 ml-64">
         <div className="max-w-full mx-auto px-4">

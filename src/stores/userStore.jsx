@@ -19,8 +19,9 @@ const useUserStore = create(
         });
       },
       logout: () => {
-        set({ user: null, token: "" });
-      },
+        localStorage.clear()
+        set({ user: null, token: "" })
+      }
     }),
     {
       name: "userState",

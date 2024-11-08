@@ -15,9 +15,12 @@ const LoginGoogle = () => {
       const decoded = jwtDecode(token);
 
       const res = await userLoginGoogle(token);
-      console.log(decoded);
-      login(res);
+      console.log("res google", res)
+      console.log("decode", decoded);
       console.log("res", res);
+
+      login(res);
+
       if (res.data.payload.role === "USER") {
         navigate("/");
       } else {

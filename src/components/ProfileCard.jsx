@@ -11,9 +11,12 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
 
   const getUserInfo = async () => {
     try {
-      const resp = await getProfile(selectedUser);
-      // console.log(resp.data.profileData);
-      setBioUser(resp.data.profileData);
+      if (selectedUser) {
+        const resp = await getProfile(selectedUser);
+        console.log("selectedUser", selectedUser)
+        // console.log(resp.data.profileData);
+        setBioUser(resp.data.profileData);
+      }
     } catch (err) {
       console.log(err?.response?.data?.error || err.message);
     }

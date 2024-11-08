@@ -18,14 +18,9 @@ const useUserStore = create(
           },
         });
       },
-<<<<<<< HEAD
-      logout: ()=>{
-        set({token:"",user:null})
-=======
       logout: () => {
         localStorage.clear()
         set({ user: null, token: "" })
->>>>>>> dev
       }
     }),
     {

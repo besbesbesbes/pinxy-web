@@ -45,7 +45,7 @@ function ForgotPassword() {
 
     return (
         <div>
-            <button className="underline hover:text-my-acct-hover" onClick={() => document.getElementById('forgotPass').showModal()}>Forgot your password?</button>
+            <button className="text-xl underline hover:text-my-acct-hover" onClick={() => document.getElementById('forgotPass').showModal()}>Forgot your password?</button>
             <dialog id="forgotPass" className="modal">
                 <div className="modal-box max-w-xl h-3/7 p-10">
                     <form method="dialog">

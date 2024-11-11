@@ -18,12 +18,16 @@ import ResetPassword from "../pages/ResetPassword";
 const guestRouter = createBrowserRouter([
   { path: "/", element: <Landing /> },
   { path: "*", element: <Navigate to="/" /> },
-  { path: "/posts", element: <Pinxy /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
 ]);
 
 const userRouter = createBrowserRouter([
   { path: "/", element: <Pinxy /> },
+  { path: "/posts", element: <Pinxy /> },
+  { path: "*", element: <Navigate to="/" /> },
+]);
+
+const adminRouter = createBrowserRouter([
   {
     path: "/admin",
     element: <LayoutAdmin />,
@@ -34,10 +38,11 @@ const userRouter = createBrowserRouter([
 
   },
   { path: "*", element: <Navigate to="/" /> },
-]);
+])
 
 export default function AppRouter() {
   const user = useUserStore((state) => state.user);
-  const finalRouter = user ? userRouter : guestRouter;
+  const isAdmin = user?.role === "ADMIN"
+  const finalRouter = user ? (isAdmin ? adminRouter : userRouter) : guestRouter;
   return <RouterProvider router={finalRouter} />;
 }

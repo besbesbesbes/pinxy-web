@@ -193,6 +193,7 @@ import { useNavigate } from 'react-router-dom'
 import { userRegister } from '../api/auth'
 import PrivacyPolicy from './PrivacyPolicy'
 import TermAndCond from './TermAndCond'
+import { toast } from 'sonner';
 
 const INITIAL_ERROR_INPUT = {
     name: "Please fill USERNAME.",
@@ -291,16 +292,35 @@ function Register() {
         try {
 
             if (registerData.name === "" && registerData.email === "" && registerData.password === "" && registerData.confirmPassword === "") {
-                alert("please fill all the data")
+                toast.error("Please complete the required fields.");
             } else if (!isError && isCheck) {
-                alert("register pass");
                 const res = await userRegister(registerData)
                 navigate(0)
                 console.log("res from register", res)
             } else if (isError) {
-                alert("please fill all the data");
+                toast.error("Please complete the required fields.");
             } else if (!isCheck) {
-                alert("Please agree to the Privacy Policy and Terms and Conditions.");
+                toast.error("Please agree to the Privacy Policy and Terms and Conditions.");
+            }
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const hdlOnEnter = async (e) => {
+        try {
+
+            if (e.key === "Enter" && registerData.name === "" && registerData.email === "" && registerData.password === "" && registerData.confirmPassword === "") {
+                toast.error("Please complete the required fields.");
+            } else if (e.key === "Enter" && !isError && isCheck) {
+                const res = await userRegister(registerData)
+                navigate(0)
+                console.log("res from register", res)
+            } else if (e.key === "Enter" && isError) {
+                toast.error("Please complete the required fields.");
+            } else if (e.key === "Enter" && !isCheck) {
+                toast.error("Please agree to the Privacy Policy and Terms and Conditions.");
             }
 
         } catch (err) {
@@ -314,23 +334,23 @@ function Register() {
 
         <div className="flex flex-col gap-10" >
             {/* CONTENT */}
-            <div className='text-center text-4xl font-bold'>REGISTER</div>
+            <div className='text-center text-6xl font-bold'>REGISTER</div>
             {/* INPUT */}
-            <div className='flex flex-col text-lg'>
-                <label className='flex flex-row justify-between font-medium'>USERNAME <span className="text-red-500 text-sm">{error.name}</span></label>
-                <input name='name' value={registerData.name} onChange={hdlOnChange} type="text" className="mb-5 p-1" />
-                <label className='flex flex-row justify-between font-medium'>EMAIL <span className="text-red-500 text-sm" >{error.email}</span></label>
-                <input name='email' value={registerData.email} onChange={hdlOnChange} type="text" className="mb-5 p-1" />
-                <label className='flex flex-row justify-between font-medium'>PASSWORD <span className="text-red-500 text-sm" >{error.password}</span></label>
-                <input name='password' value={registerData.password} onChange={hdlOnChange} type="password" className="mb-5 p-1" />
-                <label className='flex flex-row justify-between font-medium'>CONFIRM PASSWORD <span className="text-red-500 text-sm" >{error.confirmPassword}</span></label>
-                <input name='confirmPassword' value={registerData.confirmPassword} onChange={hdlOnChange} type="password" className="mb-5 p-1" />
+            <div className='flex flex-col text-2xl'>
+                <label className='flex flex-row justify-between font-medium'>USERNAME <span className="text-red-500 text-lg">{error.name}</span></label>
+                <input name='name' value={registerData.name} onChange={hdlOnChange} type="text" className="mb-5 p-1" onKeyDown={hdlOnEnter} />
+                <label className='flex flex-row justify-between font-medium'>EMAIL <span className="text-red-500 text-lg" >{error.email}</span></label>
+                <input name='email' value={registerData.email} onChange={hdlOnChange} type="text" className="mb-5 p-1" onKeyDown={hdlOnEnter} />
+                <label className='flex flex-row justify-between font-medium'>PASSWORD <span className="text-red-500 text-lg" >{error.password}</span></label>
+                <input name='password' value={registerData.password} onChange={hdlOnChange} type="password" className="mb-5 p-1" onKeyDown={hdlOnEnter} />
+                <label className='flex flex-row justify-between font-medium'>CONFIRM PASSWORD <span className="text-red-500 text-lg" >{error.confirmPassword}</span></label>
+                <input name='confirmPassword' value={registerData.confirmPassword} onChange={hdlOnChange} type="password" className="mb-5 p-1" onKeyDown={hdlOnEnter} />
             </div>
             {/* PRIVACY AND BUTTON */}
             <div className='flex flex-col gap-10 items-center'>
                 <div className='flex flex-row gap-3'>
                     <input type="checkbox" checked={isCheck} onChange={hdlIsCheck} className="scale-150" />
-                    <p className="text-lg">I agree to the <button className="underline hover:text-my-prim font-bold" onClick={() => document.getElementById('privacy').showModal()}>Privacy Policy</button> and the <button className="underline hover:text-my-prim font-bold" onClick={() => document.getElementById('terms').showModal()}>Terms and Conditions</button></p>
+                    <p className="text-lg lg:text-base">I agree to the <button className="underline hover:text-my-prim font-bold" onClick={() => document.getElementById('privacy').showModal()}>Privacy Policy</button> and the <button className="underline hover:text-my-prim font-bold" onClick={() => document.getElementById('terms').showModal()}>Terms and Conditions</button></p>
                     {/* PRIVACY POLICY */}
                     <dialog id="privacy" className="modal">
                         <div className="modal-box bg-blue-100">
@@ -352,7 +372,7 @@ function Register() {
                 </div>
 
                 <div className='flex flex-col items-center mb-1'>
-                    <button className='bg-my-secon text-white hover:bg-my-secon-hover py-3 px-10 text-xl font-semibold' onClick={hdlSubmit}>CREATE ACCOUNT</button>
+                    <button className='bg-my-secon text-white hover:bg-my-secon-hover py-3 px-10 text-2xl font-semibold' onClick={hdlSubmit}>CREATE ACCOUNT</button>
                 </div>
             </div>
         </div>

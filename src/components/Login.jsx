@@ -135,6 +135,8 @@ import { useNavigate } from 'react-router-dom'
 import useUserStore from '../stores/userStore'
 import LoginGoogle from './LoginGoogle'
 import ForgotPassword from './ForgotPassword'
+import { toast } from 'sonner';
+
 
 const INITIAL_ERROR_INPUT = {
     input: "Please fill USERNAME or Email",
@@ -205,11 +207,9 @@ function Login() {
         e.preventDefault()
         try {
             if (loginData.input === "" && loginData.password === "") {
-                alert("please fill al the data.")
+                toast.error("Please complete the required fields.")
             } else if (!isError) {
-                alert("log in pass");
                 const res = await userLogin(loginData)
-                console.log("res from log in", res)
                 login(res)
                 console.log("res", res)
                 if (res.data.payload.role === "USER") {
@@ -219,9 +219,10 @@ function Login() {
                 }
 
             } else if (isError) {
-                alert("please fill all the data.");
+                toast.error("Please complete the required fields.");
             }
         } catch (err) {
+            toast.error(err.response.data.message)
             console.log(err)
         }
     }
@@ -230,43 +231,44 @@ function Login() {
         try {
             const { input, password } = loginData
             if (e.key === "Enter" && input !== "" && password !== "") {
-                alert("log in pass");
+                toast.error("Please complete the required fields.")
+            } else if (e.key === "Enter" && !isError) {
                 const res = await userLogin(loginData)
-                console.log("res from log in", res)
                 login(res)
-                console.log("res", res)
                 if (res.data.payload.role === "USER") {
                     navigate("/")
                 } else {
                     navigate("/admin")
                 }
             } else if (e.key === "Enter") {
-                alert("Please fill all the data.")
+                toast.error("Please complete the required fields.")
             }
         } catch (err) {
+            toast.error(err.response.data.message)
             console.log(err)
         }
 
     }
 
+
     return (
-        <div className='flex flex-col gap-16'>
+        <div className='flex flex-col gap-16 lg:gap-10'>
             {/* CONTENT */}
-            <div className='text-center text-4xl font-bold'>LOG IN</div>
+            <div className='text-center text-6xl font-bold'>LOG IN</div>
             {/* INPUT */}
             <div className='flex flex-col text-lg gap-3'>
-                <label className='flex flex-row justify-between font-medium'>USERNAME / EMAIL <span className="text-red-500 text-sm">{error.input}</span></label>
+                <label className='text-2xl flex flex-row justify-between font-medium'>USERNAME / EMAIL <span className="text-red-500 text-lg">{error.input}</span></label>
                 <input name='input' value={loginData.input} onChange={hdlOnChange} type="text" className="mb-5 p-1" onKeyDown={hdlOnEnter} />
-                <label className='flex flex-row justify-between font-medium'>PASSWORD <span className="text-red-500 text-sm">{error.password}</span></label>
+                <label className='text-2xl flex flex-row justify-between font-medium'>PASSWORD <span className="text-red-500 text-lg">{error.password}</span></label>
                 <input name='password' value={loginData.password} onChange={hdlOnChange} type="password" className=" p-1" onKeyDown={hdlOnEnter} />
                 <ForgotPassword />
             </div>
             {/* BUTTON */}
             <div className='flex flex-col items-center'>
-                <div className='flex flex-col mb-10 gap-10'>
+                <div className='flex flex-col mb-10 gap-10 lg:gap-5 lg:mb-1'>
 
-                    <button className='bg-my-secon text-white hover:bg-my-secon-hover py-3 px-10 text-xl font-semibold' onClick={hdlSubmit}>LOG IN</button>
-                    <div className='text-center'>OR</div>
+                    <button className='bg-my-secon text-white hover:bg-my-secon-hover py-3 px-10 text-2xl font-semibold' onClick={hdlSubmit}>LOG IN</button>
+                    <div className='text-center text-2xl'>OR</div>
                     <LoginGoogle />
                 </div>
             </div>

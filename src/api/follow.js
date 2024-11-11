@@ -1,15 +1,17 @@
 import axios from "axios";
+import useUserStore from "../stores/userStore";
+import createAuthHeader from "../utils/createAuthHeader";
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const headerToken = import.meta.env.VITE_API_HEADER
+const token = useUserStore.getState().token;
 
 export const followUserApi = (body) => {
-  return axios.post(`${baseUrl}/follow`, body, headerToken);
+  return axios.post(`${baseUrl}/follow`, body, createAuthHeader(token));
 };
 
 export const unfollowUserApi = (body) => {
-  return axios.post(`${baseUrl}/follow/unfollow`, body, headerToken);
+  return axios.post(`${baseUrl}/follow/unfollow`, body, createAuthHeader(token));
 };
 
 export const getFollowingInfoApi = (body) => {
-  return axios.post(`${baseUrl}/follow/userinfo`, body);
+  return axios.post(`${baseUrl}/follow/userinfo`, body, createAuthHeader(token));
 };

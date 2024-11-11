@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import EventMap from "./components/map/EventMap";
 import { SearchUser } from "./components/Filters";
@@ -22,6 +22,7 @@ import {
   getFollowingApi,
 } from "./api/search";
 import useStore from "./stores/geoStore";
+import PostSkeleton from "./components/PostSkeleton";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
@@ -42,6 +43,7 @@ const Pinxy = () => {
   const [orderOption, setOrderOption] = useState("asc");
   const [categoryOption, setCategoryOption] = useState("");
   const [value, setValue] = useState("");
+  const LazyPost = lazy(() => import("./components/Post_post"));
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
@@ -233,20 +235,22 @@ const Pinxy = () => {
               />
               <div className="space-y-2">
                 <AnimatePresence>
-                  {posts.map((post, idx) => (
-                    <motion.div
-                      key={post.postId}
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Post_post
-                        postId={post.postId}
-                        setCategoryOption={setCategoryOption}
-                      />
-                    </motion.div>
-                  ))}
+                  <Suspense fallback={<PostSkeleton />}>
+                    {posts.map((post, idx) => (
+                      <motion.div
+                        key={post.postId}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <LazyPost
+                          postId={post.postId}
+                          setCategoryOption={setCategoryOption}
+                        />
+                      </motion.div>
+                    ))}
+                  </Suspense>
                 </AnimatePresence>
               </div>
             </div>

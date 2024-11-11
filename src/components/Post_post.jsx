@@ -8,7 +8,7 @@ import useUserStore from "../stores/userStore";
 import { div } from "framer-motion/client";
 import { FaCommentDots } from "react-icons/fa";
 import useGeoStore from "../stores/geoStore";
-function Post_post({ postId }) {
+function Post_post({ postId, setCategoryOption }) {
   const token = useUserStore((state) => state.token);
   const [post, setPost] = useState(null);
   const [user, setUser] = useState({});
@@ -25,6 +25,8 @@ function Post_post({ postId }) {
   const postForAI = usePostStore((state) => state.postForAI);
   const postLocation = useGeoStore((state) => state.postLocation);
   const setPostLocation = useGeoStore((state) => state.setPostLocation);
+  const setSelectedUser = usePostStore((state) => state.setSelectedUser);
+  const setActiveMenu = usePostStore((state) => state.setActiveMenu);
   const hdlShowPost = () => {
     // console.log("Show Post_modal");
     setCurPostId(postId);
@@ -65,6 +67,12 @@ function Post_post({ postId }) {
       console.log(err.response.data.error || err.message);
     }
   };
+  const hdlClickUser = (e, userId) => {
+    e.stopPropagation();
+    setSelectedUser(userId);
+    setActiveMenu("");
+    setCategoryOption("");
+  };
   useEffect(() => {
     if (postId) {
       getPost();
@@ -104,10 +112,14 @@ function Post_post({ postId }) {
             className="w-[80px] h-[80px] object-cover rounded-full shadow-md"
             src={post?.user?.imageUrl}
             alt="no load"
+            onClick={(e) => hdlClickUser(e, post?.user?.id)}
           />
           <div className="flex flex-col justify-between text-my-text w-full flex-1">
             <div className="flex justify-between">
-              <p className="text-2xl translate-y-2">
+              <p
+                className="text-2xl translate-y-2"
+                onClick={(e) => hdlClickUser(e, post?.user?.id)}
+              >
                 {post?.user?.displayName}
               </p>
             </div>

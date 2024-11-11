@@ -8,3 +8,7 @@ export const followUserApi = (body) => {
 export const unfollowUserApi = (body) => {
   return axios.post(`${baseUrl}/follow/unfollow`, body);
 };
+
+export const getFollowingInfoApi = (body) => {
+  return axios.post(`${baseUrl}/follow/userinfo`, body);
+};

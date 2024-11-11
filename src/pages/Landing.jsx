@@ -66,7 +66,7 @@ function AuthContainer() {
         >
           {/* ด้านหน้า */}
           <div
-            className={`absolute ml-64 w-9/12 h-3/4 backface-hidden flex justify-center items-center ${
+            className={`absolute ml-64 lg:ml-28 w-9/12 h-3/4 backface-hidden flex justify-center items-center ${
               isLogin ? "" : "hidden"
             }`}
           >
@@ -86,13 +86,13 @@ function AuthContainer() {
 
           {/* ด้านหลัง */}
           <div
-            className={`absolute ml-64 w-9/12 h-3/4 backface-hidden flex justify-center items-center rotate-y-180 ${
+            className={`absolute ml-64 lg:ml-36 w-9/12 h-3/4 backface-hidden flex justify-center items-center rotate-y-180 ${
               isLogin ? "hidden" : ""
             }`}
           >
-            <div className="flex justify-evenly flex-col w-2/3 h-3/4 bg-white bg-opacity-60 shadow-lg p-10 rounded-3xl">
+            <div className="flex justify-evenly flex-col w-2/3 h-3/4 lg:h-5/6 lg:w-3/4 bg-white bg-opacity-60 shadow-lg p-10 rounded-3xl">
               <Register />
-              <div className="text-base flex gap-1 justify-center">
+              <div className=" flex text-lg gap-1 justify-center">
                 Already have an account?
                 <button
                   onClick={toggleComponent}

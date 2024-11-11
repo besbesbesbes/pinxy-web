@@ -30,6 +30,10 @@ const usePostStore = create((set) => ({
   setBioUser: (newVal) => set({ bioUser: newVal }),
   activeMenu: "Home",
   setActiveMenu: (newVal) => set({ activeMenu: newVal }),
+  isRenderFollower: false,
+  setIsRenderFollower: (newVal) => set({ isRenderFollower: newVal }),
+  isRenderProfileCard: false,
+  setIsRenderProfileCard: (newVal) => set({ isRenderProfileCard: newVal }),
 }));
 
 export default usePostStore;

@@ -13,6 +13,9 @@ export default {
         "my-text": "#0c1018",
         "my-bg-main": "#f3f3f3",
         "my-bg-card": "#ffffff",
+        // "my-text": "#eee",
+        // "my-bg-main": "#333",
+        // "my-bg-card": "#000",
         "my-cat-alert": "#eb1e22",
         "my-cat-news": "#f6961b",
         "my-cat-shop": "#2c66b0",
@@ -20,12 +23,12 @@ export default {
         "my-cat-other": "#614399",
       },
       animation: {
-        blink: 'blink 5s infinite',
+        blink: "blink 5s infinite",
       },
       keyframes: {
         blink: {
-          '0%, 100%': { borderColor: 'transparent' },
-          '50%': { borderColor: '#4B5563' },
+          "0%, 100%": { borderColor: "transparent" },
+          "50%": { borderColor: "#4B5563" },
         },
       },
     },

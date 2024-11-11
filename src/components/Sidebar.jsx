@@ -19,6 +19,8 @@ import { RiHome7Fill } from "react-icons/ri";
 import { AiFillOpenAI } from "react-icons/ai";
 import usePostStore from "../stores/postStore";
 import useUserStore from "../stores/userStore";
+import { useNavigate } from "react-router-dom";
+import UserProfile from "./UserProfile";
 import { FaQuestionCircle } from "react-icons/fa";
 import { MdSummarize } from "react-icons/md";
 
@@ -27,10 +29,9 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
     <button
       onClick={onClick} // กำหนด onClick เพื่อเรียกใช้ฟังก์ชันเมื่อคลิก
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
-        ${
-          isActive
-            ? "bg-my-prim text-white"
-            : "text-my-prim text-opacity-60 hover:bg-gray-100"
+        ${isActive
+          ? "bg-my-prim text-white"
+          : "text-my-prim text-opacity-60 hover:bg-gray-100"
         }`}
     >
       <Icon className="h-7 w-7" />
@@ -39,7 +40,7 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   </li>
 );
 
-const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
+const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
   const postForAI = usePostStore((state) => state.postForAI);
   const user = useUserStore((state) => state.user);
   const activeMenu = usePostStore((state) => state.activeMenu);
@@ -49,6 +50,16 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
   );
   const setAiAskmeTrigger = usePostStore((state) => state.setAiAskmeTrigger);
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
+
+  const logout = useUserStore((state) => state.logout)
+  const navigate = useNavigate()
+
+  const hdlLogout = () => {
+    console.log("logout")
+    logout()
+    navigate("/")
+
+  }
   const hdlAISummary = () => {
     if (postForAI.length > 0) {
       setAiSummaryTrigger(true);
@@ -74,16 +85,21 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-full bg-my-prim flex items-center justify-center">
-            <User className="h-6 w-6 text-white" />
+          <div className="w-12 h-12 rounded-full overflow-hidden   flex items-center justify-center">
+            <img src={profileData.imageUrl} alt="profilePic" className="w-[45px] h-[45px] object-cover rounded-full" onClick={() => document.getElementById('userProfile').showModal()} />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">Jane Smith</h3>
-            <p className="text-sm text-gray-600">Administrator</p>
+            <h3 className="font-bold text-gray-900">{profileData.displayName}</h3>
+            <p className="text-sm text-gray-600">{profileData.name}</p>
           </div>
         </div>
       </div>
-
+      <dialog id="userProfile" className="modal">
+        <div className="modal-box flex flex-col h-1/2 max-w-2xl ">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 " onClick={() => document.getElementById('userProfile').close()}>✕</button>
+          <UserProfile profileData={profileData} />
+        </div>
+      </dialog>
       {/* Menu Items */}
       <div className="flex-1">
         <nav className="flex-1 overflow-y-auto p-4">
@@ -157,7 +173,7 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue }) => {
           <li>
             <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-my-acct hover:bg-red-50 transition-colors">
               <LogOut className="h-5 w-5" />
-              <span className="font-medium">Logout</span>
+              <span className="font-medium" onClick={hdlLogout}>Logout</span>
             </button>
           </li>
         </ul>

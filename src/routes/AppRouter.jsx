@@ -13,11 +13,13 @@ import UserManage from "../pages/admin/UserManage";
 import Landing from "../pages/Landing"
 
 import Pinxy from "../pinxy";
+import ResetPassword from "../pages/ResetPassword";
 
 const guestRouter = createBrowserRouter([
   { path: "/", element: <Landing /> },
   { path: "*", element: <Navigate to="/" /> },
   { path: "/posts", element: <Pinxy /> },
+  { path: "/reset-password/:token", element: <ResetPassword /> },
 ]);
 
 const userRouter = createBrowserRouter([

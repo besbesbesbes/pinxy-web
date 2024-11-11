@@ -30,6 +30,8 @@ const Pinxy = () => {
   const { id } = user;
   const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
+  console.log("id check", id);
+
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks
@@ -48,6 +50,7 @@ const Pinxy = () => {
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const selectedUser = usePostStore((state) => state.selectedUser);
+  const isRenderFollower = usePostStore((state) => state.isRenderFollower);
 
   useEffect(() => {
     getProfileData(id);
@@ -81,6 +84,7 @@ const Pinxy = () => {
     orderOption,
     value,
     selectedUser,
+    isRenderFollower,
   ]);
 
   useEffect(() => {
@@ -197,7 +201,6 @@ const Pinxy = () => {
     setContent("");
   };
   console.log("profileData", profileData);
-
   return (
     <div className="min-h-screen bg-my-bg-main flex">
       <Sidebar
@@ -233,7 +236,7 @@ const Pinxy = () => {
               <div className="space-y-2">
                 <AnimatePresence>
                   <Suspense fallback={<PostSkeleton />}>
-                    {posts.map((post) => (
+                    {posts.map((post, idx) => (
                       <motion.div
                         key={post.postId}
                         initial={{ opacity: 0, y: -20 }}
@@ -241,7 +244,10 @@ const Pinxy = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <LazyPost postId={post.postId} />
+                        <LazyPost
+                          postId={post.postId}
+                          setCategoryOption={setCategoryOption}
+                        />
                       </motion.div>
                     ))}
                   </Suspense>

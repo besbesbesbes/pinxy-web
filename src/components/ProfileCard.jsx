@@ -3,17 +3,33 @@ import usePostStore from "../stores/postStore";
 import { getProfile } from "../api/userProfile";
 import { MdOutlineReport } from "react-icons/md";
 import { format } from "timeago.js";
+import { FaEye } from "react-icons/fa";
+import { followUserApi, getFollowingInfoApi } from "../api/follow";
+import useUserStore from "../stores/userStore";
 
 const ProfileCard = ({ handleGetAllPostByUserId }) => {
   const bioUser = usePostStore((state) => state.bioUser);
   const setBioUser = usePostStore((state) => state.setBioUser);
   const selectedUser = usePostStore((state) => state.selectedUser);
-
+  const user = useUserStore((state) => state.user);
+  const [isFollow, setIsFollow] = useState(false);
+  const setIsRenderFollower = usePostStore(
+    (state) => state.setIsRenderFollower
+  );
+  const isRenderProfileCard = usePostStore(
+    (state) => state.isRenderProfileCard
+  );
+  const setIsRenderProfileCard = usePostStore(
+    (state) => state.setIsRenderProfileCard
+  );
   const getUserInfo = async () => {
     try {
-      const resp = await getProfile(selectedUser);
-      // console.log(resp.data.profileData);
-      setBioUser(resp.data.profileData);
+      if (selectedUser) {
+        const resp = await getProfile(selectedUser);
+        console.log("selectedUser", selectedUser);
+        console.log(resp.data.profileData);
+        setBioUser(resp.data.profileData);
+      }
     } catch (err) {
       console.log(err?.response?.data?.error || err.message);
     }
@@ -21,12 +37,48 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
   const hdlReportUser = () => {
     document.getElementById("report-user-modal").showModal();
   };
+  const hdlFollowing = async () => {
+    try {
+      setIsRenderFollower(true);
+      // console.log("hdlfollowing");
+      // console.log(user.id, selectedUser);
+      const body = {
+        userId: user.id,
+        followingId: selectedUser,
+      };
+      const resp = await followUserApi(body);
+      getFollowingInfo();
+      // console.log(resp);
+    } catch (err) {
+      console.log(err.response.data.error || err.message);
+    } finally {
+      setIsRenderFollower(false);
+    }
+  };
+  const getFollowingInfo = async () => {
+    try {
+      setIsRenderFollower(true);
+      const body = {
+        userId: user.id,
+        followingId: selectedUser,
+      };
+      const resp = await getFollowingInfoApi(body);
+      setIsFollow(resp.data.isFollow);
+    } catch (err) {
+      console.log(err.response.data.error || err.message);
+    } finally {
+      setIsRenderFollower(false);
+    }
+  };
+
   useEffect(() => {
     getUserInfo();
+    getFollowingInfo();
+    setIsRenderProfileCard(false);
     // if (selectedUser) {
     //   handleGetAllPostByUserId(selectedUser);
     // }
-  }, [selectedUser]);
+  }, [selectedUser, isRenderProfileCard]);
   return selectedUser ? (
     <div className="w-full min-h-[120px]  flex flex-col pl-10 rounded-xl gap-5 pt-5 cursor-pointer text-my-text">
       <div className="flex items-end gap-4">
@@ -41,6 +93,16 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
               <p className="text-2xl pl-3 text-my-prim">
                 {bioUser?.displayName}
               </p>
+              {/* follow area */}
+              {user.id == selectedUser ? null : !isFollow ? (
+                <div
+                  className="flex px-2 py-1 gap-2 items-center cursor-pointer rounded-full bg-my-secon ml-2 text-white hover:bg-my-secon-hover"
+                  onClick={hdlFollowing}
+                >
+                  <FaEye className="text-[20px]" />
+                  <p>Follow</p>
+                </div>
+              ) : null}
               <p className="self-end ml-5 text-my-text text-sm text-opacity-50 italic">
                 ( joined us {format(bioUser?.createdAt)} )
               </p>

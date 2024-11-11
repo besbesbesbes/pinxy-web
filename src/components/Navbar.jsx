@@ -43,9 +43,11 @@ const Navbar = ({
 
   const getUserInfo = async () => {
     try {
-      const resp = await getProfile(selectedUser);
-      // console.log(resp.data.profileData);
-      setBioUser(resp.data.profileData);
+      if (selectedUser) {
+        const resp = await getProfile(selectedUser);
+        // console.log(resp.data.profileData);
+        setBioUser(resp.data.profileData);
+      }
     } catch (err) {
       console.log(err?.response?.data?.error || err.message);
     }
@@ -65,7 +67,7 @@ const Navbar = ({
   }, [selectedUser]);
 
   return (
-    <div className="bg-white rounded-lg  p-4 w-full">
+    <div className="bg-my-bg-card rounded-lg  p-4 w-full">
       {" "}
       {/* ใช้ w-full */}
       <div className="flex justify-start">

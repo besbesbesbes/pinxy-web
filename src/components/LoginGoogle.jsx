@@ -15,9 +15,12 @@ const LoginGoogle = () => {
       const decoded = jwtDecode(token);
 
       const res = await userLoginGoogle(token);
-      console.log(decoded);
-      login(res);
+      console.log("res google", res)
+      console.log("decode", decoded);
       console.log("res", res);
+
+      login(res);
+
       if (res.data.payload.role === "USER") {
         navigate("/");
       } else {
@@ -32,7 +35,7 @@ const LoginGoogle = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div className="m-auto w-[19rem] border rounded-lg">
+      <div className="m-auto w-full border rounded-lg">
         <GoogleLogin
           onSuccess={handleLogin}
           onError={() => {

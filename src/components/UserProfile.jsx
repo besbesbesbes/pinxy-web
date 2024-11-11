@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { updateProfile } from '../api/userProfile'
 import ChangePass from './ChangePass'
 import ChangePicture from './ChangePicture'
@@ -10,13 +10,15 @@ function UserProfile(props) {
     const navigate = useNavigate()
     const { profileData } = props
 
-
+    console.log("profileData.displayName", profileData)
 
     const [editData, setEditData] = useState({
-        id: profileData?.id,
-        displayName: profileData?.displayName,
-        bio: profileData?.bio,
+        id: '',
+        displayName: '',
+        bio: ''
     })
+
+    console.log("editData", editData.displayName)
 
     const hdlOnChange = (e) => {
         setEditData({
@@ -42,6 +44,16 @@ function UserProfile(props) {
             console.log(err)
         }
     }
+
+    useEffect(() => {
+        if (profileData !== null)
+            setEditData({
+                id: profileData.id,
+                displayName: profileData.displayName,
+                bio: profileData?.bio
+            })
+
+    }, [profileData?.id])
 
     return (
         <div className='flex flex-col w-full h-full p-2'>

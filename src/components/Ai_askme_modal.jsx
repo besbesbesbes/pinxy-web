@@ -52,7 +52,7 @@ function Ai_askme_modal() {
         ...chats,
         {
           role: "user",
-          content: `In my situation: ${input}, I would like answer and make result like someone telling you about your situation and reply me same language that i ask.`,
+          content: `In my situation: ${input}, I would like answer and make result like your friend telling you about your situation and reply me same language that i ask.`,
         },
       ]);
       addChats("system", resp.data.content);

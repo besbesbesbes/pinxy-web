@@ -29,14 +29,13 @@ const Pinxy = () => {
   const { id } = user;
   const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
-  console.log("id check", id)
+  console.log("id check", id);
 
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks
 
-
-  const [profileData, setProfileData] = useState({})
+  const [profileData, setProfileData] = useState({});
   const [distance, setDistance] = useState(1000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
@@ -49,20 +48,20 @@ const Pinxy = () => {
   const clearPostForAI = usePostStore((state) => state.clearPostForAI);
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const selectedUser = usePostStore((state) => state.selectedUser);
+  const isRenderFollower = usePostStore((state) => state.isRenderFollower);
 
   useEffect(() => {
-    getProfileData(id)
-  }, [])
+    getProfileData(id);
+  }, []);
 
   const getProfileData = async (id) => {
     try {
-      const resp = await getProfile(id)
-      setProfileData(resp.data.profileData)
+      const resp = await getProfile(id);
+      setProfileData(resp.data.profileData);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
-
+  };
 
   useEffect(() => {
     handleGetFollowing(user.id);
@@ -75,7 +74,16 @@ const Pinxy = () => {
     } else {
       handleGetAllPost();
     }
-  }, [categoryOption, userPosition, distance, sortOption, orderOption, value, selectedUser]);
+  }, [
+    categoryOption,
+    userPosition,
+    distance,
+    sortOption,
+    orderOption,
+    value,
+    selectedUser,
+    isRenderFollower,
+  ]);
 
   useEffect(() => {
     clearPostForAI();
@@ -190,7 +198,7 @@ const Pinxy = () => {
     setPosts([newPost, ...posts]);
     setContent("");
   };
-  console.log('profileData', profileData)
+  console.log("profileData", profileData);
   return (
     <div className="min-h-screen bg-my-bg-main flex">
       <Sidebar
@@ -233,7 +241,10 @@ const Pinxy = () => {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Post_post postId={post.postId} />
+                      <Post_post
+                        postId={post.postId}
+                        setCategoryOption={setCategoryOption}
+                      />
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -251,7 +262,10 @@ const Pinxy = () => {
                 {/* <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
                 /> */}
-                <FollowBar followers={followers} setCategoryOption={setCategoryOption} />
+                <FollowBar
+                  followers={followers}
+                  setCategoryOption={setCategoryOption}
+                />
               </div>
             </div>
           </div>

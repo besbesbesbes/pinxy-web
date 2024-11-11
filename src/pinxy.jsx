@@ -232,8 +232,8 @@ const Pinxy = () => {
               />
               <div className="space-y-2">
                 <AnimatePresence>
-                  {posts.map((post) => (
-                    <Suspense fallback={<PostSkeleton />}>
+                  <Suspense fallback={<PostSkeleton />}>
+                    {posts.map((post) => (
                       <motion.div
                         key={post.postId}
                         initial={{ opacity: 0, y: -20 }}
@@ -243,8 +243,8 @@ const Pinxy = () => {
                       >
                         <LazyPost postId={post.postId} />
                       </motion.div>
-                    </Suspense>
-                  ))}
+                    ))}
+                  </Suspense>
                 </AnimatePresence>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import EventMap from "./components/map/EventMap";
 import { SearchUser } from "./components/Filters";
@@ -22,6 +22,7 @@ import {
   getFollowingApi,
 } from "./api/search";
 import useStore from "./stores/geoStore";
+import PostSkeleton from "./components/PostSkeleton";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
@@ -33,14 +34,14 @@ const Pinxy = () => {
   const [followers, setFollowers] = useState([]);
   const [landmarks, setLandmarks] = useState([]); // เพิ่ม state สำหรับ landmarks
 
-
-  const [profileData, setProfileData] = useState({})
+  const [profileData, setProfileData] = useState({});
   const [distance, setDistance] = useState(1000); // Distance filter
   const [content, setContent] = useState("");
   const [sortOption, setSortOption] = useState("distance");
   const [orderOption, setOrderOption] = useState("asc");
   const [categoryOption, setCategoryOption] = useState("");
   const [value, setValue] = useState("");
+  const LazyPost = lazy(() => import("./components/Post_post"));
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
@@ -49,18 +50,17 @@ const Pinxy = () => {
   const selectedUser = usePostStore((state) => state.selectedUser);
 
   useEffect(() => {
-    getProfileData(id)
-  }, [])
+    getProfileData(id);
+  }, []);
 
   const getProfileData = async (id) => {
     try {
-      const resp = await getProfile(id)
-      setProfileData(resp.data.profileData)
+      const resp = await getProfile(id);
+      setProfileData(resp.data.profileData);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
-
+  };
 
   useEffect(() => {
     handleGetFollowing(user.id);
@@ -73,7 +73,15 @@ const Pinxy = () => {
     } else {
       handleGetAllPost();
     }
-  }, [categoryOption, userPosition, distance, sortOption, orderOption, value, selectedUser]);
+  }, [
+    categoryOption,
+    userPosition,
+    distance,
+    sortOption,
+    orderOption,
+    value,
+    selectedUser,
+  ]);
 
   useEffect(() => {
     clearPostForAI();
@@ -188,7 +196,8 @@ const Pinxy = () => {
     setPosts([newPost, ...posts]);
     setContent("");
   };
-  console.log('profileData', profileData)
+  console.log("profileData", profileData);
+
   return (
     <div className="min-h-screen bg-my-bg-main flex">
       <Sidebar
@@ -223,16 +232,18 @@ const Pinxy = () => {
               />
               <div className="space-y-2">
                 <AnimatePresence>
-                  {posts.map((post, idx) => (
-                    <motion.div
-                      key={post.postId}
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Post_post postId={post.postId} />
-                    </motion.div>
+                  {posts.map((post) => (
+                    <Suspense fallback={<PostSkeleton />}>
+                      <motion.div
+                        key={post.postId}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <LazyPost postId={post.postId} />
+                      </motion.div>
+                    </Suspense>
                   ))}
                 </AnimatePresence>
               </div>
@@ -249,7 +260,10 @@ const Pinxy = () => {
                 {/* <SearchUser
                   handleGetAllPostByUserId={handleGetAllPostByUserId}
                 /> */}
-                <FollowBar followers={followers} setCategoryOption={setCategoryOption} />
+                <FollowBar
+                  followers={followers}
+                  setCategoryOption={setCategoryOption}
+                />
               </div>
             </div>
           </div>

@@ -47,7 +47,7 @@ const FollowBar = ({ followers, setCategoryOption }) => {
     <div className="bg-white rounded-lg p-5 mb-6 w-full">
       <h4 className="text-xl font-bold flex items-center gap-2">
         <FaEye className="text-[35px] text-my-prim" />
-        Following
+        Following ({updatedFollowers.length})
       </h4>
       <ul className="max-h-56 p-4 overflow-y-auto">
         <AnimatePresence>

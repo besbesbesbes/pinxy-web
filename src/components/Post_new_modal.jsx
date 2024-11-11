@@ -174,7 +174,7 @@ function Post_new_modal() {
       </button> */}
 
       {/* <button onClick={hdlTest}>setNewUserPosition</button> */}
-      {/* <button onClick={test}>input</button> */}
+      {/* <button onClick={() => console.log(files)}>files</button> */}
       {/* user area */}
       <div className="flex gap-5">
         <img
@@ -235,7 +235,11 @@ function Post_new_modal() {
             {/* picture lists */}
             <div className="flex flex-col gap-2 px-2 max-h-[450px] overflow-auto">
               {files.length > 0 ? (
-                <Reorder.Group axis="y" values={files} onReorder={setFiles}>
+                <Reorder.Group
+                  axis="y"
+                  values={files || []}
+                  onReorder={setFiles}
+                >
                   <AnimatePresence>
                     {files.map((el, idx) => (
                       <Reorder.Item

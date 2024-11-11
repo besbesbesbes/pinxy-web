@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import { getReportPostReasonApi, reportPostApi } from "../apis/post-api";
 import useUserStore from "../stores/userStore";
 import usePostStore from "../stores/postStore";
+import { motion, AnimatePresence } from "framer-motion";
 function Report_post_modal() {
+  const [confirming, setConfirming] = useState(false);
   const [reasons, setReasons] = useState([]);
   const [input, setInput] = useState("");
   const curPostId = usePostStore((state) => state.curPostId);
@@ -15,16 +17,23 @@ function Report_post_modal() {
     document.getElementById("report-post-modal").close();
   };
   const hdlReportPost = async () => {
-    try {
-      if (!input) {
-        console.log("Please select reason.");
-        return;
+    if (!confirming) {
+      setConfirming(true);
+    } else {
+      try {
+        if (!input) {
+          console.log("Please select reason.");
+          return;
+        }
+        await reportPostApi(token, curPostId, input);
+        setInput("");
+        hdlClosePopup();
+      } catch (err) {
+        console.log(err.response.data.error || err.message);
+      } finally {
+        setConfirming(false);
       }
-      await reportPostApi(token, curPostId, input);
-      setInput("");
-      hdlClosePopup();
-    } catch (err) {
-      console.log(err.response.data.error || err.message);
+      setConfirming(false);
     }
   };
   const getReportPostReason = async () => {
@@ -84,11 +93,35 @@ function Report_post_modal() {
           <strong>Warning:</strong> Reports made with the intent to persecute or
           harm others may lead to restrictions on your account.
         </p>
-        <button className="btn self-end bg-my-secon hover:bg-my-secon-hover">
-          <IoSendSharp
-            className="text-2xl text-white"
-            onClick={hdlReportPost}
-          />
+        <button
+          className="btn self-end bg-my-secon hover:bg-my-secon-hover"
+          onClick={hdlReportPost}
+        >
+          <AnimatePresence mode="wait">
+            {confirming ? (
+              <motion.span
+                key="confirmText"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-white text-lg"
+              >
+                Confirm
+              </motion.span>
+            ) : (
+              <motion.div
+                key="trashIcon"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-2xl text-white"
+              >
+                <IoSendSharp className="text-2xl text-white" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </button>
       </div>
     </div>

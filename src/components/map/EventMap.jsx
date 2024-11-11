@@ -32,7 +32,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
       if (userPosition === postLocation) {
         mapRef.current.flyTo(postLocation, fixZoomLevel);
       } else {
-        mapRef.current.flyTo(postLocation, 18);
+        mapRef.current.flyTo(postLocation, 16);
       }
     }
   }, [postLocation]);

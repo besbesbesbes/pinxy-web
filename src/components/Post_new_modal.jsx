@@ -174,7 +174,7 @@ function Post_new_modal() {
       </button> */}
 
       {/* <button onClick={hdlTest}>setNewUserPosition</button> */}
-      <button onClick={() => console.log(filesNew)}>filesNew</button>
+      {/* <button onClick={() => console.log(filesNew)}>filesNew</button> */}
       {/* user area */}
       <div className="flex gap-5">
         <img

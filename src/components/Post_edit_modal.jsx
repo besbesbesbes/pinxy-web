@@ -201,7 +201,7 @@ function Post_edit_modal() {
         e.stopPropagation();
       }}
     >
-      <button onClick={() => console.log(files)}>files</button>
+      {/* <button onClick={() => console.log(files)}>files</button> */}
       {/* <button onClick={() => console.log(markerPosition)}>
         markerPosition
       </button> */}

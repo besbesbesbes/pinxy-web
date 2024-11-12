@@ -214,7 +214,7 @@ const Pinxy = () => {
   };
   console.log("profileData", profileData);
   return (
-    <div className="min-h-screen bg-my-bg-main flex justify-center">
+    <div className="min-h-screen bg-my-bg-main dark:bg-my-bg-main-dark flex justify-center">
       <div>
         {isLargeScreen ? (
           <Sidebar
@@ -233,7 +233,7 @@ const Pinxy = () => {
         )}
       </div>
       <main
-        className={`flex-1 bg-my-bg-main   px-5 max-w-[1000px] ${
+        className={`flex-1 bg-my-bg-main dark:bg-my-bg-main-dark  px-5 max-w-[1000px] ${
           isLargeScreen ? "ml-64 mr-[500px]" : null
         }`}
       >

@@ -44,9 +44,9 @@ const FollowBar = ({ followers, setCategoryOption }) => {
   }, [followers]);
 
   return (
-    <div className="bg-white rounded-lg px-5 pt-5 pb-0 w-full h-full flex flex-col overflow-auto">
-      <h4 className="text-xl font-bold flex items-center gap-2">
-        <FaEye className="text-[35px] text-my-prim" />
+    <div className="bg-my-bg-card dark:bg-my-bg-card-dark rounded-lg px-5 pt-5 pb-0 w-full h-full flex flex-col overflow-auto">
+      <h4 className="text-xl font-bold flex items-center gap-2 dark:text-my-text-dark">
+        <FaEye className="text-[35px] text-my-prim " />
         Following ({updatedFollowers.length})
       </h4>
       <ul className="h-full px-4 pt-4 overflow-auto">
@@ -59,7 +59,7 @@ const FollowBar = ({ followers, setCategoryOption }) => {
             updatedFollowers.map((follower) => (
               <motion.div
                 key={follower.id}
-                className="flex items-center hover:bg-gray-50 p-2 rounded-lg cursor-pointer group"
+                className="flex items-center hover:bg-gray-50 hover:dark:bg-my-bg-main-dark p-2 rounded-lg cursor-pointer group"
                 onClick={() => {
                   setSelectedUser(follower.id);
                   setActiveMenu("");
@@ -76,7 +76,9 @@ const FollowBar = ({ followers, setCategoryOption }) => {
                   className="w-[50px] h-[50px] rounded-full mr-3 object-cover"
                 />
                 <div>
-                  <p className="font-medium">{follower.displayName}</p>
+                  <p className="font-medium dark:text-my-text-dark">
+                    {follower.displayName}
+                  </p>
                 </div>
                 <div
                   className="ml-auto p-2 rounded-full flex items-center space-x-1 bg-my-secon hover:bg-my-secon-hover text-white transition-colors opacity-0 group-hover:opacity-100"

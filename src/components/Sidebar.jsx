@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
 import { FaQuestionCircle } from "react-icons/fa";
 import { MdSummarize } from "react-icons/md";
+import ChangeTheme from "./ChangeTheme";
 
 const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
   <li>
@@ -32,7 +33,7 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
         ${
           isActive
             ? "bg-my-prim text-white"
-            : "text-my-prim text-opacity-60 hover:bg-gray-100"
+            : "text-my-prim dark:text-my-text-dark text-opacity-60 hover:bg-gray-100 hover:dark:bg-my-bg-main-dark"
         }`}
     >
       <Icon className="h-7 w-7" />
@@ -83,9 +84,9 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
   };
 
   return (
-    <div className="bg-my-bg-card fixed top-0 left-0 h-screen flex flex-col shadow-lg text-xl w-64">
+    <div className="bg-my-bg-card dark:bg-my-bg-card-dark fixed top-0 left-0 h-screen flex flex-col shadow-lg text-xl w-64">
       {/* Profile Section */}
-      <div className="p-6 border-b">
+      <div className="p-6 border-b dark:border-my-text-dark dark:border-opacity-30">
         <div className="flex items-center space-x-4">
           {/* Profile Picture */}
           <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
@@ -97,10 +98,12 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
             />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">
+            <h3 className="font-bold text-gray-900 dark:text-my-text-dark">
               {profileData.displayName}
             </h3>
-            <p className="text-sm text-gray-600">{profileData.name}</p>
+            <p className="text-sm text-gray-600 dark:text-my-text-dark">
+              {profileData.name}
+            </p>
           </div>
         </div>
       </div>
@@ -163,14 +166,14 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
         {/* AI section */}
         <div className="px-4 flex flex-col gap-2">
           <button
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-my-secon transition-colors transform hover:scale-105 duration-200 text-white"
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-my-secon dark:bg-my-bg-main-dark transition-colors transform hover:scale-105 duration-200 text-white"
             onClick={hdlAISummary}
           >
             <MdSummarize className="h-6 w-6" />
             <span>AI Summary</span>
           </button>
           <button
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-my-secon transition-colors transform hover:scale-105 duration-200 text-white"
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-my-secon dark:bg-my-bg-main-dark transition-colors transform hover:scale-105 duration-200 text-white"
             onClick={hdlAIAskme}
           >
             <FaQuestionCircle className="h-6 w-6" />

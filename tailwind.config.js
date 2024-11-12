@@ -12,6 +12,7 @@ export default {
         "my-secon-hover": "#9fc5e8",
         "my-text": "#0c1018",
         "my-bg-main": "#f3f3f3",
+        // "my-bg-main": "#555",
         "my-bg-card": "#ffffff",
         // "my-text": "#eee",
         // "my-bg-main": "#333",

@@ -10,6 +10,8 @@ const usePostStore = create((set) => ({
   setCurUserId: (newVal) => set({ curUserId: newVal }),
   files: [],
   setFiles: (newVal) => set({ files: newVal }),
+  filesNew: [],
+  setFilesNew: (newVal) => set({ filesNew: newVal }),
   postForAI: [],
   addPostForAI: (newVal) =>
     set((state) => ({

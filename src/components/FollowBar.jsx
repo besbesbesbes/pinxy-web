@@ -44,12 +44,12 @@ const FollowBar = ({ followers, setCategoryOption }) => {
   }, [followers]);
 
   return (
-    <div className="bg-white rounded-lg p-5 mb-6 w-full">
+    <div className="bg-white rounded-lg px-5 pt-5 pb-0 w-full h-full flex flex-col overflow-auto">
       <h4 className="text-xl font-bold flex items-center gap-2">
         <FaEye className="text-[35px] text-my-prim" />
         Following ({updatedFollowers.length})
       </h4>
-      <ul className="max-h-56 p-4 overflow-y-auto">
+      <ul className="h-full px-4 pt-4 overflow-auto">
         <AnimatePresence>
           {updatedFollowers.length === 0 ? (
             <p className="text-my-text text-opacity-50">

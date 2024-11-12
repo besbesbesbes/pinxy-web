@@ -29,9 +29,10 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick }) => (
     <button
       onClick={onClick}
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
-        ${isActive
-          ? "bg-my-prim text-white"
-          : "text-my-prim text-opacity-60 hover:bg-gray-100"
+        ${
+          isActive
+            ? "bg-my-prim text-white"
+            : "text-my-prim text-opacity-60 hover:bg-gray-100"
         }`}
     >
       <Icon className="h-7 w-7" />
@@ -51,14 +52,14 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
   const setAiAskmeTrigger = usePostStore((state) => state.setAiAskmeTrigger);
   const setSelectedUser = usePostStore((state) => state.setSelectedUser);
 
-  const logout = useUserStore((state) => state.logout)
-  const navigate = useNavigate()
+  const logout = useUserStore((state) => state.logout);
+  const navigate = useNavigate();
 
   const hdlLogout = () => {
-    console.log("logout")
-    logout()
-    navigate("/")
-  }
+    console.log("logout");
+    logout();
+    navigate("/");
+  };
   const hdlAISummary = () => {
     if (postForAI.length > 0) {
       setAiSummaryTrigger(true);
@@ -82,30 +83,35 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
   };
 
   return (
-    <div 
-      className="bg-my-bg-card fixed top-0 left-0 h-screen flex flex-col shadow-lg text-xl w-64"
-    >
+    <div className="bg-my-bg-card fixed top-0 left-0 h-screen flex flex-col shadow-lg text-xl w-64">
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-4">
           {/* Profile Picture */}
           <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
-            <img 
-              src={profileData.imageUrl} 
-              alt="profilePic" 
+            <img
+              src={profileData.imageUrl}
+              alt="profilePic"
               className="w-full h-full object-cover rounded-full transition-all duration-200"
-              onClick={() => document.getElementById('userProfile').showModal()} 
+              onClick={() => document.getElementById("userProfile").showModal()}
             />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">{profileData.displayName}</h3>
+            <h3 className="font-bold text-gray-900">
+              {profileData.displayName}
+            </h3>
             <p className="text-sm text-gray-600">{profileData.name}</p>
           </div>
         </div>
       </div>
       <dialog id="userProfile" className="modal">
         <div className="modal-box flex flex-col h-1/2 max-w-2xl ">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 " onClick={() => document.getElementById('userProfile').close()}>✕</button>
+          <button
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 "
+            onClick={() => document.getElementById("userProfile").close()}
+          >
+            ✕
+          </button>
           <UserProfile profileData={profileData} />
         </div>
       </dialog>

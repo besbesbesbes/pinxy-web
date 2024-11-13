@@ -36,15 +36,13 @@ export const changePassword = (passwordData) => {
 export const sendResetPassword = (resetPasswordData) => {
   return axios.post(
     `${baseUrl}/user/send-reset`,
-    resetPasswordData,
-    createAuthHeader(token)
+    resetPasswordData
   );
 };
 
 export const resetPassword = (password) => {
   return axios.patch(
     `${baseUrl}/user/reset-password`,
-    password,
-    createAuthHeader(token)
+    password
   );
 };

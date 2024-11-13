@@ -10,7 +10,7 @@ function UserProfile(props) {
     const navigate = useNavigate()
     const { profileData } = props
 
-    console.log("profileData.displayName", profileData)
+    // console.log("profileData.displayName", profileData)
 
     const [editData, setEditData] = useState({
         id: '',
@@ -18,7 +18,7 @@ function UserProfile(props) {
         bio: ''
     })
 
-    console.log("editData", editData.displayName)
+    // console.log("editData", editData.displayName)
 
     const hdlOnChange = (e) => {
         setEditData({
@@ -26,7 +26,7 @@ function UserProfile(props) {
             [e.target.name]: e.target.value
         })
     }
-    console.log("editData", editData)
+    // console.log("editData", editData)
     const [isDisabled, setIsDisabled] = useState(true)
 
 

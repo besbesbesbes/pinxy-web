@@ -26,8 +26,8 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
     try {
       if (selectedUser) {
         const resp = await getProfile(selectedUser);
-        console.log("selectedUser", selectedUser);
-        console.log(resp.data.profileData);
+        // console.log("selectedUser", selectedUser);
+        // console.log(resp.data.profileData);
         setBioUser(resp.data.profileData);
       }
     } catch (err) {
@@ -56,18 +56,20 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
     }
   };
   const getFollowingInfo = async () => {
-    try {
-      setIsRenderFollower(true);
-      const body = {
-        userId: user.id,
-        followingId: selectedUser,
-      };
-      const resp = await getFollowingInfoApi(body);
-      setIsFollow(resp.data.isFollow);
-    } catch (err) {
-      console.log(err.response.data.error || err.message);
-    } finally {
-      setIsRenderFollower(false);
+    if (selectedUser) {
+      try {
+        setIsRenderFollower(true);
+        const body = {
+          userId: user.id,
+          followingId: selectedUser,
+        };
+        const resp = await getFollowingInfoApi(body);
+        setIsFollow(resp.data.isFollow);
+      } catch (err) {
+        console.log(err.response.data.error || err.message);
+      } finally {
+        setIsRenderFollower(false);
+      }
     }
   };
 

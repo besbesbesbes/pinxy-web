@@ -52,7 +52,7 @@ function AuthContainer() {
                 loop
                 muted
                 playsInline
-                src="asset/pinxy2.mp4"
+                src="asset/pinxy4.mp4"
                 className="absolute inset-0 w-full h-full object-cover z-0"
             ></video>
 

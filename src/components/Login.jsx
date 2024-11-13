@@ -200,8 +200,8 @@ function Login() {
         return setIsError(!!(alertError.password || alertError.email || alertError.name))
     }
 
-    console.log("isEmail", isEmail)
-    console.log("loginData", loginData)
+    // console.log("isEmail", isEmail)
+    // console.log("loginData", loginData)
 
     const hdlSubmit = async (e) => {
         e.preventDefault()
@@ -230,7 +230,7 @@ function Login() {
     const hdlOnEnter = async (e) => {
         try {
             const { input, password } = loginData
-            if (e.key === "Enter" && input !== "" && password !== "") {
+            if (e.key === "Enter" && input === "" && password === "") {
                 toast.error("Please complete the required fields.")
             } else if (e.key === "Enter" && !isError) {
                 const res = await userLogin(loginData)

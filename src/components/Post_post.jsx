@@ -93,7 +93,7 @@ function Post_post({ postId, setCategoryOption }) {
       onMouseLeave={() => {
         setPostLocation(userPosition), console.log(postLocation);
       }}
-      className="w-full  min-h-[100px] bg-my-bg-card flex flex-col py-5 px-10 rounded-xl shadow-md"
+      className="w-full  min-h-[100px] bg-my-bg-card dark:bg-my-bg-card-dark flex flex-col py-5 px-10 rounded-xl shadow-md"
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -114,7 +114,7 @@ function Post_post({ postId, setCategoryOption }) {
             alt="no load"
             onClick={(e) => hdlClickUser(e, post?.user?.id)}
           />
-          <div className="flex flex-col justify-between text-my-text w-full flex-1">
+          <div className="flex flex-col justify-between text-my-text dark:text-my-text-dark w-full flex-1">
             <div className="flex justify-between">
               <p
                 className="text-2xl translate-y-2"
@@ -137,7 +137,7 @@ function Post_post({ postId, setCategoryOption }) {
         </div>
         {/* text content area */}
         <div onClick={hdlShowPost} className="cursor-pointer">
-          <p className="text-2xl">{post?.content}</p>
+          <p className="text-2xl dark:text-my-text-dark">{post?.content}</p>
         </div>
         {/* picture content area */}
         <div className="w-full cursor-pointer" onClick={hdlShowPost}>
@@ -257,7 +257,7 @@ function Post_post({ postId, setCategoryOption }) {
         <div className="flex flex-col">
           {/* engaging area */}
           <div
-            className="w-full flex justify-between text-my-text text-opacity-70 text-lg cursor-pointer"
+            className="w-full flex justify-between text-my-text dark:text-my-text-dark text-opacity-70 text-lg cursor-pointer"
             onClick={hdlShowPost}
           >
             <div className="flex items-baseline gap-2">
@@ -273,7 +273,7 @@ function Post_post({ postId, setCategoryOption }) {
             <p>{post?._count.comments} comments</p>
           </div>
           {/* vote area */}
-          <div className="w-full h-[50px] border-x-0 border-b-0 border-[2px] border-my-text border-opacity-20 flex justify-evenly text-lg text-my-text text-opacity-20 font-bold items-center gap-20 pt-2">
+          <div className="w-full h-[50px] border-x-0 border-b-0 border-[2px] border-my-text dark:border-my-text-dark border-opacity-20 flex justify-evenly text-lg text-my-text dark:text-my-text-dark text-opacity-20 font-bold items-center gap-20 pt-2">
             <button
               className={`flex gap-2 items-baseline hover:text-my-prim cursor-pointer ${
                 isAnimatingUpPost

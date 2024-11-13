@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -13,14 +14,15 @@ export default {
         "my-text": "#0c1018",
         "my-bg-main": "#f3f3f3",
         "my-bg-card": "#ffffff",
-        // "my-text": "#eee",
-        // "my-bg-main": "#333",
-        // "my-bg-card": "#000",
         "my-cat-alert": "#eb1e22",
         "my-cat-news": "#f6961b",
         "my-cat-shop": "#2c66b0",
         "my-cat-job": "#40b449",
         "my-cat-other": "#614399",
+        // Dark theme overrides
+        "my-bg-main-dark": "#555",
+        "my-bg-card-dark": "#000",
+        "my-text-dark": "#fff",
       },
       animation: {
         blink: "blink 5s infinite",

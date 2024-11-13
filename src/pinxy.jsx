@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import EventMap from "./components/map/EventMap";
 import { SearchUser } from "./components/Filters";
@@ -22,6 +22,9 @@ import {
   getFollowingApi,
 } from "./api/search";
 import useStore from "./stores/geoStore";
+import PostSkeleton from "./components/PostSkeleton";
+import SidebarMini from "./components/SidebarMini";
+import NavbarMini from "./components/NavbarMini";
 
 const Pinxy = () => {
   const user = useUserStore((state) => state.user);
@@ -29,7 +32,7 @@ const Pinxy = () => {
   const { id } = user;
   const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
-  console.log("id check", id);
+  // console.log("id check", id);
 
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -42,6 +45,7 @@ const Pinxy = () => {
   const [orderOption, setOrderOption] = useState("asc");
   const [categoryOption, setCategoryOption] = useState("");
   const [value, setValue] = useState("");
+  const LazyPost = lazy(() => import("./components/Post_post"));
 
   const userPosition = useStore((state) => state.userPosition);
   const updateUserPosition = useStore((state) => state.updateUserPosition);
@@ -49,6 +53,16 @@ const Pinxy = () => {
   const addPostForAI = usePostStore((state) => state.addPostForAI);
   const selectedUser = usePostStore((state) => state.selectedUser);
   const isRenderFollower = usePostStore((state) => state.isRenderFollower);
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1440);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1440);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     getProfileData(id);
@@ -120,7 +134,7 @@ const Pinxy = () => {
         value: searchValue,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -137,7 +151,7 @@ const Pinxy = () => {
         category: categoryOption,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -154,7 +168,7 @@ const Pinxy = () => {
         userId: selectedUser,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -198,41 +212,75 @@ const Pinxy = () => {
     setPosts([newPost, ...posts]);
     setContent("");
   };
-  console.log("profileData", profileData);
+  // console.log("profileData", profileData);
   return (
-    <div className="min-h-screen bg-my-bg-main flex">
-      <Sidebar
-        setCategoryOption={setCategoryOption}
-        inputRef={inputRef}
-        setValue={setValue}
-        profileData={profileData}
-      />
-      <main className="flex-1 ml-64">
-        <div className="max-w-full mx-auto px-4">
-          {/* <header className="sticky top-0 z-10"></header> */}
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-2">
-              <Navbar
+    <div className="min-h-screen bg-my-bg-main dark:bg-my-bg-main-dark flex justify-center">
+      <div>
+        {isLargeScreen ? (
+          <Sidebar
+            setCategoryOption={setCategoryOption}
+            inputRef={inputRef}
+            setValue={setValue}
+            profileData={profileData}
+          />
+        ) : (
+          <SidebarMini
+            setCategoryOption={setCategoryOption}
+            inputRef={inputRef}
+            setValue={setValue}
+            profileData={profileData}
+          />
+        )}
+      </div>
+      <main
+        className={`flex-1 bg-my-bg-main dark:bg-my-bg-main-dark  px-5 max-w-[1000px] ${
+          isLargeScreen ? "ml-64 mr-[500px]" : null
+        }`}
+      >
+        <div className="gap-6">
+          <div className={`${isLargeScreen && "space-y-2"}`}>
+            {isLargeScreen ? (
+              <>
+                <Navbar
+                  inputRef={inputRef}
+                  setValue={setValue}
+                  setCategoryOption={setCategoryOption}
+                  handleGetAllPostByValue={handleGetAllPostByValue}
+                  handleGetAllPostByUserId={handleGetAllPostByUserId}
+                />
+                <Post_form />
+                <ProfileCard
+                  handleGetAllPostByUserId={handleGetAllPostByUserId}
+                />
+                <PostFilters
+                  sortOption={sortOption}
+                  setSortOption={setSortOption}
+                  orderOption={orderOption}
+                  setOrderOption={setOrderOption}
+                />
+              </>
+            ) : (
+              <NavbarMini
                 inputRef={inputRef}
                 setValue={setValue}
                 setCategoryOption={setCategoryOption}
                 handleGetAllPostByValue={handleGetAllPostByValue}
                 handleGetAllPostByUserId={handleGetAllPostByUserId}
               />
-              <Post_form />
-              {/* <ProfileBio /> */}
-              <ProfileCard
-                handleGetAllPostByUserId={handleGetAllPostByUserId}
-              />
-              <PostFilters
-                sortOption={sortOption}
-                setSortOption={setSortOption}
-                orderOption={orderOption}
-                setOrderOption={setOrderOption}
-              />
-              <div className="space-y-2">
-                <AnimatePresence>
+            )}
+            {!isLargeScreen && (
+              <div className="my-2">
+                <EventMap
+                  posts={posts}
+                  distance={distance}
+                  setDistance={setDistance}
+                  landmarks={landmarks}
+                />
+              </div>
+            )}
+            <div className="space-y-2">
+              <AnimatePresence>
+                <Suspense fallback={<PostSkeleton />}>
                   {posts.map((post, idx) => (
                     <motion.div
                       key={post.postId}
@@ -241,36 +289,38 @@ const Pinxy = () => {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Post_post
+                      <LazyPost
                         postId={post.postId}
                         setCategoryOption={setCategoryOption}
                       />
                     </motion.div>
                   ))}
-                </AnimatePresence>
-              </div>
-            </div>
-            <div className="lg:col-span-1 sticky top-0 h-[calc(100vh-4rem)] overflow-y-auto">
-              <div className="space-y-2">
-                {/* ส่ง landmarks ไปที่ EventMap */}
-                <EventMap
-                  posts={posts}
-                  distance={distance}
-                  setDistance={setDistance}
-                  landmarks={landmarks}
-                />
-                {/* <SearchUser
-                  handleGetAllPostByUserId={handleGetAllPostByUserId}
-                /> */}
-                <FollowBar
-                  followers={followers}
-                  setCategoryOption={setCategoryOption}
-                />
-              </div>
+                </Suspense>
+              </AnimatePresence>
             </div>
           </div>
         </div>
       </main>
+      {isLargeScreen && (
+        <div className="min-w-[500px] fixed top-0 right-0 h-screen">
+          <div className="w-full h-screen flex flex-col gap-5">
+            {/* ส่ง landmarks ไปที่ EventMap */}
+            <EventMap
+              posts={posts}
+              distance={distance}
+              setDistance={setDistance}
+              landmarks={landmarks}
+            />
+            {/* <SearchUser
+                  handleGetAllPostByUserId={handleGetAllPostByUserId}
+                /> */}
+            <FollowBar
+              followers={followers}
+              setCategoryOption={setCategoryOption}
+            />
+          </div>
+        </div>
+      )}
       <Modal />
     </div>
   );

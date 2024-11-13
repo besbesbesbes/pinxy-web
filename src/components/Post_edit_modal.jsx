@@ -80,7 +80,7 @@ function Post_edit_modal() {
   const getPost = async () => {
     try {
       const result = await getPostApi(token, curPostId);
-      console.log(result.data.resPost);
+      // console.log(result.data.resPost);
       // console.log(result.data.user);
       setPost(result.data.resPost);
       setInput({
@@ -108,7 +108,7 @@ function Post_edit_modal() {
       },
     });
   };
-  const hdlFileChange = (e) => {
+  const hdlFileChangeEdit = (e) => {
     setFiles([...files, ...Array.from(e.target.files)]);
   };
   const removeImage = (idx) => {
@@ -201,7 +201,7 @@ function Post_edit_modal() {
         e.stopPropagation();
       }}
     >
-      {/* <button onClick={() => console.log(post)}>post</button> */}
+      {/* <button onClick={() => console.log(files)}>files</button> */}
       {/* <button onClick={() => console.log(markerPosition)}>
         markerPosition
       </button> */}
@@ -268,11 +268,11 @@ function Post_edit_modal() {
           <div className="border h-full rounded-xl bg-slate-50 shadow-md">
             <input
               type="file"
-              id="input-file"
+              id="input-file-edit"
               className="opacity-0 absolute"
               multiple
               accept="image/*"
-              onChange={hdlFileChange}
+              onChange={hdlFileChangeEdit}
             />
             {/* picture lists */}
             <div className="flex flex-col px-2 max-h-[450px] overflow-auto">
@@ -359,7 +359,9 @@ function Post_edit_modal() {
               ) : (
                 <div
                   className="w-full min-h-[300px] flex flex-col justify-center items-center text-my-text text-opacity-50 cursor-pointer"
-                  onClick={() => document.getElementById("input-file").click()}
+                  onClick={() =>
+                    document.getElementById("input-file-edit").click()
+                  }
                 >
                   <RiImageAddFill className="text-[100px]" />
                   <p>Add photos</p>
@@ -369,7 +371,7 @@ function Post_edit_modal() {
           </div>
           <button
             className="btn btn-primary bg-my-acct border-none  hover:bg-my-acct-hover  text-white shadow-md"
-            onClick={() => document.getElementById("input-file").click()}
+            onClick={() => document.getElementById("input-file-edit").click()}
           >
             <FaImage className="text-2xl" />
             Add Picture

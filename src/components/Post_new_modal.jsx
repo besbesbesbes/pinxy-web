@@ -38,8 +38,8 @@ function Post_new_modal() {
   const setErrTxt = useErrStore((state) => state.setErrTxt);
   const userPosition = useGeoStore((state) => state.userPosition);
   const updateUserPosition = useGeoStore((state) => state.updateUserPosition);
-  const files = usePostStore((state) => state.files);
-  const setFiles = usePostStore((state) => state.setFiles);
+  const filesNew = usePostStore((state) => state.filesNew);
+  const setFilesNew = usePostStore((state) => state.setFilesNew);
   const [rangeVal, setRangeVal] = useState(24);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
@@ -64,7 +64,7 @@ function Post_new_modal() {
       drt: 24,
       cat: "",
     });
-    setFiles([]);
+    setFilesNew([]);
     setSentiment("Neutral");
     setIsSentimentLoading(false);
     // setUser({});
@@ -96,7 +96,7 @@ function Post_new_modal() {
         createError(setErrTxt, "Miss some information...");
         return;
       }
-      if (files.length > 10) {
+      if (filesNew.length > 10) {
         createError(setErrTxt, "Maximum upload 10 images per time...");
         return;
       }
@@ -106,7 +106,7 @@ function Post_new_modal() {
       body.append("lng", input.lng);
       body.append("drt", input.drt);
       body.append("cat", input.cat);
-      files.forEach((file) => {
+      filesNew.forEach((file) => {
         body.append("images", file);
       });
       const result = await newPostApi(token, body);
@@ -122,10 +122,10 @@ function Post_new_modal() {
     }
   };
   const hdlFileChange = (e) => {
-    setFiles([...files, ...Array.from(e.target.files)]);
+    setFilesNew([...filesNew, ...Array.from(e.target.files)]);
   };
   const removeImage = (idx) => {
-    setFiles(files.filter((v, i) => i !== idx));
+    setFilesNew(filesNew.filter((v, i) => i !== idx));
   };
   const getSentiment = async (e) => {
     console.log("Call ai sentiment");
@@ -174,7 +174,7 @@ function Post_new_modal() {
       </button> */}
 
       {/* <button onClick={hdlTest}>setNewUserPosition</button> */}
-      {/* <button onClick={test}>input</button> */}
+      {/* <button onClick={() => console.log(filesNew)}>filesNew</button> */}
       {/* user area */}
       <div className="flex gap-5">
         <img
@@ -234,10 +234,14 @@ function Post_new_modal() {
             />
             {/* picture lists */}
             <div className="flex flex-col gap-2 px-2 max-h-[450px] overflow-auto">
-              {files.length > 0 ? (
-                <Reorder.Group axis="y" values={files} onReorder={setFiles}>
+              {filesNew.length > 0 ? (
+                <Reorder.Group
+                  axis="y"
+                  values={filesNew || []}
+                  onReorder={setFilesNew}
+                >
                   <AnimatePresence>
-                    {files.map((el, idx) => (
+                    {filesNew.map((el, idx) => (
                       <Reorder.Item
                         key={el.name} // Use a unique key like el.name or el.url if available
                         value={el}

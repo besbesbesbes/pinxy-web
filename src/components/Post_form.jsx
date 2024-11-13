@@ -34,7 +34,7 @@ function Post_form() {
   }, []);
   return (
     <div
-      className="w-full min-h-[120px] bg-my-bg-card flex flex-col px-10 py-6 rounded-xl gap-5 shadow-md cursor-pointer"
+      className="w-full min-h-[120px] bg-my-bg-card dark:bg-my-bg-card-dark flex flex-col px-10 py-6 rounded-xl gap-5 shadow-md cursor-pointer"
       onClick={hdlNewPost}
     >
       <div className="flex gap-5">
@@ -45,7 +45,7 @@ function Post_form() {
           onClick={(e) => hdlClickUseProfile(e)}
         />
         <div className="flex flex-col w-full flex-1 h-fit gap-2">
-          <div className="bg-my-bg-main h-[40px] py-2 px-5 rounded-2xl flex-1 self-start w-full shadow-md mb-2">
+          <div className="bg-my-bg-main dark:bg-my-bg-main-dark h-[40px] py-2 px-5 rounded-2xl flex-1 self-start w-full shadow-md mb-2">
             <p className="text-my-text text-opacity-40 italic">
               Got someting to share...
             </p>
@@ -53,15 +53,19 @@ function Post_form() {
           <div className="flex justify-around text-lg">
             <div className="flex items-baseline gap-2">
               <FaCommentDots className="text-2xl text-my-prim translate-y-1" />
-              <p className="text-my-text font-bold text-opacity-50">Posts</p>
+              <p className="text-my-text dark:text-my-text-dark font-bold text-opacity-50">
+                Posts
+              </p>
             </div>
             <div className="flex items-baseline gap-2">
               <AiFillPicture className="text-2xl text-my-cat-job  translate-y-1" />
-              <p className="text-my-text font-bold text-opacity-50">Photos</p>
+              <p className="text-my-text dark:text-my-text-dark font-bold text-opacity-50">
+                Photos
+              </p>
             </div>
             <div className="flex items-baseline gap-2">
               <FaLocationDot className="text-2xl text-my-acct translate-y-1" />
-              <p className="text-my-text font-bold text-opacity-50">
+              <p className="text-my-text dark:text-my-text-dark font-bold text-opacity-50">
                 Locations
               </p>
             </div>

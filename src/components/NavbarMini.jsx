@@ -3,9 +3,9 @@ import { FaSearch } from "react-icons/fa"; // นำเข้าไอคอน�
 import usePostStore from "../stores/postStore";
 import { getUserApi } from "../api/search";
 import { getProfile } from "../api/userProfile";
-import ChangeTheme from "./ChangeTheme";
+import { IoMdAddCircle } from "react-icons/io";
 
-const Navbar = ({
+const NavbarMini = ({
   inputRef,
   setValue,
   setCategoryOption,
@@ -67,34 +67,13 @@ const Navbar = ({
     }
   }, [selectedUser]);
 
-  const hdlTheme = () => {
-    console.log("first");
-    document.documentElement.classList.toggle("dark");
-  };
-
   return (
-    <div className="bg-my-bg-card dark:bg-my-bg-card-dark rounded-lg  p-4 w-full">
+    <div className="bg-my-bg-card rounded-lg  p-4 w-full flex justify-center items-center">
       {" "}
       {/* ใช้ w-full */}
-      <div className="flex justify-between">
-        <div className="flex items-center">
-          <div className="flex px-2 items-baseline">
-            <img
-              src="/src/assets/Pinxy.png"
-              alt="LOGO"
-              className="w-[30px] translate-y-1"
-            />
-            <h1 className="text-[40px] font-bold mb-2 text-my-prim">
-              <span className="text-my-acct">in</span>xy
-            </h1>
-          </div>
-          <div className="self-end text-lg italic text-my-text dark:text-my-text-dark font-bold text-opacity-40 mb-[15px] -translate-y-1">
-            Discover What's Happening Near You.
-          </div>
-        </div>
-        {/* Dark Mode */}
-        <div className="p-4 w-fit">
-          <ChangeTheme hdlTheme={hdlTheme} className="w-full" />
+      <div className="flex justify-start">
+        <div className="flex px-2 items-center">
+          <img src="/src/assets/Pinxy.png" alt="LOGO" className="w-[50px]" />
         </div>
       </div>
       {/* เพิ่ม mb-2 เพื่อเพิ่มระยะห่างด้านล่าง */}
@@ -103,7 +82,7 @@ const Navbar = ({
           <input
             type="text"
             ref={inputRef}
-            className="w-full flex-1 focus:outline-none text-xl text-my-text dark:text-my-text-dark text-opacity-70 pl-2 dark:bg-my-bg-card-dark"
+            className="w-full flex-1 focus:outline-none text-xl text-my-text text-opacity-70 pl-2"
             placeholder="Search Posts or Users..."
             value={displayName}
             onChange={hdlOnChange}
@@ -140,8 +119,15 @@ const Navbar = ({
           </ul>
         )}
       </form>
+      <button
+        type="submit"
+        className="flex bg-my-acct justify-center items-center gap-1 px-3 py-2 rounded-lg ml-2 h-[40px]"
+      >
+        <IoMdAddCircle className="h-7 w-7 text-white" />
+        <p className="font-bold text-white">Post</p>
+      </button>
     </div>
   );
 };
 
-export default Navbar;
+export default NavbarMini;

@@ -9,9 +9,9 @@ const PostFilters = ({
   return (
     <div className="flex items-center justify-between w-full p-3">
       <div className="flex items-center gap-2 ml-auto">
-      <p className="text-lg">Current Sort By:</p>
+        <p className="text-lg dark:text-my-text-dark">Sort By:</p>
         <select
-          className="px-4 py-2 rounded-lg focus:outline-none shadow-md "
+          className="px-4 py-2 rounded-lg focus:outline-none shadow-md dark:bg-my-bg-card-dark dark:text-my-text-dark"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
         >
@@ -24,7 +24,7 @@ const PostFilters = ({
         </select>
 
         <select
-          className="px-4 py-2 rounded-lg focus:outline-none shadow-md "
+          className="px-4 py-2 rounded-lg focus:outline-none shadow-md dark:bg-my-bg-card-dark dark:text-my-text-dark"
           value={orderOption}
           onChange={(e) => setOrderOption(e.target.value)}
         >

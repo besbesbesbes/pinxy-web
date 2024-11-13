@@ -26,8 +26,8 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
     try {
       if (selectedUser) {
         const resp = await getProfile(selectedUser);
-        console.log("selectedUser", selectedUser);
-        console.log(resp.data.profileData);
+        // console.log("selectedUser", selectedUser);
+        // console.log(resp.data.profileData);
         setBioUser(resp.data.profileData);
       }
     } catch (err) {
@@ -56,18 +56,20 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
     }
   };
   const getFollowingInfo = async () => {
-    try {
-      setIsRenderFollower(true);
-      const body = {
-        userId: user.id,
-        followingId: selectedUser,
-      };
-      const resp = await getFollowingInfoApi(body);
-      setIsFollow(resp.data.isFollow);
-    } catch (err) {
-      console.log(err.response.data.error || err.message);
-    } finally {
-      setIsRenderFollower(false);
+    if (selectedUser) {
+      try {
+        setIsRenderFollower(true);
+        const body = {
+          userId: user.id,
+          followingId: selectedUser,
+        };
+        const resp = await getFollowingInfoApi(body);
+        setIsFollow(resp.data.isFollow);
+      } catch (err) {
+        console.log(err.response.data.error || err.message);
+      } finally {
+        setIsRenderFollower(false);
+      }
     }
   };
 
@@ -90,7 +92,7 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
         <div className="flex flex-1 ">
           <div className=" flex flex-col gap-2 flex-1">
             <div className="flex">
-              <p className="text-2xl pl-3 text-my-prim">
+              <p className="text-2xl pl-3 text-my-prim dark:text-my-text-dark">
                 {bioUser?.displayName}
               </p>
               {/* follow area */}
@@ -103,18 +105,18 @@ const ProfileCard = ({ handleGetAllPostByUserId }) => {
                   <p>Follow</p>
                 </div>
               ) : null}
-              <p className="self-end ml-5 text-my-text text-sm text-opacity-50 italic">
+              <p className="self-end ml-5 text-my-text dark:text-my-text-dark text-sm text-opacity-50 italic">
                 ( joined us {format(bioUser?.createdAt)} )
               </p>
             </div>
             <textarea
-              className="bg-my-bg-card w-full h-fit p-4 rounded-xl  self-start resize-none  text-[18px] italic text-my-text text-opacity-70"
+              className="bg-my-bg-card dark:bg-my-bg-card-dark w-full h-fit p-4 rounded-xl  self-start resize-none  text-[18px] italic text-my-text dark:text-my-text-dark text-opacity-70"
               value={bioUser?.bio}
             />
           </div>
           {/* report button */}
           <button
-            className="btn w-[50px] ml-[100px] h-[50px] text-my-text text-opacity-50 rounded-full text-3xl font-bold flex justify-center items-center bg-transparent border-none shadow-none hover:bg-opacity-10 relative self-start "
+            className="btn w-[50px] ml-[100px] h-[50px] text-my-text dark:text-my-text-dark text-opacity-50 rounded-full text-3xl font-bold flex justify-center items-center bg-transparent border-none shadow-none hover:bg-opacity-10 relative self-start "
             onClick={hdlReportUser}
           >
             <MdOutlineReport className="absolute text-[35px]" />

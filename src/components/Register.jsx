@@ -228,7 +228,7 @@ function Register() {
         validate(e.target.name, e.target.value)
     }
 
-    console.log("registerData", registerData)
+    // console.log("registerData", registerData)
     const hdlIsCheck = (e) => {
         setIsCheck(!isCheck)
     }

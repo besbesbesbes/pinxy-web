@@ -91,7 +91,7 @@ function Ai_askme_modal() {
     }
   }, [chats]);
   useEffect(() => {
-    console.log("useEffect ai ask me");
+    // console.log("useEffect ai ask me");
     getUserInfo();
     setUserForChat({});
     setInput("");

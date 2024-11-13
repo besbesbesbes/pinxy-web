@@ -32,7 +32,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
       if (userPosition === postLocation) {
         mapRef.current.flyTo(postLocation, fixZoomLevel);
       } else {
-        mapRef.current.flyTo(postLocation, 18);
+        mapRef.current.flyTo(postLocation, 16);
       }
     }
   }, [postLocation]);
@@ -95,7 +95,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-3 w-full flex flex-col gap-2">
+    <div className="bg-my-bg-card dark:bg-my-bg-card-dark rounded-lg p-3 w-full flex flex-col gap-2">
       {/* ซ่อนแผนที่เล็กเมื่อ popup เปิดอยู่ */}
       {isMapVisible && (
         <div className="h-[400px] rounded-lg overflow-hidden relative">
@@ -147,7 +147,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
         </div>
       )}
       {error && <p className="text-red-600">{error}</p>}
-      <div className="bg-white rounded-lg mt-2 w-full flex gap-2">
+      <div className="bg-my-bg-card dark:bg-my-bg-card-dark rounded-lg mt-2 w-full flex gap-2">
         <input
           type="range"
           min="500"
@@ -167,7 +167,7 @@ const EventMap = ({ posts, distance, setDistance, landmarks }) => {
           }}
           className="flex-1"
         />
-        <p className="text-gray-600 text-center w-fit">
+        <p className="text-gray-600 dark:text-my-text-dark text-center w-fit">
           {formatDistance(distance)}
         </p>
       </div>

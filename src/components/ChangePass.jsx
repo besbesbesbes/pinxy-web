@@ -15,7 +15,7 @@ function ChangePass(props) {
         newPassword: "",
     })
 
-    console.log("passwordData", passwordData)
+    // console.log("passwordData", passwordData)
 
     const hdlOnChange = (e) => {
         setPasswordData({
@@ -23,7 +23,7 @@ function ChangePass(props) {
             [e.target.name]: e.target.value,
         })
     }
-    console.log("2", passwordData)
+    // console.log("2", passwordData)
 
     const hdlOnChangePassword = async () => {
         try {

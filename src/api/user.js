@@ -1,7 +1,9 @@
 import axios from "axios";
+import useUserStore from "../stores/userStore";
+import createAuthHeader from "../utils/createAuthHeader";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const headerToken = import.meta.env.VITE_API_HEADER;
+const token = useUserStore.getState().token;
 
 export const reportUser = () => {
   return axios.post(

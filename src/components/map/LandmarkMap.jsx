@@ -12,7 +12,7 @@ const icons = {
   }),
   NEWS: new L.Icon({
     iconUrl:
-      "https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/new-icon.png",
+      "https://res.cloudinary.com/dxfryzi0g/image/upload/v1731473050/nwdvr8tn3mfz4n754g7l.png",
     iconSize: [30, 30],
     iconAnchor: [12, 41],
   }),

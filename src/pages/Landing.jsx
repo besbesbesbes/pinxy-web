@@ -50,7 +50,7 @@ function AuthContainer() {
         loop
         muted
         playsInline
-        src="asset/pinxy2.mp4"
+        src="asset/pinxy4.mp4"
         className="absolute inset-0 w-full h-full object-cover z-0"
       ></video>
 
@@ -60,15 +60,13 @@ function AuthContainer() {
       {/* คอนเทนต์ */}
       <div className="relative z-20 flex items-center  justify-end w-full h-screen">
         <div
-          className={`transition-transform duration-1000 transform ${
-            isLogin ? "rotate-y-0" : "rotate-y-180"
-          } w-1/2 h-full flex items-center justify-center`}
+          className={`transition-transform duration-1000 transform ${isLogin ? "rotate-y-0" : "rotate-y-180"
+            } w-1/2 h-full flex items-center justify-center`}
         >
           {/* ด้านหน้า */}
           <div
-            className={`absolute ml-64 lg:ml-28 w-9/12 h-3/4 backface-hidden flex justify-center items-center ${
-              isLogin ? "" : "hidden"
-            }`}
+            className={`absolute ml-64 lg:ml-28 w-9/12 h-3/4 backface-hidden flex justify-center items-center ${isLogin ? "" : "hidden"
+              }`}
           >
             <div className="flex justify-evenly flex-col w-2/3 h-full bg-white bg-opacity-60 shadow-lg p-10 rounded-3xl">
               <Login />
@@ -86,9 +84,8 @@ function AuthContainer() {
 
           {/* ด้านหลัง */}
           <div
-            className={`absolute ml-64 lg:ml-36 w-9/12 h-full backface-hidden flex justify-center items-center rotate-y-180 ${
-              isLogin ? "hidden" : ""
-            }`}
+            className={`absolute ml-64 lg:ml-36 w-9/12 h-full backface-hidden flex justify-center items-center rotate-y-180 ${isLogin ? "hidden" : ""
+              }`}
           >
             <div className="flex justify-evenly flex-col w-2/3 h-full lg:h-5/6 lg:w-3/4 bg-white bg-opacity-60 shadow-lg p-10 rounded-3xl">
               <Register />

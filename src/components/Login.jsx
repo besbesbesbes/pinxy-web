@@ -200,8 +200,8 @@ function Login() {
         return setIsError(!!(alertError.password || alertError.email || alertError.name))
     }
 
-    console.log("isEmail", isEmail)
-    console.log("loginData", loginData)
+    // console.log("isEmail", isEmail)
+    // console.log("loginData", loginData)
 
     const hdlSubmit = async (e) => {
         e.preventDefault()

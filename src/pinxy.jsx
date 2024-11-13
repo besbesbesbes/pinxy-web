@@ -32,7 +32,7 @@ const Pinxy = () => {
   const { id } = user;
   const inputRef = useRef(); // ใช้ useRef สำหรับเก็บค่า input
 
-  console.log("id check", id);
+  // console.log("id check", id);
 
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -134,7 +134,7 @@ const Pinxy = () => {
         value: searchValue,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -151,7 +151,7 @@ const Pinxy = () => {
         category: categoryOption,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -168,7 +168,7 @@ const Pinxy = () => {
         userId: selectedUser,
       });
       setPosts(resp.data.data);
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -212,7 +212,7 @@ const Pinxy = () => {
     setPosts([newPost, ...posts]);
     setContent("");
   };
-  console.log("profileData", profileData);
+  // console.log("profileData", profileData);
   return (
     <div className="min-h-screen bg-my-bg-main dark:bg-my-bg-main-dark flex justify-center">
       <div>

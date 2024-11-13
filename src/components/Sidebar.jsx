@@ -57,7 +57,7 @@ const Sidebar = ({ setCategoryOption, inputRef, setValue, profileData }) => {
   const navigate = useNavigate();
 
   const hdlLogout = () => {
-    console.log("logout");
+    // console.log("logout");
     logout();
     navigate("/");
   };
